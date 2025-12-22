@@ -1,11 +1,131 @@
+import { useAudioPlayer } from 'expo-audio';
+import * as Crypto from 'expo-crypto';
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Button, Platform, StyleSheet, View } from 'react-native';
+import { Child, SubsonicAPI } from "subsonic-api";
 
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Link } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+
+function Player({ id }: { id: string }) {
+  const [error, setError] = useState<string | null>(null);
+  const setupComplete = useRef(false)
+
+  const player = useAudioPlayer();
+
+  useEffect(() => {
+    async function fetchSong() {
+      try {
+        const api = await getApi()
+        const stream = await api.stream({ id })
+
+        player.replace(stream.url)
+      } catch (err) {
+
+        if (err && typeof err === 'object' && 'message' in err) {
+          setError(err.message as string);
+        } else {
+          setError('An unknown error occurred');
+        }
+      }
+    }
+
+    fetchSong()
+  }, [id])
+
+
+  if (error) {
+    return <ThemedText>error: {error}</ThemedText>
+  }
+
+  return (
+    <View>
+      <Button title="Play Sound" onPress={() => {
+        player.play()
+      }} />
+      <Button title="Stop" onPress={() => {
+        player.pause()
+        player.seekTo(0);
+      }} />
+
+    </View>
+  );
+}
+
+async function getApi() {
+  const randomBytes = await Crypto.getRandomBytesAsync(16);
+
+  const salt = Array.from(randomBytes)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+  const api = new SubsonicAPI({
+    url: process.env.EXPO_PUBLIC_NAVIDROME_HOST!,
+    auth: {
+      username: process.env.EXPO_PUBLIC_NAVIDROME_USERNAME!,
+      password: process.env.EXPO_PUBLIC_NAVIDROME_PASSWORD!,
+    },
+    salt: salt,
+    reuseSalt: true
+  });
+
+  return api
+}
+
+function SubsonicComponent() {
+  const [data, setData] = useState<Child | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    const api = await getApi()
+
+    try {
+      setLoading(true);
+      const { randomSongs } = await api.getRandomSongs({ size: 1 });
+      setData(randomSongs.song?.[0] ?? null);
+    } catch (err) {
+      if (err && typeof err === 'object' && 'message' in err) {
+        setError(err.message as string);
+      } else {
+        setError('An unknown error occurred');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+  if (loading) {
+    return <ThemedText>Loading...</ThemedText>
+
+  }
+  if (error) {
+    return <ThemedText>error: {error}</ThemedText>
+  }
+
+  if (!data) {
+    return <ThemedText>Couldnt get random song</ThemedText>
+  }
+
+  return <View>
+    <View style={{ flexDirection: "row" }}>
+      <ThemedText>
+        {data.artist} -  {data.title}
+      </ThemedText>
+      <Button onPress={fetchData} disabled={loading} title='🔄' />
+    </View>
+    <Player id={data.id} />
+  </View>
+
+}
 
 export default function HomeScreen() {
   return (
@@ -20,6 +140,9 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <SubsonicComponent />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
