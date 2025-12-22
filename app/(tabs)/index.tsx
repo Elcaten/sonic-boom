@@ -6,19 +6,22 @@ import { Child, SubsonicAPI } from "subsonic-api";
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/auth-context';
+import { useCallback, useEffect, useState } from 'react';
 import TrackPlayer from 'react-native-track-player';
 
 function CoverArt({ track }: { track: Child }) {
+  const getApi = useGetApi()
+
   const [data, setData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
-    const api = await getApi()
 
     try {
       setLoading(true);
+      const api = await getApi()
       const coverArt = await api.getCoverArt({ id: track.id });
       setData(coverArt.url);
     } catch (err) {
@@ -56,6 +59,8 @@ function CoverArt({ track }: { track: Child }) {
 }
 
 function Player({ track }: { track: Child }) {
+  const getApi = useGetApi()
+
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -105,26 +110,38 @@ function Player({ track }: { track: Child }) {
   );
 }
 
-async function getApi() {
-  const randomBytes = await Crypto.getRandomBytesAsync(16);
+function useGetApi() {
+  const auth = useAuth()
 
-  const salt = Array.from(randomBytes)
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
-  const api = new SubsonicAPI({
-    url: process.env.EXPO_PUBLIC_NAVIDROME_HOST!,
-    auth: {
-      username: process.env.EXPO_PUBLIC_NAVIDROME_USERNAME!,
-      password: process.env.EXPO_PUBLIC_NAVIDROME_PASSWORD!,
-    },
-    salt: salt,
-    reuseSalt: true
-  });
+  if (!auth.serverAddress || !auth.password || !auth.username) {
+    throw new Error("invalid config: server address username or password are missing")
+  }
 
-  return api
+  const getApi = useCallback(async () => {
+    const randomBytes = await Crypto.getRandomBytesAsync(16);
+
+    const salt = Array.from(randomBytes)
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+    const api = new SubsonicAPI({
+      url: auth.serverAddress,
+      auth: {
+        username: auth.username,
+        password: auth.password,
+      },
+      salt: salt,
+      reuseSalt: true
+    });
+
+    return api
+  }, [auth.password, auth.username, auth.serverAddress])
+
+  return getApi
 }
 
 function SubsonicComponent() {
+  const getApi = useGetApi()
+
   const [data, setData] = useState<Child | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -181,6 +198,8 @@ function SubsonicComponent() {
 }
 
 export default function HomeScreen() {
+  const auth = useAuth()
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -191,6 +210,7 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.stepContainer}>
+        <Button title='Log out' onPress={() => auth.clearAll()} />
         <SubsonicComponent />
       </ThemedView>
     </ParallaxScrollView>

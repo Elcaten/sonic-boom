@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { AuthProvider, useAuth } from '@/context/auth-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useSetupTrackPlayer } from '@/hooks/use-setup-track-player';
 import { playbackService } from '@/utils/playbackService';
@@ -28,11 +29,26 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
+      <AuthProvider>
+        <Content />
+      </AuthProvider>
     </ThemeProvider>
   );
+}
+
+function Content() {
+  const auth = useAuth()
+  const isLoggedIn = Boolean(auth.serverAddress && auth.username && auth.password)
+
+  return <>
+    <Stack>
+      <Stack.Protected guard={isLoggedIn}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+      </Stack.Protected>
+      <Stack.Protected guard={!isLoggedIn}>
+        <Stack.Screen name="sign-in" />
+      </Stack.Protected>
+    </Stack>
+    <StatusBar style="auto" /></>
 }
