@@ -4,10 +4,17 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { setAudioModeAsync } from 'expo-audio';
 
 export const unstable_settings = {
   anchor: '(tabs)',
 };
+
+setAudioModeAsync({
+  playsInSilentMode: true,
+  shouldPlayInBackground: true,
+  interruptionMode: 'mixWithOthers'
+});
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
