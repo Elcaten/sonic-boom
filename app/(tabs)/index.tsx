@@ -1,29 +1,78 @@
-import { useAudioPlayer } from 'expo-audio';
 import * as Crypto from 'expo-crypto';
 import { Image } from 'expo-image';
-import { Button, Platform, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 import { Child, SubsonicAPI } from "subsonic-api";
 
-import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import TrackPlayer from 'react-native-track-player';
 
-function Player({ id }: { id: string }) {
+function CoverArt({ track }: { track: Child }) {
+  const [data, setData] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const setupComplete = useRef(false)
 
-  const player = useAudioPlayer();
+  const fetchData = async () => {
+    const api = await getApi()
+
+    try {
+      setLoading(true);
+      const coverArt = await api.getCoverArt({ id: track.id });
+      setData(coverArt.url);
+    } catch (err) {
+      if (err && typeof err === 'object' && 'message' in err) {
+        setError(err.message as string);
+      } else {
+        setError('An unknown error occurred');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+  if (loading) {
+    return <ThemedText>Loading...</ThemedText>
+
+  }
+  if (error) {
+    return <ThemedText>error: {error}</ThemedText>
+  }
+
+  if (!data) {
+    return <ThemedText>Couldnt get cover</ThemedText>
+  }
+
+  return <Image
+    source={data}
+    style={{ width: 128, height: 128 }}
+  />
+}
+
+function Player({ track }: { track: Child }) {
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchSong() {
       try {
         const api = await getApi()
-        const stream = await api.stream({ id })
+        const stream = await api.stream({ id: track.id })
+        const coverArt = await api.getCoverArt({ id: track.id });
 
-        player.replace(stream.url)
+        TrackPlayer.reset()
+        TrackPlayer.add([{
+          id: track.id,
+          url: stream.url,
+          title: track.title,
+          artist: track.artist,
+          artwork: coverArt.url
+        }])
       } catch (err) {
 
         if (err && typeof err === 'object' && 'message' in err) {
@@ -35,7 +84,7 @@ function Player({ id }: { id: string }) {
     }
 
     fetchSong()
-  }, [id])
+  }, [track.id])
 
 
   if (error) {
@@ -43,13 +92,13 @@ function Player({ id }: { id: string }) {
   }
 
   return (
-    <View>
-      <Button title="Play Sound" onPress={() => {
-        player.play()
+    <View style={{ flexDirection: "row", gap: 32 }}>
+      <Button title="Play" onPress={() => {
+        TrackPlayer.play()
       }} />
       <Button title="Stop" onPress={() => {
-        player.pause()
-        player.seekTo(0);
+        TrackPlayer.pause()
+        TrackPlayer.seekTo(0);
       }} />
 
     </View>
@@ -115,14 +164,18 @@ function SubsonicComponent() {
     return <ThemedText>Couldnt get random song</ThemedText>
   }
 
-  return <View>
-    <View style={{ flexDirection: "row" }}>
-      <ThemedText>
-        {data.artist} -  {data.title}
-      </ThemedText>
-      <Button onPress={fetchData} disabled={loading} title='🔄' />
+  return <View style={{ gap: 64 }}>
+    <View style={{ flexDirection: "row", gap: 32 }}>
+      <Button onPress={fetchData} disabled={loading} title='Refresh' />
+      <Player track={data} />
     </View>
-    <Player id={data.id} />
+    <View>
+      <CoverArt track={data} />
+      <ThemedText>
+        {data.artist} - {data.title}
+      </ThemedText>
+    </View>
+
   </View>
 
 }
@@ -137,65 +190,8 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <SubsonicComponent />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
       </ThemedView>
     </ParallaxScrollView>
   );
