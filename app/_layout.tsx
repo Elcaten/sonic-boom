@@ -1,5 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
@@ -8,7 +9,10 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useSetupTrackPlayer } from '@/hooks/use-setup-track-player';
 import { playbackService } from '@/utils/playbackService';
 import { setAudioModeAsync } from 'expo-audio';
+import { useEffect, useState } from 'react';
 import TrackPlayer from 'react-native-track-player';
+
+SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -20,16 +24,25 @@ setAudioModeAsync({
   interruptionMode: 'mixWithOthers'
 });
 
+
 TrackPlayer.registerPlaybackService(() => playbackService);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const [playerReady, setPlayerReady] = useState(false)
+  const [authReady, setAuthReady] = useState(false)
 
-  useSetupTrackPlayer({ onLoad: () => { } })
+  useSetupTrackPlayer({ onLoad: () => setPlayerReady(true) })
+
+  useEffect(() => {
+    if (playerReady && authReady) {
+      SplashScreen.hide()
+    }
+  }, [playerReady, authReady])
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
+      <AuthProvider onLoad={() => setAuthReady(true)}>
         <Content />
       </AuthProvider>
     </ThemeProvider>

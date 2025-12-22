@@ -24,7 +24,7 @@ const KEYS = {
 };
 
 // Provider component
-export const AuthProvider = ({ children }: PropsWithChildren<unknown>) => {
+export const AuthProvider = ({ children, onLoad }: PropsWithChildren<{ onLoad: () => void }>) => {
     const [serverAddress, setServerAddressState] = useState('');
     const [username, setUsernameState] = useState('');
     const [password, setPasswordState] = useState('');
@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }: PropsWithChildren<unknown>) => {
             console.error('Error loading stored values:', error);
         } finally {
             setIsLoading(false);
+            onLoad()
         }
     };
 
@@ -113,6 +114,10 @@ export const AuthProvider = ({ children }: PropsWithChildren<unknown>) => {
         clearAll,
         isLoading,
     };
+
+    if (isLoading) {
+        return null
+    }
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

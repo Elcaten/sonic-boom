@@ -1,6 +1,6 @@
 import * as Crypto from 'expo-crypto';
 import { Image } from 'expo-image';
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, ImageStyle, StyleProp, StyleSheet, View } from 'react-native';
 import { Child, SubsonicAPI } from "subsonic-api";
 
 import ParallaxScrollView from '@/components/parallax-scroll-view';
@@ -10,7 +10,7 @@ import { useAuth } from '@/context/auth-context';
 import { useCallback, useEffect, useState } from 'react';
 import TrackPlayer from 'react-native-track-player';
 
-function CoverArt({ track }: { track: Child }) {
+function CoverArt({ track, style }: { track: Child, style?: StyleProp<ImageStyle> }) {
   const getApi = useGetApi()
 
   const [data, setData] = useState<string | null>(null);
@@ -37,7 +37,7 @@ function CoverArt({ track }: { track: Child }) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [track.id]);
 
 
   if (loading) {
@@ -54,7 +54,7 @@ function CoverArt({ track }: { track: Child }) {
 
   return <Image
     source={data}
-    style={{ width: 128, height: 128 }}
+    style={[{ width: 256, height: 256, }, style]}
   />
 }
 
@@ -139,14 +139,14 @@ function useGetApi() {
   return getApi
 }
 
-function SubsonicComponent() {
+function useFetchRandomTrack() {
   const getApi = useGetApi()
 
   const [data, setData] = useState<Child | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async () => {
+  const trigger = async () => {
     const api = await getApi()
 
     try {
@@ -164,11 +164,15 @@ function SubsonicComponent() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  return {
+    data,
+    loading,
+    error,
+    trigger
+  }
+}
 
-
+function SubsonicComponent({ track, loading, error, onRefreshClick }: { track: Child | null, loading: boolean, error: string | null, onRefreshClick: () => void }) {
   if (loading) {
     return <ThemedText>Loading...</ThemedText>
 
@@ -177,41 +181,42 @@ function SubsonicComponent() {
     return <ThemedText>error: {error}</ThemedText>
   }
 
-  if (!data) {
+  if (!track) {
     return <ThemedText>Couldnt get random song</ThemedText>
   }
 
-  return <View style={{ gap: 64 }}>
-    <View style={{ flexDirection: "row", gap: 32 }}>
-      <Button onPress={fetchData} disabled={loading} title='Refresh' />
-      <Player track={data} />
-    </View>
-    <View>
-      <CoverArt track={data} />
-      <ThemedText>
-        {data.artist} - {data.title}
-      </ThemedText>
-    </View>
-
+  return <View style={{ flexDirection: "row", gap: 32 }}>
+    <Button onPress={onRefreshClick} disabled={loading} title='Refresh' />
+    <Player track={track} />
   </View>
 
 }
 
 export default function HomeScreen() {
   const auth = useAuth()
+  const { trigger, loading, error, data } = useFetchRandomTrack()
+
+  useEffect(() => {
+    trigger();
+  }, []);
+
 
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
+        data ?
+          <View style={{}}>
+            <CoverArt track={data} />
+            <View style={{ position: "absolute", right: 0, top: 0, padding: 32 }}>
+              <ThemedText type='title'>{data.title}</ThemedText>
+              <ThemedText type='title'>{data.artist}</ThemedText>
+            </View>
+          </View> : <></>
       }>
       <ThemedView style={styles.stepContainer}>
         <Button title='Log out' onPress={() => auth.clearAll()} />
-        <SubsonicComponent />
+        <SubsonicComponent loading={loading} error={error} track={data} onRefreshClick={trigger} />
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -226,12 +231,5 @@ const styles = StyleSheet.create({
   stepContainer: {
     gap: 8,
     marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
   },
 });
