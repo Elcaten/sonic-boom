@@ -1,0 +1,12 @@
+{
+	"useSubsonicQuery": {
+		"prefix": "usq",
+		"body": [
+			"const ${1:data}Query = useSubsonicQuery({",
+			"  queryKey: [\"${2:queryKey}\"],",
+			"  callApi: (api) => api.${3:method}",
+			"})"
+		],
+		"description": "useSubsonicQuery hook"
+	}
+}
