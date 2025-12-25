@@ -1,30 +1,77 @@
 import { CallApiParams } from "@/hooks/use-subsonic-query";
+import {
+  DataTag,
+  DefaultError,
+  QueryKey,
+  queryOptions,
+  UndefinedInitialDataOptions,
+} from "@tanstack/react-query";
+
+function susbsonicQueryOptions<
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey
+>(
+  options: UndefinedInitialDataOptions<
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryKey
+  > & {
+    callApi: (...[api, session]: CallApiParams) => TQueryFnData;
+  }
+): UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
+  queryKey: DataTag<TQueryKey, TQueryFnData, TError>;
+  callApi: (...[api, session]: CallApiParams) => TQueryFnData;
+} {
+  return { ...queryOptions(options), callApi: options.callApi };
+}
 
 export const subsonicQueries = {
-  streamUrl: (trackId: string) => ({
-    queryKey: ["stream-url", trackId],
-    callApi: (...[api, session]: CallApiParams) => {
-      const url = new URL(`${api.baseURL()}rest/stream.view`);
-      url.searchParams.set("v", "1.16");
-      url.searchParams.set("c", "subsonic-api");
-      url.searchParams.set("f", "json");
-      url.searchParams.set("id", trackId);
-      url.searchParams.set("u", session.username);
-      url.searchParams.set("t", session.subsonicToken);
-      url.searchParams.set("s", session.subsonicSalt);
+  streamUrl: function (trackId: string) {
+    return susbsonicQueryOptions({
+      queryKey: ["stream-url", trackId],
+      callApi: (...[api, session]: CallApiParams) => {
+        const url = new URL(`${api.baseURL()}rest/stream.view`);
+        url.searchParams.set("v", "1.16");
+        url.searchParams.set("c", "subsonic-api");
+        url.searchParams.set("f", "json");
+        url.searchParams.set("id", trackId);
+        url.searchParams.set("u", session.username);
+        url.searchParams.set("t", session.subsonicToken);
+        url.searchParams.set("s", session.subsonicSalt);
 
-      console.log(url.toString());
-      return url.toString();
-    },
-  }),
+        return url.toString();
+      },
+      staleTime: Infinity,
+    });
+  },
 
-  coverArt: (trackId: string) => ({
-    queryKey: ["cover-art", trackId],
-    callApi: (...[api]: CallApiParams) => api.getCoverArt({ id: trackId }),
-  }),
+  coverArtUrl: function (entityId: string, size: 64 | 256) {
+    return susbsonicQueryOptions({
+      queryKey: ["cover-art", entityId],
+      callApi: (...[api, session]: CallApiParams) => {
+        const url = new URL(`${api.baseURL()}rest/getCoverArt.view`);
+        url.searchParams.set("v", "1.16.1");
+        url.searchParams.set("c", "subsonic-api");
+        url.searchParams.set("f", "json");
+        url.searchParams.set("id", entityId);
+        url.searchParams.set("size", size.toString());
+        url.searchParams.set("u", session.username);
+        url.searchParams.set("t", session.subsonicToken);
+        url.searchParams.set("s", session.subsonicSalt);
 
-  song: (trackId: string) => ({
-    queryKey: ["song", trackId],
-    callApi: (...[api]: CallApiParams) => api.getSong({ id: trackId }),
-  }),
+        return url.toString();
+      },
+      staleTime: Infinity,
+    });
+  },
+
+  song: function (trackId: string) {
+    return susbsonicQueryOptions({
+      queryKey: ["song", trackId],
+      callApi: (...[api]: CallApiParams) => api.getSong({ id: trackId }),
+    });
+  },
 };

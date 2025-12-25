@@ -68,9 +68,9 @@ export default function AlbumTracks() {
       }
 
       setPlayError("");
-      const [streamUrl, coverArt, song] = await Promise.all([
+      const [streamUrl, coverArtUrl, song] = await Promise.all([
         ensureQuery(subsonicQueries.streamUrl(trackId)),
-        ensureQuery(subsonicQueries.coverArt(trackId)),
+        ensureQuery(subsonicQueries.coverArtUrl(trackId, 64)),
         ensureQuery(subsonicQueries.song(trackId)),
       ]);
 
@@ -81,7 +81,7 @@ export default function AlbumTracks() {
           url: streamUrl,
           title: song.song.title,
           artist: song.song.artist,
-          artwork: coverArt.url,
+          artwork: coverArtUrl,
         },
       ]);
       TrackPlayer.play();

@@ -13,16 +13,15 @@ import { CoverArt } from "../../components/CoverArt";
 
 function Player({ track }: { track: Child }) {
   const streamUrlQuery = useSubsonicQuery(subsonicQueries.streamUrl(track.id));
-  const coverArtQuery = useSubsonicQuery({
-    queryKey: ["cover-art", track.id],
-    callApi: (api) => api.getCoverArt({ id: track.id }),
-  });
+  const coverArtUrlQuery = useSubsonicQuery(
+    subsonicQueries.coverArtUrl(track.id, 64)
+  );
 
   useEffect(() => {
     if (
       !streamUrlQuery.data ||
       streamUrlQuery.isLoading ||
-      coverArtQuery.isLoading
+      coverArtUrlQuery.isLoading
     ) {
       return;
     }
@@ -33,7 +32,7 @@ function Player({ track }: { track: Child }) {
         url: streamUrlQuery.data,
         title: track.title,
         artist: track.artist,
-        artwork: coverArtQuery.data?.url,
+        artwork: coverArtUrlQuery.data,
       },
     ]);
 
@@ -41,8 +40,8 @@ function Player({ track }: { track: Child }) {
       TrackPlayer.reset();
     };
   }, [
-    coverArtQuery.data?.url,
-    coverArtQuery.isLoading,
+    coverArtUrlQuery.data,
+    coverArtUrlQuery.isLoading,
     streamUrlQuery.data,
     streamUrlQuery.isLoading,
     track.artist,

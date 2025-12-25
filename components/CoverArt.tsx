@@ -1,5 +1,6 @@
 import { ThemedText } from "@/components/themed-text";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
+import { subsonicQueries } from "@/utils/subsonicQueries";
 import { Image } from "expo-image";
 import { ImageStyle, StyleProp } from "react-native";
 
@@ -13,10 +14,7 @@ export function CoverArt({
   style?: StyleProp<ImageStyle>;
   size: 64 | 256;
 }) {
-  const coverArtQuery = useSubsonicQuery({
-    queryKey: ["cover-art", id, size],
-    callApi: (api) => api.getCoverArt({ id: id }),
-  });
+  const coverArtQuery = useSubsonicQuery(subsonicQueries.coverArtUrl(id, size));
 
   if (coverArtQuery.isError) {
     return <ThemedText>error: {coverArtQuery.error.message}</ThemedText>;
@@ -27,7 +25,7 @@ export function CoverArt({
       placeholder={{
         blurhash: getRandomBlurhash(),
       }}
-      source={coverArtQuery.isLoading ? undefined : coverArtQuery?.data?.url}
+      source={coverArtQuery.isLoading ? undefined : coverArtQuery?.data}
       style={[{ width: size, height: size }, style]}
     />
   );

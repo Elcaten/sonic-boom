@@ -4,6 +4,7 @@ import {
   QueryKey,
   UseQueryOptions,
   UseQueryResult,
+  queryOptions,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -15,6 +16,21 @@ export type CallApiParams = [
   api: SubsonicAPI,
   session: Awaited<ReturnType<SubsonicAPI["navidromeSession"]>>
 ];
+
+function sessionQueryOptions(params: {
+  username: string;
+  getApi: () => Promise<SubsonicAPI>;
+}) {
+  return queryOptions({
+    queryKey: ["navidrome-session", params.username],
+    queryFn: async () => {
+      const api = await params.getApi();
+      const session = await api.navidromeSession();
+      return session;
+    },
+    staleTime: Infinity,
+  });
+}
 
 export function useSubsonicQuery<
   TQueryFnData = unknown,
@@ -28,14 +44,9 @@ export function useSubsonicQuery<
 ): UseQueryResult<NoInfer<TData>, TError> {
   const getApi = useGetApi();
   const auth = useAuth();
-  const navidromeSession = useQuery({
-    queryKey: ["navidrome-session", auth.username],
-    queryFn: async () => {
-      const api = await getApi();
-      const session = await api.navidromeSession();
-      return session;
-    },
-  });
+  const navidromeSession = useQuery(
+    sessionQueryOptions({ username: auth.username, getApi })
+  );
   const query = useQuery({
     ...options,
     queryFn: async () => {
@@ -58,19 +69,14 @@ export function useEnsureSubsonicQuery() {
       queryKey: QueryKey;
       callApi: (...params: CallApiParams) => TQueryFnData;
     }): Promise<Awaited<TQueryFnData>> => {
-      const session = await queryClient.ensureQueryData({
-        queryKey: ["navidrome-session", auth.username],
-        queryFn: async () => {
-          const api = await getApi();
-          const session = await api.navidromeSession();
-          return session;
-        },
-      });
+      const navidromeSession = await queryClient.ensureQueryData(
+        sessionQueryOptions({ username: auth.username, getApi })
+      );
       return queryClient.ensureQueryData({
         queryKey: options.queryKey,
         queryFn: async () => {
           const api = await getApi();
-          return options.callApi(api, session);
+          return options.callApi(api, navidromeSession);
         },
       });
     },
