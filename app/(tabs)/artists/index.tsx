@@ -6,7 +6,6 @@ import {
   View,
 } from "react-native";
 
-import { CoverArt } from "@/components/CoverArt";
 import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -42,7 +41,7 @@ export default function ArtistsScreen() {
               }
             >
               <View style={{ flexDirection: "row", gap: 12 }}>
-                <CoverArt id={item.id} size={64} />
+                {/* <CoverArt id={item.id} size={64} /> */}
                 <View>
                   <ThemedText>{item.name}</ThemedText>
                   <ThemedText>{item.albumCount} album(s)</ThemedText>

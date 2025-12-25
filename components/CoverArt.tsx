@@ -22,16 +22,12 @@ export function CoverArt({
     return <ThemedText>error: {coverArtQuery.error.message}</ThemedText>;
   }
 
-  if (!coverArtQuery.data) {
-    return <ThemedText>Couldnt get cover</ThemedText>;
-  }
-
   return (
     <Image
       placeholder={{
         blurhash: getRandomBlurhash(),
       }}
-      // source={coverArtQuery.isLoading ? undefined : coverArtQuery.data.url}
+      source={coverArtQuery.isLoading ? undefined : coverArtQuery?.data?.url}
       style={[{ width: size, height: size }, style]}
     />
   );

@@ -5,6 +5,7 @@ import {
   UseQueryOptions,
   UseQueryResult,
   useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
 import { useCallback } from "react";
@@ -31,6 +32,27 @@ export function useSubsonicQuery<
   });
 
   return query;
+}
+
+export function useEnsureSubsonicQuery() {
+  const queryClient = useQueryClient();
+  const getApi = useGetApi();
+
+  return useCallback(
+    async <TQueryFnData = unknown>(options: {
+      queryKey: QueryKey;
+      callApi: (api: SubsonicAPI) => TQueryFnData;
+    }): Promise<Awaited<TQueryFnData>> => {
+      return queryClient.ensureQueryData({
+        queryKey: options.queryKey,
+        queryFn: async () => {
+          const api = await getApi();
+          return options.callApi(api);
+        },
+      });
+    },
+    [queryClient, getApi]
+  );
 }
 
 function useGetApi() {
