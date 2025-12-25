@@ -52,7 +52,9 @@ export default function ArtistsScreen() {
           </ThemedView>
         )}
         renderSectionHeader={({ section: { title } }) => (
-          <ThemedText type="defaultSemiBold">{title}</ThemedText>
+          <ThemedView>
+            <ThemedText type="defaultSemiBold">{title}</ThemedText>
+          </ThemedView>
         )}
       />
     </ThemedSafeAreaView>

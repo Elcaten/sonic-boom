@@ -29,6 +29,12 @@ function susbsonicQueryOptions<
 }
 
 export const subsonicQueries = {
+  currentNavidromeSession: function () {
+    return susbsonicQueryOptions({
+      queryKey: ["currentNavidromeSession"],
+      callApi: (...[_, session]: CallApiParams) => session ?? null,
+    });
+  },
   streamUrl: function (trackId: string) {
     return susbsonicQueryOptions({
       queryKey: ["stream-url", trackId],
