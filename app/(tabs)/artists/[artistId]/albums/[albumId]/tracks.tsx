@@ -68,16 +68,17 @@ export default function AlbumTracks() {
       }
 
       setPlayError("");
-      const [stream, coverArt, song] = await Promise.all([
-        ensureQuery(subsonicQueries.stream(trackId)),
+      const [streamUrl, coverArt, song] = await Promise.all([
+        ensureQuery(subsonicQueries.streamUrl(trackId)),
         ensureQuery(subsonicQueries.coverArt(trackId)),
         ensureQuery(subsonicQueries.song(trackId)),
       ]);
+
       await TrackPlayer.reset();
       await TrackPlayer.add([
         {
           id: trackId,
-          url: stream.url,
+          url: streamUrl,
           title: song.song.title,
           artist: song.song.artist,
           artwork: coverArt.url,
@@ -117,9 +118,20 @@ export default function AlbumTracks() {
         >
           <View
             style={{
+              width: (buffered / duration) * 100,
+              height: 32,
+              backgroundColor: "green",
+              left: 0,
+              position: "absolute",
+            }}
+          ></View>
+          <View
+            style={{
               width: (position / duration) * 100,
               height: 32,
               backgroundColor: tintColor,
+              left: 0,
+              position: "absolute",
             }}
           ></View>
           <View

@@ -6,15 +6,13 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useAuth } from "@/context/auth-context";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
+import { subsonicQueries } from "@/utils/subsonicQueries";
 import { useEffect } from "react";
 import TrackPlayer from "react-native-track-player";
 import { CoverArt } from "../../components/CoverArt";
 
 function Player({ track }: { track: Child }) {
-  const streamQuery = useSubsonicQuery({
-    queryKey: ["stream", track.id],
-    callApi: (api) => api.stream({ id: track.id }),
-  });
+  const streamUrlQuery = useSubsonicQuery(subsonicQueries.streamUrl(track.id));
   const coverArtQuery = useSubsonicQuery({
     queryKey: ["cover-art", track.id],
     callApi: (api) => api.getCoverArt({ id: track.id }),
@@ -22,8 +20,8 @@ function Player({ track }: { track: Child }) {
 
   useEffect(() => {
     if (
-      !streamQuery.data?.url ||
-      streamQuery.isLoading ||
+      !streamUrlQuery.data ||
+      streamUrlQuery.isLoading ||
       coverArtQuery.isLoading
     ) {
       return;
@@ -32,7 +30,7 @@ function Player({ track }: { track: Child }) {
     TrackPlayer.add([
       {
         id: track.id,
-        url: streamQuery.data.url,
+        url: streamUrlQuery.data,
         title: track.title,
         artist: track.artist,
         artwork: coverArtQuery.data?.url,
@@ -45,15 +43,17 @@ function Player({ track }: { track: Child }) {
   }, [
     coverArtQuery.data?.url,
     coverArtQuery.isLoading,
-    streamQuery.data?.url,
-    streamQuery.isLoading,
+    streamUrlQuery.data,
+    streamUrlQuery.isLoading,
     track.artist,
     track.id,
     track.title,
   ]);
 
-  if (streamQuery.error) {
-    return <ThemedText>stream error: {streamQuery.error.message}</ThemedText>;
+  if (streamUrlQuery.error) {
+    return (
+      <ThemedText>stream error: {streamUrlQuery.error.message}</ThemedText>
+    );
   }
 
   return (
