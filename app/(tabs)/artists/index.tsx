@@ -1,42 +1,61 @@
-import { SectionList, StatusBar, StyleSheet } from "react-native";
+import {
+  SectionList,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
+import { CoverArt } from "@/components/CoverArt";
+import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
-import { useThemeColor } from "@/hooks/use-theme-color";
+import { useRouter } from "expo-router";
 import React from "react";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function ArtistsScreen() {
   const artistsQuery = useSubsonicQuery({
     queryKey: ["artists"],
     callApi: (api) => api.getArtists(),
   });
-  const backgroundColor = useThemeColor({}, "background");
+  const router = useRouter();
 
   return (
-    <SafeAreaProvider style={{ backgroundColor }}>
-      <SafeAreaView style={styles.container} edges={["top"]}>
-        <SectionList
-          sections={
-            artistsQuery.data?.artists.index?.map((section) => ({
-              title: section.name,
-              data: section.artist ?? [],
-            })) ?? []
-          }
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ThemedView style={{ borderBottomColor: "blue", borderWidth: 1 }}>
-              <ThemedText>{item.name}</ThemedText>
-              <ThemedText>{item.albumCount} album(s)</ThemedText>
-            </ThemedView>
-          )}
-          renderSectionHeader={({ section: { title } }) => (
-            <ThemedText type="defaultSemiBold">{title}</ThemedText>
-          )}
-        />
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <ThemedSafeAreaView edges={["top"]}>
+      <SectionList
+        sections={
+          artistsQuery.data?.artists.index?.map((section) => ({
+            title: section.name,
+            data: section.artist ?? [],
+          })) ?? []
+        }
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <ThemedView style={{ borderBottomColor: "blue", borderWidth: 1 }}>
+            <TouchableOpacity
+              onPress={() =>
+                router.navigate({
+                  pathname: "/(tabs)/artists/[artistId]/albums",
+                  params: { artistId: item.id },
+                })
+              }
+            >
+              <View style={{ flexDirection: "row", gap: 12 }}>
+                <CoverArt id={item.id} size={64} />
+                <View>
+                  <ThemedText>{item.name}</ThemedText>
+                  <ThemedText>{item.albumCount} album(s)</ThemedText>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </ThemedView>
+        )}
+        renderSectionHeader={({ section: { title } }) => (
+          <ThemedText type="defaultSemiBold">{title}</ThemedText>
+        )}
+      />
+    </ThemedSafeAreaView>
   );
 }
 
@@ -159,17 +178,5 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: StatusBar.currentHeight,
     marginHorizontal: 16,
-  },
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8,
-  },
-  header: {
-    fontSize: 32,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
   },
 });

@@ -1,5 +1,4 @@
-import { Image } from "expo-image";
-import { Button, ImageStyle, StyleProp, View } from "react-native";
+import { Button, View } from "react-native";
 import { Child } from "subsonic-api";
 
 import ParallaxScrollView from "@/components/parallax-scroll-view";
@@ -9,37 +8,7 @@ import { useAuth } from "@/context/auth-context";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { useEffect } from "react";
 import TrackPlayer from "react-native-track-player";
-
-function CoverArt({
-  track,
-  style,
-}: {
-  track: Child;
-  style?: StyleProp<ImageStyle>;
-}) {
-  const coverArtQuery = useSubsonicQuery({
-    queryKey: ["cover-art", track.id],
-    callApi: (api) => api.getCoverArt({ id: track.id }),
-  });
-
-  if (coverArtQuery.isLoading) {
-    return <ThemedText>Loading...</ThemedText>;
-  }
-  if (coverArtQuery.isError) {
-    return <ThemedText>error: {coverArtQuery.error.message}</ThemedText>;
-  }
-
-  if (!coverArtQuery.data) {
-    return <ThemedText>Couldnt get cover</ThemedText>;
-  }
-
-  return (
-    <Image
-      source={coverArtQuery.data.url}
-      style={[{ width: 256, height: 256 }, style]}
-    />
-  );
-}
+import { CoverArt } from "../../components/CoverArt";
 
 function Player({ track }: { track: Child }) {
   const streamQuery = useSubsonicQuery({
@@ -151,8 +120,8 @@ export default function HomeScreen() {
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={
         randomTrackQuery.data ? (
-          <View style={{}}>
-            <CoverArt track={randomTrackQuery.data} />
+          <View>
+            <CoverArt id={randomTrackQuery.data.id} size={256} />
             <View
               style={{ position: "absolute", right: 0, top: 0, padding: 32 }}
             >
