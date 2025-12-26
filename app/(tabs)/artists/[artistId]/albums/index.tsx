@@ -1,10 +1,10 @@
 import { CoverArt } from "@/components/CoverArt";
+import { ListItem } from "@/components/ListItem";
 import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
-import { ThemedText } from "@/components/themed-text";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
-import { useThemeColor } from "@/hooks/use-theme-color";
+import { formatDuration } from "@/utils/formatDuration";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, TouchableOpacity } from "react-native";
 
 export default function ArtistAlbums() {
   const { artistId } =
@@ -15,15 +15,15 @@ export default function ArtistAlbums() {
     callApi: (api) => api.getArtist({ id: artistId }),
   });
 
-  const iconColor = useThemeColor({}, "icon");
-
   const router = useRouter();
+
+  const data = artistQuery.data?.artist.album ?? [];
 
   return (
     <ThemedSafeAreaView>
       <FlatList
-        data={artistQuery.data?.artist.album ?? []}
-        renderItem={({ item }) => (
+        data={data}
+        renderItem={({ item, index }) => (
           <TouchableOpacity
             onPress={() =>
               router.navigate({
@@ -31,23 +31,15 @@ export default function ArtistAlbums() {
                 params: { artistId: artistId, albumId: item.id },
               })
             }
-            style={{
-              padding: 12,
-              borderBottomWidth: 1,
-              borderColor: iconColor,
-            }}
           >
-            <View style={{ flexDirection: "row" }}>
-              <CoverArt id={item.id} size={64} />
-              <View>
-                <ThemedText>
-                  {item.name} ({item.year})
-                </ThemedText>
-                <ThemedText>
-                  {item.songCount} track(s) | {item.duration} minute(s)
-                </ThemedText>
-              </View>
-            </View>
+            <ListItem
+              leftAddon={<CoverArt id={item.id} size={64} />}
+              title={`${item.name} (${item.year})`}
+              subtitle={`${item.songCount} track(s) | ${formatDuration(
+                item.duration
+              )}`}
+              isLastItem={index === data.length - 1}
+            />
           </TouchableOpacity>
         )}
       ></FlatList>

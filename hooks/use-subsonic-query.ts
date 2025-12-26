@@ -41,7 +41,7 @@ export function useSubsonicQuery<
   options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey> & {
     callApi: (...params: CallApiParams) => TQueryFnData;
   }
-): UseQueryResult<NoInfer<TData>, TError> {
+): UseQueryResult<NoInfer<Awaited<TData>>, TError> {
   const getApi = useGetApi();
   const auth = useAuth();
   const navidromeSession = useQuery(

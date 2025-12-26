@@ -35,6 +35,12 @@ export const subsonicQueries = {
       callApi: (...[_, session]: CallApiParams) => session ?? null,
     });
   },
+  randomSong: function () {
+    return susbsonicQueryOptions({
+      queryKey: ["random-song"],
+      callApi: (...[api]: CallApiParams) => api.getRandomSongs(),
+    });
+  },
   streamUrl: function (trackId: string) {
     return susbsonicQueryOptions({
       queryKey: ["stream-url", trackId],
@@ -54,7 +60,7 @@ export const subsonicQueries = {
     });
   },
 
-  coverArtUrl: function (entityId: string, size: 64 | 256) {
+  coverArtUrl: function (entityId: string, size: 64 | 256 | 512 | "Full") {
     return susbsonicQueryOptions({
       queryKey: ["cover-art", entityId],
       callApi: (...[api, session]: CallApiParams) => {
@@ -63,7 +69,9 @@ export const subsonicQueries = {
         url.searchParams.set("c", "subsonic-api");
         url.searchParams.set("f", "json");
         url.searchParams.set("id", entityId);
-        url.searchParams.set("size", size.toString());
+        if (size !== "Full") {
+          // url.searchParams.set("size", size.toString());
+        }
         url.searchParams.set("u", session.username);
         url.searchParams.set("t", session.subsonicToken);
         url.searchParams.set("s", session.subsonicSalt);

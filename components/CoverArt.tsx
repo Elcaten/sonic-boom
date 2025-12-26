@@ -1,33 +1,68 @@
-import { ThemedText } from "@/components/themed-text";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { subsonicQueries } from "@/utils/subsonicQueries";
 import { Image } from "expo-image";
-import { ImageStyle, StyleProp } from "react-native";
+import { ImageStyle, StyleProp, useColorScheme, View } from "react-native";
 
 export function CoverArt({
   id,
   style,
   size,
+  elevated = false,
 }: {
   /** The ID of a song, album or artist. */
   id: string;
   style?: StyleProp<ImageStyle>;
-  size: 64 | 256;
+  size: 64 | 256 | 512 | "Full";
+  elevated?: boolean;
 }) {
+  const theme = useColorScheme() ?? "light";
   const coverArtQuery = useSubsonicQuery(subsonicQueries.coverArtUrl(id, size));
 
-  if (coverArtQuery.isError) {
-    return <ThemedText>error: {coverArtQuery.error.message}</ThemedText>;
-  }
+  const borderRadius = {
+    64: 6,
+    256: 12,
+    512: 12,
+    Full: 12,
+  }[size];
+
+  const shadowContainer = {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 16,
+  };
+  const shadowContainerDark = {
+    shadowColor: "#282828",
+    shadowOpacity: 0.6,
+    shadowRadius: 20,
+  };
+  const themedShadowContainer =
+    theme === "light"
+      ? shadowContainer
+      : { ...shadowContainer, ...shadowContainerDark };
+  const shadow = {
+    64: themedShadowContainer,
+    256: themedShadowContainer,
+    512: themedShadowContainer,
+    Full: themedShadowContainer,
+  }[size];
+
+  const imgSize = size === "Full" ? "100%" : size;
 
   return (
-    <Image
-      placeholder={{
-        blurhash: getRandomBlurhash(),
-      }}
-      source={coverArtQuery.isLoading ? undefined : coverArtQuery?.data}
-      style={[{ width: size, height: size }, style]}
-    />
+    <View style={elevated ? shadow : undefined}>
+      <Image
+        placeholder={{
+          blurhash: getRandomBlurhash(),
+        }}
+        source={coverArtQuery.isLoading ? undefined : coverArtQuery?.data}
+        style={[{ width: imgSize, height: imgSize, borderRadius }, style]}
+      />
+    </View>
   );
 }
 

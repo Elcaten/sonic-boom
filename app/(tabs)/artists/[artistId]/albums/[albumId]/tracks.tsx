@@ -1,3 +1,4 @@
+import { CoverArt } from "@/components/CoverArt";
 import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
 import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/theme";
@@ -6,8 +7,10 @@ import {
   useSubsonicQuery,
 } from "@/hooks/use-subsonic-query";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { formatDuration } from "@/utils/formatDuration";
 import { subsonicQueries } from "@/utils/subsonicQueries";
 import { Ionicons } from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
@@ -31,7 +34,6 @@ export default function AlbumTracks() {
   });
 
   const iconColor = useThemeColor({}, "icon");
-  const tintColor = useThemeColor({}, "tint");
 
   const [playError, setPlayError] = useState("");
 
@@ -99,6 +101,12 @@ export default function AlbumTracks() {
     }
   };
 
+  const handleSeek = (time: number) => {
+    console.log("seek to ", time, "(total: ", duration, " ), curr: ", position);
+
+    TrackPlayer.seekTo(time);
+  };
+
   return (
     <ThemedSafeAreaView>
       {playError && (
@@ -106,50 +114,21 @@ export default function AlbumTracks() {
           {playError}
         </ThemedText>
       )}
-      <ThemedText>
-        <View
-          style={{
-            flexDirection: "row",
-            height: 32,
-            width: "100%",
-            backgroundColor: iconColor,
-            position: "relative",
-          }}
-        >
-          <View
-            style={{
-              width: (buffered / duration) * 100,
-              height: 32,
-              backgroundColor: "green",
-              left: 0,
-              position: "absolute",
-            }}
-          ></View>
-          <View
-            style={{
-              width: (position / duration) * 100,
-              height: 32,
-              backgroundColor: tintColor,
-              left: 0,
-              position: "absolute",
-            }}
-          ></View>
-          <View
-            style={{
-              position: "absolute",
-              inset: 0,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <ThemedText type="defaultSemiBold">
-              {formatDuration(position)} / {formatDuration(duration)}
-            </ThemedText>
-          </View>
-        </View>
-      </ThemedText>
+
+      <Slider
+        minimumValue={0}
+        maximumValue={duration}
+        value={position}
+        onSlidingComplete={(time) => TrackPlayer.seekTo(time)}
+        tapToSeek={true}
+      />
       <FlatList
         data={albumQuery.data?.album.song ?? []}
+        ListHeaderComponent={
+          <View style={{ padding: 16, alignItems: "center" }}>
+            <CoverArt id={albumId} size={256} elevated />
+          </View>
+        }
         renderItem={({ item }) => {
           const isActive = item.id === activeTrack?.id;
           const activeColor = Colors.light.tint;
@@ -195,9 +174,3 @@ export default function AlbumTracks() {
     </ThemedSafeAreaView>
   );
 }
-
-const formatDuration = (s: number) => {
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return `${m}:${sec.toString().padStart(2, "0")}`;
-};

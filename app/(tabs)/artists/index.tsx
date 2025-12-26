@@ -3,16 +3,15 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
-  View,
 } from "react-native";
 
 import { CoverArt } from "@/components/CoverArt";
 import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { useRouter } from "expo-router";
 import React from "react";
+import { ListItem } from "../../../components/ListItem";
+import { SectinHeader } from "../../../components/SectinHeader";
 
 export default function ArtistsScreen() {
   const artistsQuery = useSubsonicQuery({
@@ -24,6 +23,7 @@ export default function ArtistsScreen() {
   return (
     <ThemedSafeAreaView edges={["top"]}>
       <SectionList
+        stickySectionHeadersEnabled={false}
         sections={
           artistsQuery.data?.artists.index?.map((section) => ({
             title: section.name,
@@ -31,8 +31,9 @@ export default function ArtistsScreen() {
           })) ?? []
         }
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <ThemedView style={{ borderBottomColor: "blue", borderWidth: 1 }}>
+        renderItem={({ item, index, section }) => {
+          const isLastItem = index === section.data.length - 1;
+          return (
             <TouchableOpacity
               onPress={() =>
                 router.navigate({
@@ -41,20 +42,17 @@ export default function ArtistsScreen() {
                 })
               }
             >
-              <View style={{ flexDirection: "row", gap: 12 }}>
-                <CoverArt id={item.id} size={64} />
-                <View>
-                  <ThemedText>{item.name}</ThemedText>
-                  <ThemedText>{item.albumCount} album(s)</ThemedText>
-                </View>
-              </View>
+              <ListItem
+                leftAddon={<CoverArt id={item.id} size={64} />}
+                title={item.name}
+                subtitle={`${item.albumCount} album(s)`}
+                isLastItem={isLastItem}
+              />
             </TouchableOpacity>
-          </ThemedView>
-        )}
+          );
+        }}
         renderSectionHeader={({ section: { title } }) => (
-          <ThemedView>
-            <ThemedText type="defaultSemiBold">{title}</ThemedText>
-          </ThemedView>
+          <SectinHeader>{title}</SectinHeader>
         )}
       />
     </ThemedSafeAreaView>

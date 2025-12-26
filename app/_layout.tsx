@@ -47,6 +47,12 @@ export default function RootLayout() {
     }
   }, [playerReady, authReady]);
 
+  useEffect(() => {
+    return () => {
+      TrackPlayer.reset();
+    };
+  }, []);
+
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

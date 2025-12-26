@@ -1,26 +1,86 @@
-import { Button, View } from "react-native";
-
+import { CoverArt } from "@/components/CoverArt";
 import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
 import { ThemedText } from "@/components/themed-text";
-import { useAuth } from "@/context/auth-context";
-import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
+import {
+  useEnsureSubsonicQuery,
+  useSubsonicQuery,
+} from "@/hooks/use-subsonic-query";
 import { subsonicQueries } from "@/utils/subsonicQueries";
+import Slider from "@react-native-community/slider";
+import { useEffect } from "react";
+import { Button, View } from "react-native";
+import TrackPlayer, { State, useProgress } from "react-native-track-player";
 
 export default function HomeScreen() {
-  const auth = useAuth();
-  const curentSessionQuery = useSubsonicQuery(
-    subsonicQueries.currentNavidromeSession()
-  );
+  const ensureQuery = useEnsureSubsonicQuery();
+  const randomSongQuery = useSubsonicQuery(subsonicQueries.randomSong());
+  const randomSong = randomSongQuery.data?.randomSongs.song?.[0];
+
+  useEffect(() => {
+    const effect = async () => {
+      if (!randomSong?.id) {
+        return;
+      }
+
+      const [streamUrl, coverArtUrl, song] = await Promise.all([
+        ensureQuery(subsonicQueries.streamUrl(randomSong.id)),
+        ensureQuery(subsonicQueries.coverArtUrl(randomSong.id, 64)),
+        ensureQuery(subsonicQueries.song(randomSong.id)),
+      ]);
+
+      await TrackPlayer.reset();
+      await TrackPlayer.add([
+        {
+          id: randomSong.id,
+          url: streamUrl,
+          title: song.song.title,
+          artist: song.song.artist,
+          artwork: coverArtUrl,
+        },
+      ]);
+      TrackPlayer.play();
+    };
+
+    effect();
+  }, [ensureQuery, randomSong?.id]);
+
+  const { position, buffered, duration } = useProgress();
 
   return (
     <ThemedSafeAreaView>
-      <View style={{ height: 96 }} />
-      {curentSessionQuery.data && (
-        <ThemedText>
-          {JSON.stringify(curentSessionQuery.data, null, 2)}
-        </ThemedText>
-      )}
-      <Button title="Log out" onPress={() => auth.clearAll()} />
+      <View style={{ padding: 32, alignItems: "center", gap: 16 }}>
+        {<CoverArt id={randomSong?.id!} size={256} elevated />}
+        <View style={{ flexDirection: "row" }}>
+          <ThemedText>
+            {randomSong?.artist} - {randomSong?.title}
+          </ThemedText>
+        </View>
+      </View>
+      <View style={{ paddingHorizontal: 64 }}>
+        <Slider
+          minimumValue={0}
+          maximumValue={duration}
+          value={position}
+          onSlidingComplete={(time) => TrackPlayer.seekTo(time)}
+          tapToSeek={true}
+        />
+      </View>
+      <View style={{ paddingHorizontal: 64 }}>
+        <Button
+          title="play/pause"
+          onPress={async () => {
+            if ((await TrackPlayer.getPlaybackState()).state === State.Paused) {
+              TrackPlayer.play();
+            } else {
+              TrackPlayer.pause();
+            }
+          }}
+        />
+        <Button
+          title="random track"
+          onPress={() => randomSongQuery.refetch()}
+        />
+      </View>
     </ThemedSafeAreaView>
   );
 }
