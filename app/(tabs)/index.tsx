@@ -9,7 +9,7 @@ import { subsonicQueries } from "@/utils/subsonicQueries";
 import Slider from "@react-native-community/slider";
 import { useEffect } from "react";
 import { Button, View } from "react-native";
-import TrackPlayer, { State, useProgress } from "react-native-track-player";
+import TrackPlayer, { useProgress } from "react-native-track-player";
 
 export default function HomeScreen() {
   const ensureQuery = useEnsureSubsonicQuery();
@@ -66,16 +66,6 @@ export default function HomeScreen() {
         />
       </View>
       <View style={{ paddingHorizontal: 64 }}>
-        <Button
-          title="play/pause"
-          onPress={async () => {
-            if ((await TrackPlayer.getPlaybackState()).state === State.Paused) {
-              TrackPlayer.play();
-            } else {
-              TrackPlayer.pause();
-            }
-          }}
-        />
         <Button
           title="random track"
           onPress={() => randomSongQuery.refetch()}

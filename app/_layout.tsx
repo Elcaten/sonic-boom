@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { AuthProvider, useAuth } from "@/context/auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useSetupTrackPlayer } from "@/hooks/use-setup-track-player";
@@ -87,6 +88,7 @@ function Content() {
         </Stack.Protected>
       </Stack>
       <StatusBar style="auto" />
+      <FloatingPlayer />
     </>
   );
 }
