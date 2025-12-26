@@ -6,9 +6,18 @@ export default function StackLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
         name="[artistId]/albums/index"
-        options={{ headerShown: false }}
+        options={{
+          headerBackButtonDisplayMode: "minimal",
+          headerTitle: "Albums",
+        }}
       />
-      <Stack.Screen name="[artistId]/albums/[albumId]/tracks" />
+      <Stack.Screen
+        name="[artistId]/albums/[albumId]/tracks"
+        options={{
+          headerBackButtonDisplayMode: "minimal",
+          headerTitle: "Artist",
+        }}
+      />
     </Stack>
   );
 }

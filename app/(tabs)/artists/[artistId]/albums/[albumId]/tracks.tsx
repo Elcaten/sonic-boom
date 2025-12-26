@@ -1,5 +1,5 @@
+import { SongProgress } from "@/components/CircularProgress";
 import { CoverArt } from "@/components/CoverArt";
-import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
 import { ThemedText } from "@/components/themed-text";
 import { Colors } from "@/constants/theme";
 import {
@@ -7,19 +7,16 @@ import {
   useSubsonicQuery,
 } from "@/hooks/use-subsonic-query";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { formatDuration } from "@/utils/formatDuration";
 import { subsonicQueries } from "@/utils/subsonicQueries";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import Slider from "@react-native-community/slider";
-import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import TrackPlayer, {
   Event,
-  State,
   Track,
-  usePlaybackState,
-  usePlayWhenReady,
+  useIsPlaying,
   useProgress,
   useTrackPlayerEvents,
 } from "react-native-track-player";
@@ -34,23 +31,11 @@ export default function AlbumTracks() {
   });
 
   const iconColor = useThemeColor({}, "icon");
+  const textPrimary = useThemeColor({}, "textPrimary");
+  const textSecondary = useThemeColor({}, "textSecondary");
+  const separator = useThemeColor({}, "separator");
 
-  const [playError, setPlayError] = useState("");
-
-  const playWhenReady = usePlayWhenReady();
-  const playbackState = usePlaybackState();
-  const playButtonState =
-    playWhenReady &&
-    (playbackState.state === State.Loading ||
-      playbackState.state === State.Buffering)
-      ? "loading"
-      : playWhenReady &&
-        !(
-          playbackState.state === State.Error ||
-          playbackState.state === State.Buffering
-        )
-      ? "playing"
-      : "paused";
+  const { playing, bufferingDuringPlay } = useIsPlaying();
   const [activeTrack, setActiveTrack] = useState<Track | undefined>(undefined);
   useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], (data) => {
     setActiveTrack(data.track);
@@ -59,69 +44,59 @@ export default function AlbumTracks() {
 
   const ensureQuery = useEnsureSubsonicQuery();
   const handlePlayPress = async (trackId: string) => {
-    try {
-      if (trackId === activeTrack?.id) {
-        if (playButtonState === "playing") {
-          TrackPlayer.pause();
-        } else if (playButtonState === "paused") {
-          TrackPlayer.play();
-        }
+    //TODO: handle errors
+    if (trackId === activeTrack?.id) {
+      if (bufferingDuringPlay) {
         return;
       }
 
-      setPlayError("");
-      const [streamUrl, coverArtUrl, song] = await Promise.all([
-        ensureQuery(subsonicQueries.streamUrl(trackId)),
-        ensureQuery(subsonicQueries.coverArtUrl(trackId, 64)),
-        ensureQuery(subsonicQueries.song(trackId)),
-      ]);
-
-      await TrackPlayer.reset();
-      await TrackPlayer.add([
-        {
-          id: trackId,
-          url: streamUrl,
-          title: song.song.title,
-          artist: song.song.artist,
-          artwork: coverArtUrl,
-        },
-      ]);
-      TrackPlayer.play();
-    } catch (e) {
-      if (
-        e &&
-        typeof e === "object" &&
-        "message" in e &&
-        typeof e.message === "string"
-      ) {
-        setPlayError(e.message);
+      if (playing) {
+        TrackPlayer.pause();
       } else {
-        setPlayError(JSON.stringify(e, null, 2));
+        TrackPlayer.play();
       }
+      return;
     }
+
+    const [streamUrl, coverArtUrl, song] = await Promise.all([
+      ensureQuery(subsonicQueries.streamUrl(trackId)),
+      ensureQuery(subsonicQueries.coverArtUrl(trackId, 64)),
+      ensureQuery(subsonicQueries.song(trackId)),
+    ]);
+
+    await TrackPlayer.reset();
+    await TrackPlayer.add([
+      {
+        id: trackId,
+        url: streamUrl,
+        title: song.song.title,
+        artist: song.song.artist,
+        artwork: coverArtUrl,
+      },
+    ]);
+    TrackPlayer.play();
   };
 
-  const handleSeek = (time: number) => {
-    console.log("seek to ", time, "(total: ", duration, " ), curr: ", position);
-
-    TrackPlayer.seekTo(time);
-  };
+  const navigation = useNavigation();
+  useEffect(() => {
+    if (albumQuery.data?.album.artist) {
+      navigation.setOptions({
+        headerTitle: albumQuery.data?.album.artist,
+      });
+    }
+  }, [albumQuery.data?.album.artist, navigation]);
 
   return (
-    <ThemedSafeAreaView>
-      {playError && (
-        <ThemedText type="title" style={{ color: "red" }}>
-          {playError}
-        </ThemedText>
-      )}
-
-      <Slider
-        minimumValue={0}
-        maximumValue={duration}
-        value={position}
-        onSlidingComplete={(time) => TrackPlayer.seekTo(time)}
-        tapToSeek={true}
-      />
+    <View>
+      <View style={{ marginHorizontal: 16 }}>
+        <Slider
+          minimumValue={0}
+          maximumValue={duration}
+          value={position}
+          onSlidingComplete={(time) => TrackPlayer.seekTo(time)}
+          tapToSeek={true}
+        />
+      </View>
       <FlatList
         data={albumQuery.data?.album.song ?? []}
         ListHeaderComponent={
@@ -134,43 +109,58 @@ export default function AlbumTracks() {
           const activeColor = Colors.light.tint;
           return (
             <TouchableOpacity
-              disabled={playButtonState === "loading"}
+              disabled={bufferingDuringPlay}
               onPress={() => handlePlayPress(item.id)}
               style={{
                 padding: 12,
-                borderBottomWidth: 1,
-                borderColor: isActive ? activeColor : iconColor,
+                paddingHorizontal: 16,
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderColor: separator,
               }}
             >
               <View style={{ flexDirection: "row", gap: 12 }}>
-                {playButtonState === "loading" && (
-                  <Ionicons name="play" size={24} color={iconColor} />
-                )}
-                {playButtonState === "paused" && (
-                  <Ionicons
-                    name="play"
-                    size={24}
-                    color={isActive ? activeColor : iconColor}
-                  />
-                )}
-                {playButtonState === "playing" &&
-                  (isActive ? (
-                    <Ionicons name="pause" size={24} color={activeColor} />
-                  ) : (
-                    <Ionicons name="play" size={24} color={iconColor} />
-                  ))}
-
-                <ThemedText
-                  style={{ color: isActive ? activeColor : iconColor }}
+                <View
+                  style={{
+                    width: 24,
+                    height: 24,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
-                  {item.title} |{" "}
-                  {item.duration && formatDuration(item.duration)}
-                </ThemedText>
+                  {isActive && (
+                    <View style={{ position: "relative" }}>
+                      <Ionicons
+                        name="play-sharp"
+                        size={12}
+                        color={activeColor}
+                        style={{
+                          position: "absolute",
+                          top: 6,
+                          left: 7,
+                          color: "red",
+                        }}
+                      />
+                      <SongProgress progress={position / duration} size={24} />
+                    </View>
+                  )}
+                  {!isActive && (
+                    <ThemedText style={{ color: textSecondary }}>
+                      {item.track}
+                    </ThemedText>
+                  )}
+                </View>
+                <ThemedText>{item.title}</ThemedText>
               </View>
             </TouchableOpacity>
           );
         }}
-      ></FlatList>
-    </ThemedSafeAreaView>
+        ListFooterComponent={ListFooter}
+      />
+    </View>
   );
+}
+
+function ListFooter() {
+  //TODO: correctly account for tabs + floating player
+  return <View style={{ height: 200 }}></View>;
 }
