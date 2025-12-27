@@ -6,6 +6,7 @@ import {
   useSubsonicQuery,
 } from "@/hooks/use-subsonic-query";
 import { subsonicQueries } from "@/utils/subsonicQueries";
+import { subsonicTrackPlayer } from "@/utils/subsonicTrackPlayer";
 import Slider from "@react-native-community/slider";
 import { useEffect } from "react";
 import { Button, View } from "react-native";
@@ -29,15 +30,16 @@ export default function HomeScreen() {
       ]);
 
       await TrackPlayer.reset();
-      await TrackPlayer.add([
-        {
-          id: randomSong.id,
-          url: streamUrl,
-          title: song.song.title,
-          artist: song.song.artist,
-          artwork: coverArtUrl,
-        },
-      ]);
+      await subsonicTrackPlayer.add({
+        id: randomSong.id,
+        url: streamUrl,
+        title: song.song.title,
+        artist: song.song.artist,
+        artistId: song.song.artistId,
+        album: song.song.album,
+        albumId: song.song.albumId,
+        artwork: coverArtUrl,
+      });
       TrackPlayer.play();
     };
 

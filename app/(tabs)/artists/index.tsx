@@ -6,7 +6,6 @@ import {
 } from "react-native";
 
 import { CoverArt } from "@/components/CoverArt";
-import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { useRouter } from "expo-router";
@@ -56,7 +55,6 @@ export default function ArtistsScreen() {
           <SectinHeader>{title}</SectinHeader>
         )}
       />
-      <FloatingPlayer />
     </ThemedSafeAreaView>
   );
 }

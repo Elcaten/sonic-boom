@@ -8,17 +8,16 @@ import {
 } from "@/hooks/use-subsonic-query";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { subsonicQueries } from "@/utils/subsonicQueries";
+import { subsonicTrackPlayer } from "@/utils/subsonicTrackPlayer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Slider from "@react-native-community/slider";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import TrackPlayer, {
-  Event,
-  Track,
+  useActiveTrack,
   useIsPlaying,
   useProgress,
-  useTrackPlayerEvents,
 } from "react-native-track-player";
 
 export default function AlbumTracks() {
@@ -36,11 +35,8 @@ export default function AlbumTracks() {
   const separator = useThemeColor({}, "separator");
 
   const { playing, bufferingDuringPlay } = useIsPlaying();
-  const [activeTrack, setActiveTrack] = useState<Track | undefined>(undefined);
-  useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], (data) => {
-    setActiveTrack(data.track);
-  });
   const { position, buffered, duration } = useProgress();
+  const activeTrack = useActiveTrack();
 
   const ensureQuery = useEnsureSubsonicQuery();
   const handlePlayPress = async (trackId: string) => {
@@ -65,15 +61,16 @@ export default function AlbumTracks() {
     ]);
 
     await TrackPlayer.reset();
-    await TrackPlayer.add([
-      {
-        id: trackId,
-        url: streamUrl,
-        title: song.song.title,
-        artist: song.song.artist,
-        artwork: coverArtUrl,
-      },
-    ]);
+    await subsonicTrackPlayer.add({
+      id: trackId,
+      url: streamUrl,
+      title: song.song.title,
+      artist: song.song.artist,
+      artistId: song.song.artistId,
+      album: song.song.album,
+      albumId: song.song.albumId,
+      artwork: coverArtUrl,
+    });
     TrackPlayer.play();
   };
 
@@ -130,7 +127,7 @@ export default function AlbumTracks() {
                   {isActive && (
                     <View style={{ position: "relative" }}>
                       <Ionicons
-                        name="play-sharp"
+                        name={playing ? "pause-sharp" : "play-sharp"}
                         size={12}
                         color={activeColor}
                         style={{
