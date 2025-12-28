@@ -1,5 +1,6 @@
 import { useAuth } from "@/context/auth-context";
-import { Button, Form, Host, HStack, Section } from "@expo/ui/swift-ui";
+import { Button, Form, Host, Section } from "@expo/ui/swift-ui";
+import { padding } from "@expo/ui/swift-ui/modifiers";
 
 export default function SettingsView() {
   const auth = useAuth();
@@ -11,14 +12,13 @@ export default function SettingsView() {
     <Host style={{ flex: 1 }}>
       <Form>
         <Section>
-          <HStack spacing={16}>
-            <Button
-              systemImage="rectangle.portrait.and.arrow.right"
-              onPress={onSignOutPress}
-            >
-              Sign out
-            </Button>
-          </HStack>
+          <Button
+            systemImage="rectangle.portrait.and.arrow.right"
+            onPress={onSignOutPress}
+            modifiers={[padding({ horizontal: 8 })]}
+          >
+            Sign out
+          </Button>
         </Section>
       </Form>
     </Host>
