@@ -3,6 +3,7 @@ import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { formatDuration } from "@/utils/formatDuration";
 import {
   Button,
+  ContentUnavailableView,
   Host,
   HStack,
   Image,
@@ -12,18 +13,52 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame } from "@expo/ui/swift-ui/modifiers";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
 
 export default function ArtistAlbums() {
   const { artistId } =
     useLocalSearchParams<"/(tabs)/artists/[artistId]/albums">();
+  const [search, setSearch] = useState("");
+
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        autoCapitalize: false,
+        placeholder: "Search",
+        onChangeText(e) {
+          console.log(e.nativeEvent);
+          setSearch(e.nativeEvent.text);
+        },
+        onCancelButtonPress: () => {
+          setSearch("");
+        },
+      },
+    });
+  }, [navigation]);
 
   const artistQuery = useSubsonicQuery({
     queryKey: ["artist", artistId],
     callApi: (api) => api.getArtist({ id: artistId }),
   });
 
-  const data = artistQuery.data?.artist.album ?? [];
+  const data = (artistQuery.data?.artist.album ?? []).filter((album) => {
+    const sanitizedSearch = search.toLocaleLowerCase();
+    return album.name.toLocaleLowerCase().includes(sanitizedSearch);
+  });
+
+  if (data.length === 0) {
+    return (
+      <Host style={{ flex: 1 }}>
+        <ContentUnavailableView
+          title={`No results for ${search}`}
+          description="Try a new search"
+          systemImage="magnifyingglass"
+        ></ContentUnavailableView>
+      </Host>
+    );
+  }
 
   return (
     <Host style={{ flex: 1 }}>
