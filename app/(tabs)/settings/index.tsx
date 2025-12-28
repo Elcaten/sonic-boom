@@ -25,7 +25,6 @@ export default function SettingsView() {
         </Section>
         <Section>
           <Button
-            systemImage="rectangle.portrait.and.arrow.right"
             onPress={onSignOutPress}
             modifiers={[padding({ horizontal: 8 })]}
           >
