@@ -1,13 +1,21 @@
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { SubsonicTrack } from "@/utils/subsonicTrackPlayer";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  Button,
+  Host,
+  HStack,
+  Image,
+  Spacer,
+  Text,
+  VStack,
+} from "@expo/ui/swift-ui";
+import { frame, padding } from "@expo/ui/swift-ui/modifiers";
+import { useWindowDimensions, View, ViewStyle } from "react-native";
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
 } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
-import { ThemedText } from "./themed-text";
 import { ThemedView } from "./themed-view";
 
 export function FloatingPlayer({
@@ -34,6 +42,8 @@ function Content({
   track: SubsonicTrack;
   onPress?: (_: { track: SubsonicTrack }) => void;
 }) {
+  const { width, height, scale, fontScale } = useWindowDimensions();
+
   const textSecondary = useThemeColor({}, "textSecondary");
   const textPrimary = useThemeColor({}, "textPrimary");
   const icon = useThemeColor({}, "icon");
@@ -52,72 +62,77 @@ function Content({
     }
   };
 
+  const MARGIN = 16;
+
   return (
     <View
       style={{
         position: "absolute",
-        bottom: 100,
+        bottom: MARGIN,
         width: "100%",
       }}
     >
       <ThemedView
-        style={{
-          borderRadius: 12,
-          marginHorizontal: 12,
-          paddingHorizontal: 8,
-          paddingVertical: 8,
+        style={[
+          {
+            borderRadius: 12,
+            marginHorizontal: MARGIN,
+            paddingHorizontal: 8,
+            paddingVertical: 8,
 
-          // iOS Shadow Properties
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: -4, // Negative value moves shadow upwards
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowOpacity: 0.15,
+            shadowRadius: 15,
           },
-          shadowOpacity: 0.16, // Very subtle for iOS
-          shadowRadius: 10, // Soft blur
-
-          // The "Hairline" Detail
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: "rgba(0, 0, 0, 0.1)",
-        }}
+          width > height
+            ? {
+                marginHorizontal: "auto",
+                minWidth: height,
+              }
+            : {},
+        ]}
       >
-        <TouchableOpacity
-          onPress={() => onPress?.({ track })}
-          style={{ flexDirection: "row", gap: 12, alignItems: "center" }}
-        >
-          <CoverArt id={track.id} size={48} />
-          <View style={{ marginRight: "auto", flexShrink: 1 }}>
-            <ThemedText
-              style={{ color: textPrimary, textOverflow: "ellipsis" }}
-              numberOfLines={1}
-              type="defaultSemiBold"
+        <Host style={{ flex: 1 }}>
+          <HStack spacing={12} onPress={() => onPress?.({ track })}>
+            <VStack modifiers={[frame({ width: 48, height: 48 })]}>
+              <CoverArt id={track.id} size={48} />
+            </VStack>
+            <VStack alignment="leading">
+              {track.title && (
+                <Text size={15} weight="medium">
+                  {track.title}
+                </Text>
+              )}
+              {track.artist && (
+                <Text color="secondary" size={15}>
+                  {track.artist}
+                </Text>
+              )}
+            </VStack>
+            <Spacer />
+            <Button
+              onPress={handlePlayPausePress}
+              disabled={bufferingDuringPlay}
+              modifiers={[padding({ trailing: 8 })]}
             >
-              {track.title}
-            </ThemedText>
-            <ThemedText style={{ color: textSecondary }}>
-              {track.artist}
-            </ThemedText>
-          </View>
-          <TouchableOpacity
-            style={{ marginRight: 8 }}
-            onPress={handlePlayPausePress}
-            disabled={bufferingDuringPlay}
-          >
-            {bufferingDuringPlay && (
-              <Ionicons
-                name="ellipsis-horizontal-sharp"
+              <Image
+                systemName={
+                  bufferingDuringPlay
+                    ? "progress.indicator"
+                    : playing
+                    ? "pause.fill"
+                    : "play.fill"
+                }
                 size={24}
-                color={icon}
+                color="primary"
               />
-            )}
-            {!bufferingDuringPlay && !playing && (
-              <Ionicons name="play" size={24} color={icon} />
-            )}
-            {!bufferingDuringPlay && playing && (
-              <Ionicons name="pause" size={24} color={icon} />
-            )}
-          </TouchableOpacity>
-        </TouchableOpacity>
+            </Button>
+          </HStack>
+        </Host>
       </ThemedView>
     </View>
   );
