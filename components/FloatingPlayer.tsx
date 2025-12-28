@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
-import { useWindowDimensions, View, ViewStyle } from "react-native";
+import { useWindowDimensions, ViewStyle } from "react-native";
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
@@ -65,75 +65,68 @@ function Content({
   const MARGIN = 16;
 
   return (
-    <View
-      style={{
-        position: "absolute",
-        bottom: MARGIN,
-        width: "100%",
-      }}
-    >
-      <ThemedView
-        style={[
-          {
-            borderRadius: 12,
-            marginHorizontal: MARGIN,
-            paddingHorizontal: 8,
-            paddingVertical: 8,
+    <ThemedView
+      style={[
+        {
+          borderRadius: 12,
+          marginHorizontal: MARGIN,
+          marginBottom: MARGIN,
+          paddingHorizontal: 8,
+          paddingVertical: 8,
 
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 0,
-            },
-            shadowOpacity: 0.15,
-            shadowRadius: 15,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 0,
           },
-          width > height
-            ? {
-                marginHorizontal: "auto",
-                minWidth: height,
+          shadowOpacity: 0.15,
+          shadowRadius: 15,
+        },
+        width > height
+          ? {
+              marginHorizontal: "auto",
+              minWidth: height,
+            }
+          : {},
+      ]}
+    >
+      <Host useViewportSizeMeasurement>
+        <HStack spacing={12} onPress={() => onPress?.({ track })}>
+          <VStack modifiers={[frame({ width: 48, height: 48 })]}>
+            <CoverArt id={track.id} size={48} />
+          </VStack>
+          <VStack alignment="leading">
+            {track.title && (
+              <Text size={15} weight="medium">
+                {track.title}
+              </Text>
+            )}
+            {track.artist && (
+              <Text color="secondary" size={15}>
+                {track.artist}
+              </Text>
+            )}
+          </VStack>
+          <Spacer />
+          <Button
+            onPress={handlePlayPausePress}
+            disabled={bufferingDuringPlay}
+            modifiers={[padding({ trailing: 8 })]}
+          >
+            <Image
+              systemName={
+                bufferingDuringPlay
+                  ? "progress.indicator"
+                  : playing
+                  ? "pause.fill"
+                  : "play.fill"
               }
-            : {},
-        ]}
-      >
-        <Host style={{ flex: 1 }}>
-          <HStack spacing={12} onPress={() => onPress?.({ track })}>
-            <VStack modifiers={[frame({ width: 48, height: 48 })]}>
-              <CoverArt id={track.id} size={48} />
-            </VStack>
-            <VStack alignment="leading">
-              {track.title && (
-                <Text size={15} weight="medium">
-                  {track.title}
-                </Text>
-              )}
-              {track.artist && (
-                <Text color="secondary" size={15}>
-                  {track.artist}
-                </Text>
-              )}
-            </VStack>
-            <Spacer />
-            <Button
-              onPress={handlePlayPausePress}
-              disabled={bufferingDuringPlay}
-              modifiers={[padding({ trailing: 8 })]}
-            >
-              <Image
-                systemName={
-                  bufferingDuringPlay
-                    ? "progress.indicator"
-                    : playing
-                    ? "pause.fill"
-                    : "play.fill"
-                }
-                size={24}
-                color="primary"
-              />
-            </Button>
-          </HStack>
-        </Host>
-      </ThemedView>
-    </View>
+              size={24}
+              color="primary"
+            />
+          </Button>
+        </HStack>
+      </Host>
+    </ThemedView>
   );
 }

@@ -1,17 +1,51 @@
-import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
+import { FloatingPlayer } from "@/components/FloatingPlayer";
+import { SubsonicTrack } from "@/utils/subsonicTrackPlayer";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { BottomTabBar } from "@react-navigation/bottom-tabs";
+import { Tabs, useRouter } from "expo-router";
 import React from "react";
+import { View } from "react-native";
 
 export default function TabLayout() {
+  const router = useRouter();
+  const onFloatingPlayerPress = ({ track }: { track: SubsonicTrack }) => {
+    if (!track.albumId || !track.artistId) {
+      return;
+    }
+
+    router.navigate({
+      pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
+      params: { albumId: track.albumId, artistId: track.artistId },
+    });
+  };
+
   return (
-    <NativeTabs>
-      <NativeTabs.Trigger name="artists">
-        <Label>Artists</Label>
-        <Icon sf="person.2" />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="settings">
-        <Label>Settings</Label>
-        <Icon sf="gear" />
-      </NativeTabs.Trigger>
-    </NativeTabs>
+    <Tabs
+      tabBar={(props) => (
+        <View>
+          <FloatingPlayer onPress={onFloatingPlayerPress} />
+          <BottomTabBar {...props} />
+        </View>
+      )}
+    >
+      <Tabs.Screen
+        name="artists"
+        options={{
+          title: "Artists",
+          tabBarIcon: ({ color }) => (
+            <Ionicons size={28} name="people" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color }) => (
+            <Ionicons size={28} name="settings" color={color} />
+          ),
+        }}
+      />
+    </Tabs>
   );
 }

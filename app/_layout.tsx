@@ -10,12 +10,10 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { AuthProvider, useAuth } from "@/context/auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useSetupTrackPlayer } from "@/hooks/use-setup-track-player";
 import { playbackService } from "@/utils/playbackService";
-import { SubsonicTrack } from "@/utils/subsonicTrackPlayer";
 import { setAudioModeAsync } from "expo-audio";
 import { useEffect, useState } from "react";
 import TrackPlayer from "react-native-track-player";
@@ -75,17 +73,6 @@ function Content() {
   );
   const router = useRouter();
 
-  const onFloatingPlayerPress = ({ track }: { track: SubsonicTrack }) => {
-    if (!track.albumId || !track.artistId) {
-      return;
-    }
-
-    router.navigate({
-      pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
-      params: { albumId: track.albumId, artistId: track.artistId },
-    });
-  };
-
   return (
     <>
       <Stack>
@@ -101,7 +88,6 @@ function Content() {
         </Stack.Protected>
       </Stack>
       <StatusBar style="auto" />
-      <FloatingPlayer onPress={onFloatingPlayerPress} />
     </>
   );
 }
