@@ -8,7 +8,10 @@ import {
 } from "@/hooks/use-subsonic-query";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { subsonicQueries } from "@/utils/subsonicQueries";
-import { subsonicTrackPlayer } from "@/utils/subsonicTrackPlayer";
+import {
+  SubsonicTrack,
+  subsonicTrackPlayer,
+} from "@/utils/subsonicTrackPlayer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Slider from "@react-native-community/slider";
 import { useLocalSearchParams, useNavigation } from "expo-router";
@@ -36,7 +39,8 @@ export default function AlbumTracks() {
 
   const { playing, bufferingDuringPlay } = useIsPlaying();
   const { position, buffered, duration } = useProgress();
-  const activeTrack = useActiveTrack();
+  //TODO: fix typing
+  const activeTrack = useActiveTrack() as SubsonicTrack;
 
   const ensureQuery = useEnsureSubsonicQuery();
   const handlePlayPress = async (trackId: string) => {

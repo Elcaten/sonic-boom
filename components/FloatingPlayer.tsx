@@ -1,8 +1,8 @@
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { SubsonicTrack } from "@/utils/subsonicTrackPlayer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import TrackPlayer, {
-  Track,
   useActiveTrack,
   useIsPlaying,
 } from "react-native-track-player";
@@ -15,9 +15,10 @@ export function FloatingPlayer({
   onPress,
 }: {
   style?: ViewStyle;
-  onPress?: (_: { track: Track }) => void;
+  onPress?: (_: { track: SubsonicTrack }) => void;
 }) {
-  const activeTrack = useActiveTrack();
+  //TODO: fix typing
+  const activeTrack = useActiveTrack() as SubsonicTrack;
 
   if (!activeTrack) {
     return null;
@@ -30,8 +31,8 @@ function Content({
   track,
   onPress,
 }: {
-  track: Track;
-  onPress?: (_: { track: Track }) => void;
+  track: SubsonicTrack;
+  onPress?: (_: { track: SubsonicTrack }) => void;
 }) {
   const textSecondary = useThemeColor({}, "textSecondary");
   const textPrimary = useThemeColor({}, "textPrimary");
