@@ -10,7 +10,8 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
-import { useWindowDimensions, View, ViewStyle } from "react-native";
+import { useWindowDimensions, ViewStyle } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
@@ -65,10 +66,10 @@ function Content({
   const MARGIN = 16;
 
   return (
-    <View
+    <SafeAreaView
       style={{
         position: "absolute",
-        bottom: MARGIN,
+        bottom: MARGIN + 48,
         width: "100%",
       }}
     >
@@ -124,8 +125,8 @@ function Content({
                   bufferingDuringPlay
                     ? "progress.indicator"
                     : playing
-                    ? "pause.fill"
-                    : "play.fill"
+                      ? "pause.fill"
+                      : "play.fill"
                 }
                 size={24}
                 color="primary"
@@ -134,6 +135,6 @@ function Content({
           </HStack>
         </Host>
       </ThemedView>
-    </View>
+    </SafeAreaView>
   );
 }
