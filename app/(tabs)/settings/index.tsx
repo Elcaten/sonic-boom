@@ -4,6 +4,9 @@ import { padding } from "@expo/ui/swift-ui/modifiers";
 
 export default function SettingsView() {
   const auth = useAuth();
+  const onSupportPress = () => {
+    alert("Thank you ♥️");
+  };
   const onSignOutPress = () => {
     auth.clearAll();
   };
@@ -11,6 +14,15 @@ export default function SettingsView() {
   return (
     <Host style={{ flex: 1 }}>
       <Form>
+        <Section>
+          <Button
+            systemImage="dollarsign.square"
+            onPress={onSupportPress}
+            modifiers={[padding({ horizontal: 8 })]}
+          >
+            Support
+          </Button>
+        </Section>
         <Section>
           <Button
             systemImage="rectangle.portrait.and.arrow.right"
