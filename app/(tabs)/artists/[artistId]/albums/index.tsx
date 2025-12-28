@@ -1,10 +1,18 @@
 import { CoverArt } from "@/components/CoverArt";
-import { ListItem } from "@/components/ListItem";
-import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { formatDuration } from "@/utils/formatDuration";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, TouchableOpacity } from "react-native";
+import {
+  Button,
+  Host,
+  HStack,
+  Image,
+  List,
+  Spacer,
+  Text,
+  VStack,
+} from "@expo/ui/swift-ui";
+import { frame } from "@expo/ui/swift-ui/modifiers";
+import { Link, useLocalSearchParams } from "expo-router";
 
 export default function ArtistAlbums() {
   const { artistId } =
@@ -15,34 +23,50 @@ export default function ArtistAlbums() {
     callApi: (api) => api.getArtist({ id: artistId }),
   });
 
-  const router = useRouter();
-
   const data = artistQuery.data?.artist.album ?? [];
 
   return (
-    <ThemedSafeAreaView>
-      <FlatList
-        data={data}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity
-            onPress={() =>
-              router.navigate({
+    <Host style={{ flex: 1 }}>
+      <List listStyle="automatic">
+        {data.map((item) => {
+          const title = [item.name, item.year ? `(${item.year})` : null]
+            .filter(Boolean)
+            .join(" ");
+          const subtitle = `${item.songCount} track(s) | ${formatDuration(
+            item.duration
+          )}`;
+          return (
+            <Link
+              href={{
                 pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
                 params: { artistId: artistId, albumId: item.id },
-              })
-            }
-          >
-            <ListItem
-              leftAddon={<CoverArt id={item.id} size={64} />}
-              title={`${item.name} (${item.year})`}
-              subtitle={`${item.songCount} track(s) | ${formatDuration(
-                item.duration
-              )}`}
-              isLastItem={index === data.length - 1}
-            />
-          </TouchableOpacity>
-        )}
-      ></FlatList>
-    </ThemedSafeAreaView>
+              }}
+              asChild
+              key={item.id}
+            >
+              <Button>
+                <HStack spacing={16}>
+                  <VStack modifiers={[frame({ width: 64, height: 64 })]}>
+                    <CoverArt id={item.id} size={64} />
+                  </VStack>
+                  <VStack alignment="leading" spacing={2}>
+                    <Text color="primary" lineLimit={1}>
+                      {title}
+                    </Text>
+                    <Text color="secondary">{subtitle}</Text>
+                  </VStack>
+                  <Spacer />
+                  <Image
+                    systemName="chevron.right"
+                    size={14}
+                    color="secondary"
+                  />
+                </HStack>
+              </Button>
+            </Link>
+          );
+        })}
+      </List>
+    </Host>
   );
 }
