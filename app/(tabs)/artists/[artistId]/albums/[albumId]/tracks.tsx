@@ -130,6 +130,7 @@ export default function AlbumTracks() {
                 >
                   {isActive && (
                     <View style={{ position: "relative" }}>
+                      {/* TODO: Pause icon is misaligned */}
                       <Ionicons
                         name={playing ? "pause-sharp" : "play-sharp"}
                         size={12}
