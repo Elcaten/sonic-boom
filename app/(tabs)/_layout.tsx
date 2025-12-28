@@ -8,6 +8,10 @@ export default function TabLayout() {
         <Label>Artists</Label>
         <Icon sf="person.2" />
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="settings">
+        <Label>Settings</Label>
+        <Icon sf="gear" />
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }
