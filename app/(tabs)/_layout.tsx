@@ -21,6 +21,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="artists"
       tabBar={(props) => (
         <View>
           <FloatingPlayer onPress={onFloatingPlayerPress} />
@@ -46,6 +47,12 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="index"
+        options={{
+          href: null, // Hides from tab bar
+        }}
+      ></Tabs.Screen>
     </Tabs>
   );
 }
