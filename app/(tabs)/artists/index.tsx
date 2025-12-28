@@ -29,7 +29,7 @@ export default function ArtistsScreen() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List listStyle="automatic">
+      <List listStyle="grouped">
         {data.map((item) => {
           return (
             <Section key={item.title} title={item.title}>

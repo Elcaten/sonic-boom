@@ -27,7 +27,7 @@ export default function ArtistAlbums() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List listStyle="automatic">
+      <List listStyle="inset">
         {data.map((item) => {
           const title = [item.name, item.year ? `(${item.year})` : null]
             .filter(Boolean)
