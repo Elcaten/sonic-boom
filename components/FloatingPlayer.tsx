@@ -1,4 +1,3 @@
-import { useThemeColor } from "@/hooks/use-theme-color";
 import { SubsonicTrack } from "@/utils/subsonicTrackPlayer";
 import {
   Button,
@@ -11,9 +10,10 @@ import {
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import Slider from "@react-native-community/slider";
-import { useWindowDimensions, ViewStyle } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useRouter } from "expo-router";
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
@@ -22,15 +22,21 @@ import TrackPlayer, {
 import { CoverArt } from "./CoverArt";
 import { ThemedView } from "./themed-view";
 
-export function FloatingPlayer({
-  style,
-  onPress,
-}: {
-  style?: ViewStyle;
-  onPress?: (_: { track: SubsonicTrack }) => void;
-}) {
+export function FloatingPlayer() {
   //TODO: fix typing
   const activeTrack = useActiveTrack() as SubsonicTrack;
+
+  const router = useRouter();
+  const onPress = ({ track }: { track: SubsonicTrack }) => {
+    if (!track.albumId || !track.artistId) {
+      return;
+    }
+
+    router.navigate({
+      pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
+      params: { albumId: track.albumId, artistId: track.artistId },
+    });
+  };
 
   if (!activeTrack) {
     return null;
@@ -44,16 +50,12 @@ function Content({
   onPress,
 }: {
   track: SubsonicTrack;
-  onPress?: (_: { track: SubsonicTrack }) => void;
+  onPress: (_: { track: SubsonicTrack }) => void;
 }) {
-  const { width, height, scale, fontScale } = useWindowDimensions();
-
-  const textSecondary = useThemeColor({}, "textSecondary");
-  const textPrimary = useThemeColor({}, "textPrimary");
-  const icon = useThemeColor({}, "icon");
+  const { width, height } = useWindowDimensions();
 
   const { playing, bufferingDuringPlay } = useIsPlaying();
-  const { position, buffered, duration } = useProgress();
+  const { position, duration } = useProgress();
 
   const handlePlayPausePress = () => {
     if (bufferingDuringPlay) {
@@ -103,7 +105,7 @@ function Content({
         ]}
       >
         <Host style={{ flex: 1 }}>
-          <HStack spacing={12} onPress={() => onPress?.({ track })}>
+          <HStack spacing={12} onPress={() => onPress({ track })}>
             <VStack modifiers={[frame({ width: 48, height: 48 })]}>
               <CoverArt id={track.id} size={48} />
             </VStack>
