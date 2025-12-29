@@ -49,6 +49,18 @@ export default function ArtistAlbums() {
     return album.name.toLocaleLowerCase().includes(sanitizedSearch);
   });
 
+  if (artistQuery.isLoading) {
+    return (
+      <Host style={{ flex: 1 }}>
+        <ContentUnavailableView
+          title={`Loading`}
+          description="Wait"
+          systemImage="hourglass.tophalf.fill"
+        ></ContentUnavailableView>
+      </Host>
+    );
+  }
+
   if (data.length === 0) {
     return (
       <Host style={{ flex: 1 }}>
