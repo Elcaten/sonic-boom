@@ -73,8 +73,8 @@ function Content({
     <SafeAreaView
       style={{
         position: "absolute",
-        bottom: MARGIN + 48,
         width: "100%",
+        bottom: 0,
       }}
     >
       <ThemedView
@@ -82,6 +82,7 @@ function Content({
           {
             borderRadius: 12,
             marginHorizontal: MARGIN,
+            marginBottom: MARGIN,
             paddingHorizontal: 8,
             paddingVertical: 8,
 

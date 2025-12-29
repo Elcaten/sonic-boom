@@ -1,20 +1,10 @@
-import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { Ionicons } from "@expo/vector-icons";
-import { BottomTabBar } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
 import React from "react";
-import { View } from "react-native";
 
 export default function TabLayout() {
   return (
-    <Tabs
-      tabBar={(props) => (
-        <View>
-          <FloatingPlayer />
-          <BottomTabBar {...props} />
-        </View>
-      )}
-    >
+    <Tabs>
       <Tabs.Screen name="index" options={{ href: null }}></Tabs.Screen>
       <Tabs.Screen
         name="artists"
