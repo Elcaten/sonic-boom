@@ -4,6 +4,7 @@ import { formatDuration } from "@/utils/formatDuration";
 import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 
 export default function ArtistAlbums() {
   const { artistId } =
@@ -64,7 +65,15 @@ export default function ArtistAlbums() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List listStyle="inset">
+      <List
+        listStyle={
+          Platform.OS === "ios"
+            ? Platform.isPad
+              ? "insetGrouped"
+              : "grouped"
+            : "sidebar"
+        }
+      >
         {data.map((item) => {
           const title = [item.name, item.year ? `(${item.year})` : null]
             .filter(Boolean)

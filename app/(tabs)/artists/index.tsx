@@ -3,6 +3,7 @@ import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { Platform } from "react-native";
 import { ArtistID3 } from "subsonic-api";
 
 export default function ArtistsScreen() {
@@ -81,7 +82,15 @@ export default function ArtistsScreen() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List listStyle="grouped">
+      <List
+        listStyle={
+          Platform.OS === "ios"
+            ? Platform.isPad
+              ? "insetGrouped"
+              : "grouped"
+            : "sidebar"
+        }
+      >
         {data.map((item) => {
           return (
             <Section key={item.title} title={item.title}>
