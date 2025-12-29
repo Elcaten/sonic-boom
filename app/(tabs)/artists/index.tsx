@@ -1,19 +1,7 @@
-import { CoverArt } from "@/components/CoverArt";
+import { ListItem } from "@/components/ListItem";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
-import {
-  Button,
-  ContentUnavailableView,
-  Host,
-  HStack,
-  Image,
-  List,
-  Section,
-  Spacer,
-  Text,
-  VStack,
-} from "@expo/ui/swift-ui";
-import { frame } from "@expo/ui/swift-ui/modifiers";
-import { Link, useNavigation } from "expo-router";
+import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
+import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ArtistID3 } from "subsonic-api";
 
@@ -67,7 +55,7 @@ export default function ArtistsScreen() {
     data: _data[section as keyof typeof _data],
   }));
 
-if (artistsQuery.isLoading) {
+  if (artistsQuery.isLoading) {
     return (
       <Host style={{ flex: 1 }}>
         <ContentUnavailableView
@@ -101,34 +89,16 @@ if (artistsQuery.isLoading) {
                 const title = item.name;
                 const subtitle = `${item.albumCount} album(s)`;
                 return (
-                  <Link
+                  <ListItem
+                    key={item.id}
                     href={{
                       pathname: "/(tabs)/artists/[artistId]/albums",
                       params: { artistId: item.id },
                     }}
-                    asChild
-                    key={item.id}
-                  >
-                    <Button>
-                      <HStack spacing={16}>
-                        <VStack modifiers={[frame({ width: 64, height: 64 })]}>
-                          <CoverArt id={item.id} size={64} />
-                        </VStack>
-                        <VStack alignment="leading" spacing={2}>
-                          <Text color="primary" lineLimit={1}>
-                            {title}
-                          </Text>
-                          <Text color="secondary">{subtitle}</Text>
-                        </VStack>
-                        <Spacer />
-                        <Image
-                          systemName="chevron.right"
-                          size={14}
-                          color="secondary"
-                        />
-                      </HStack>
-                    </Button>
-                  </Link>
+                    coverId={item.id}
+                    title={title}
+                    subtitle={subtitle}
+                  />
                 );
               })}
             </Section>

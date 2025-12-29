@@ -1,19 +1,8 @@
-import { CoverArt } from "@/components/CoverArt";
+import { ListItem } from "@/components/ListItem";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { formatDuration } from "@/utils/formatDuration";
-import {
-  Button,
-  ContentUnavailableView,
-  Host,
-  HStack,
-  Image,
-  List,
-  Spacer,
-  Text,
-  VStack,
-} from "@expo/ui/swift-ui";
-import { frame } from "@expo/ui/swift-ui/modifiers";
-import { Link, useLocalSearchParams, useNavigation } from "expo-router";
+import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 
 export default function ArtistAlbums() {
@@ -84,34 +73,16 @@ export default function ArtistAlbums() {
             item.duration
           )}`;
           return (
-            <Link
+            <ListItem
+              key={item.id}
               href={{
                 pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
                 params: { artistId: artistId, albumId: item.id },
               }}
-              asChild
-              key={item.id}
-            >
-              <Button>
-                <HStack spacing={16}>
-                  <VStack modifiers={[frame({ width: 64, height: 64 })]}>
-                    <CoverArt id={item.id} size={64} />
-                  </VStack>
-                  <VStack alignment="leading" spacing={2}>
-                    <Text color="primary" lineLimit={1}>
-                      {title}
-                    </Text>
-                    <Text color="secondary">{subtitle}</Text>
-                  </VStack>
-                  <Spacer />
-                  <Image
-                    systemName="chevron.right"
-                    size={14}
-                    color="secondary"
-                  />
-                </HStack>
-              </Button>
-            </Link>
+              title={title}
+              subtitle={subtitle}
+              coverId={item.id}
+            />
           );
         })}
       </List>

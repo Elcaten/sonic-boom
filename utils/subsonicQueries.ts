@@ -88,4 +88,31 @@ export const subsonicQueries = {
       callApi: (...[api]: CallApiParams) => api.getSong({ id: trackId }),
     });
   },
+
+  search: function ({ query }: { query: string }) {
+    return susbsonicQueryOptions({
+      queryKey: ["song", query],
+      callApi: (...[api]: CallApiParams) =>
+        api
+          .search2({ query, songCount: 100, albumCount: 5, artistCount: 5 })
+          .then((result) => result.searchResult2)
+          .then((result) => {
+            console.log(result);
+
+            return {
+              album: result.album?.filter((album) => {
+                // hack on client - avoid album matched by artist filed
+                const santizedQuery = query.toLocaleLowerCase();
+                return album.title.toLocaleLowerCase().includes(santizedQuery);
+              }),
+              artist: result.artist,
+              song: result.song?.filter((song) => {
+                // hack on client - avoid songs matched by artist and album fields
+                const santizedQuery = query.toLocaleLowerCase();
+                return song.title.toLocaleLowerCase().includes(santizedQuery);
+              }),
+            };
+          }),
+    });
+  },
 };
