@@ -19,7 +19,6 @@ export default function ArtistAlbums() {
         autoCapitalize: false,
         placeholder: "Search",
         onChangeText(e) {
-          console.log(e.nativeEvent);
           setSearch(e.nativeEvent.text);
         },
         onCancelButtonPress: () => {

@@ -100,8 +100,6 @@ export const subsonicQueries = {
           .search2({ query, songCount: 100, albumCount: 5, artistCount: 5 })
           .then((result) => result.searchResult2)
           .then((result) => {
-            console.log(result);
-
             return {
               album: result.album?.filter((album) => {
                 // hack on client - avoid album matched by artist filed
