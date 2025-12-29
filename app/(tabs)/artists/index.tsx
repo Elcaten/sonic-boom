@@ -2,6 +2,7 @@ import { CoverArt } from "@/components/CoverArt";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import {
   Button,
+  ContentUnavailableView,
   Host,
   HStack,
   Image,
@@ -12,20 +13,83 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame } from "@expo/ui/swift-ui/modifiers";
-import { Link } from "expo-router";
-import React from "react";
+import { Link, useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ArtistID3 } from "subsonic-api";
 
 export default function ArtistsScreen() {
+  const [search, setSearch] = useState("");
+
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        autoCapitalize: false,
+        placeholder: "Search",
+        onChangeText(e) {
+          console.log(e.nativeEvent);
+          setSearch(e.nativeEvent.text);
+        },
+        onCancelButtonPress: () => {
+          setSearch("");
+        },
+      },
+    });
+  }, [navigation]);
+
   const artistsQuery = useSubsonicQuery({
     queryKey: ["artists"],
     callApi: (api) => api.getArtists(),
   });
 
-  const data =
-    artistsQuery.data?.artists.index?.map((section) => ({
-      title: section.name,
-      data: section.artist ?? [],
-    })) ?? [];
+  const sanitizedSearch = search.toLocaleLowerCase();
+  const _data = (
+    artistsQuery.data?.artists.index?.flatMap((section) =>
+      (section.artist ?? []).map((artist) => ({
+        artist,
+        section: section.name,
+      }))
+    ) ?? []
+  )
+    .filter((artist) =>
+      artist.artist.name.toLocaleLowerCase().includes(sanitizedSearch)
+    )
+    .reduce<Record<string, ArtistID3[]>>((acc, curr) => {
+      if (!acc[curr.section]) {
+        acc[curr.section] = [];
+      }
+      acc[curr.section].push(curr.artist);
+      return acc;
+    }, {});
+
+  const data = Object.keys(_data).map((section) => ({
+    title: section,
+    data: _data[section as keyof typeof _data],
+  }));
+
+if (artistsQuery.isLoading) {
+    return (
+      <Host style={{ flex: 1 }}>
+        <ContentUnavailableView
+          title={`Loading`}
+          description="Wait"
+          systemImage="hourglass.tophalf.fill"
+        ></ContentUnavailableView>
+      </Host>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <Host style={{ flex: 1 }}>
+        <ContentUnavailableView
+          title={`No results for ${search}`}
+          description="Try a new search"
+          systemImage="magnifyingglass"
+        ></ContentUnavailableView>
+      </Host>
+    );
+  }
 
   return (
     <Host style={{ flex: 1 }}>

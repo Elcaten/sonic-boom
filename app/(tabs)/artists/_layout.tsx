@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 export default function StackLayout() {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ headerTitle: "Artists" }} />
       <Stack.Screen
         name="[artistId]/albums/index"
         options={{

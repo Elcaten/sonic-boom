@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 export default function ArtistAlbums() {
   const { artistId } =
     useLocalSearchParams<"/(tabs)/artists/[artistId]/albums">();
+
   const [search, setSearch] = useState("");
 
   const navigation = useNavigation();
