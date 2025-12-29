@@ -12,7 +12,7 @@ export function CoverArt({
   /** The ID of a song, album or artist. */
   id: string;
   style?: StyleProp<ImageStyle>;
-  size: 48 | 64 | 256 | 512 | "Full";
+  size: Parameters<(typeof subsonicQueries)["coverArtUrl"]>[1];
   elevated?: boolean;
 }) {
   const theme = useColorScheme() ?? "light";
@@ -22,6 +22,7 @@ export function CoverArt({
     48: 6,
     64: 6,
     256: 12,
+    320: 12,
     512: 12,
     Full: 12,
   }[size];
@@ -49,6 +50,7 @@ export function CoverArt({
     48: themedShadowContainer,
     64: themedShadowContainer,
     256: themedShadowContainer,
+    320: themedShadowContainer,
     512: themedShadowContainer,
     Full: themedShadowContainer,
   }[size];

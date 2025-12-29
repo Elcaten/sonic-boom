@@ -60,7 +60,10 @@ export const subsonicQueries = {
     });
   },
 
-  coverArtUrl: function (entityId: string, size: 48 | 64 | 256 | 512 | "Full") {
+  coverArtUrl: function (
+    entityId: string,
+    size: 48 | 64 | 256 | 320 | 512 | "Full"
+  ) {
     return susbsonicQueryOptions({
       queryKey: ["cover-art", entityId],
       callApi: (...[api, session]: CallApiParams) => {

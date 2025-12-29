@@ -13,9 +13,8 @@ import {
   subsonicTrackPlayer,
 } from "@/utils/subsonicTrackPlayer";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import Slider from "@react-native-community/slider";
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
+import { useLocalSearchParams } from "expo-router";
+import React from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import TrackPlayer, {
   useActiveTrack,
@@ -78,31 +77,13 @@ export default function AlbumTracks() {
     TrackPlayer.play();
   };
 
-  const navigation = useNavigation();
-  useEffect(() => {
-    if (albumQuery.data?.album.artist) {
-      navigation.setOptions({
-        headerTitle: albumQuery.data?.album.artist,
-      });
-    }
-  }, [albumQuery.data?.album.artist, navigation]);
-
   return (
     <View>
-      <View style={{ marginHorizontal: 16 }}>
-        <Slider
-          minimumValue={0}
-          maximumValue={duration}
-          value={position}
-          onSlidingComplete={(time) => TrackPlayer.seekTo(time)}
-          tapToSeek={true}
-        />
-      </View>
       <FlatList
         data={albumQuery.data?.album.song ?? []}
         ListHeaderComponent={
           <View style={{ padding: 16, alignItems: "center" }}>
-            <CoverArt id={albumId} size={256} elevated />
+            <CoverArt id={albumId} size={320} elevated />
           </View>
         }
         renderItem={({ item }) => {

@@ -10,11 +10,14 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
+import Slider from "@react-native-community/slider";
 import { useWindowDimensions, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
+  useProgress,
 } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
 import { ThemedView } from "./themed-view";
@@ -50,6 +53,7 @@ function Content({
   const icon = useThemeColor({}, "icon");
 
   const { playing, bufferingDuringPlay } = useIsPlaying();
+  const { position, buffered, duration } = useProgress();
 
   const handlePlayPausePress = () => {
     if (bufferingDuringPlay) {
@@ -125,8 +129,8 @@ function Content({
                   bufferingDuringPlay
                     ? "progress.indicator"
                     : playing
-                      ? "pause.fill"
-                      : "play.fill"
+                    ? "pause.fill"
+                    : "play.fill"
                 }
                 size={24}
                 color="primary"
@@ -134,6 +138,13 @@ function Content({
             </Button>
           </HStack>
         </Host>
+        <Slider
+          minimumValue={0}
+          maximumValue={duration}
+          value={position}
+          onSlidingComplete={(time) => TrackPlayer.seekTo(time)}
+          tapToSeek={true}
+        />
       </ThemedView>
     </SafeAreaView>
   );
