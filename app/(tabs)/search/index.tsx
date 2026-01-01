@@ -4,10 +4,18 @@ import { ThemedText } from "@/components/themed-text";
 import { useDebouncedState } from "@/hooks/use-debounce-state";
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { subsonicQueries } from "@/utils/subsonicQueries";
-import { Host, List, Section } from "@expo/ui/swift-ui";
+import { Host, HStack, List, Section, Text } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { Artist, Child } from "subsonic-api";
+
+type SearchItem =
+  | {
+      type: "Album";
+      album: Child;
+    }
+  | { type: "Song"; song: Child }
+  | { type: "Artist"; artist: Artist };
 
 export default function SearchIndex() {
   const [_, debounceSearch, setSearch] = useDebouncedState("", 300);
@@ -16,7 +24,7 @@ export default function SearchIndex() {
   useEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
-        placement: "stacked",
+        // placement: "stacked",
         placeholder: "Search",
         onChangeText: (e) => setSearch(e.nativeEvent.text),
       },
@@ -36,19 +44,28 @@ export default function SearchIndex() {
 
   if (_ === "") {
     return (
-      <ThemedSafeAreaView style={{ height: 400, justifyContent: "center" }}>
-        <ThemedText lightColor="red" darkColor="red">
-          TODO: latest songs / albums
-        </ThemedText>
-      </ThemedSafeAreaView>
+      // <ThemedSafeAreaView style={{ flex: 1 }}>
+      <Host style={{ flex: 1 }}>
+        <List>
+          <Section title="Recently Searched">
+            <HStack>
+              <Text>hell</Text>
+            </HStack>
+            <HStack>
+              <Text>hell</Text>
+            </HStack>
+          </Section>
+        </List>
+      </Host>
+      // </ThemedSafeAreaView>
     );
   }
 
   if (!data?.album && !data?.artist && !data?.song) {
     return (
-      <View style={{ height: 400 }}>
+      <ThemedSafeAreaView>
         <ThemedText>NOTHING FOUND</ThemedText>
-      </View>
+      </ThemedSafeAreaView>
     );
   }
 
