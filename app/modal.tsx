@@ -1,16 +1,35 @@
-import { Link } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from "react-native";
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { SubsonicTrack } from "@/utils/subsonicTrackPlayer";
+import { useEffect, useState } from "react";
+import TrackPlayer from "react-native-track-player";
 
 export default function ModalScreen() {
+  const [queue, setQueue] = useState<SubsonicTrack[] | undefined>();
+
+  useEffect(() => {
+    async function effect() {
+      const result = (await TrackPlayer.getQueue()) as SubsonicTrack[];
+
+      setQueue(result);
+    }
+
+    effect();
+  }, []);
+
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">This is a modal</ThemedText>
-      <Link href="/" dismissTo style={styles.link}>
-        <ThemedText type="link">Go to home screen</ThemedText>
-      </Link>
+      <FlatList
+        data={queue}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <ThemedView key={item.id}>
+            <ThemedText>{item.title}</ThemedText>
+          </ThemedView>
+        )}
+      />
     </ThemedView>
   );
 }
@@ -18,12 +37,8 @@ export default function ModalScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
   },
 });
