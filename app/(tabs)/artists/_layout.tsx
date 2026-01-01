@@ -8,9 +8,9 @@ export default function StackLayout() {
       <Stack>
         <Stack.Screen
           name="index"
-          options={{
-            headerTitle: (p) => <View></View>,
-          }}
+          // options={{
+          //   headerTitle: (p) => <View></View>,
+          // }}
         />
         <Stack.Screen
           name="[artistId]/albums/index"

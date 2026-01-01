@@ -10,8 +10,7 @@ import {
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import Slider from "@react-native-community/slider";
-import { useWindowDimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useWindowDimensions, View } from "react-native";
 
 import { useRouter } from "expo-router";
 import TrackPlayer, {
@@ -69,10 +68,18 @@ function Content({
     }
   };
 
+  const handlePrevPress = () => {
+    TrackPlayer.skipToPrevious();
+  };
+
+  const handleNextPress = () => {
+    TrackPlayer.skipToNext();
+  };
+
   const MARGIN = 16;
 
   return (
-    <SafeAreaView
+    <View
       style={{
         position: "absolute",
         width: "100%",
@@ -123,6 +130,12 @@ function Content({
             </VStack>
             <Spacer />
             <Button
+              onPress={handlePrevPress}
+              modifiers={[padding({ trailing: 8 })]}
+            >
+              <Image systemName={"backward.fill"} size={16} color="primary" />
+            </Button>
+            <Button
               onPress={handlePlayPausePress}
               disabled={bufferingDuringPlay}
               modifiers={[padding({ trailing: 8 })]}
@@ -139,6 +152,12 @@ function Content({
                 color="primary"
               />
             </Button>
+            <Button
+              onPress={handleNextPress}
+              modifiers={[padding({ trailing: 8 })]}
+            >
+              <Image systemName={"forward.fill"} size={16} color="primary" />
+            </Button>
           </HStack>
         </Host>
         <Slider
@@ -149,6 +168,6 @@ function Content({
           tapToSeek={true}
         />
       </ThemedView>
-    </SafeAreaView>
+    </View>
   );
 }

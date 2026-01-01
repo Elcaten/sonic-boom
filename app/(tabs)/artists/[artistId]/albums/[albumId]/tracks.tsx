@@ -30,14 +30,13 @@ export default function AlbumTracks() {
     queryKey: ["albums", artistId, albumId],
     callApi: (api) => api.getAlbum({ id: albumId }),
   });
+  const albumData = albumQuery.data?.album.song ?? [];
 
-  const iconColor = useThemeColor({}, "icon");
-  const textPrimary = useThemeColor({}, "textPrimary");
   const textSecondary = useThemeColor({}, "textSecondary");
   const separator = useThemeColor({}, "separator");
 
   const { playing, bufferingDuringPlay } = useIsPlaying();
-  const { position, buffered, duration } = useProgress();
+  const { position, duration } = useProgress();
   //TODO: fix typing
   const activeTrack = useActiveTrack() as SubsonicTrack;
 
@@ -57,30 +56,39 @@ export default function AlbumTracks() {
       return;
     }
 
-    const [streamUrl, coverArtUrl, song] = await Promise.all([
-      ensureQuery(subsonicQueries.streamUrl(trackId)),
-      ensureQuery(subsonicQueries.coverArtUrl(trackId, 64)),
-      ensureQuery(subsonicQueries.song(trackId)),
-    ]);
-
     await TrackPlayer.reset();
-    await subsonicTrackPlayer.add({
-      id: trackId,
-      url: streamUrl,
-      title: song.song.title,
-      artist: song.song.artist,
-      artistId: song.song.artistId,
-      album: song.song.album,
-      albumId: song.song.albumId,
-      artwork: coverArtUrl,
-    });
+
+    const startIndex = albumData.findIndex((song) => song.id === trackId);
+    const albumSlice = albumData.slice(startIndex);
+
+    const tracksToAdd: SubsonicTrack[] = [];
+    for (const song of albumSlice) {
+      const streamUrl = await ensureQuery(subsonicQueries.streamUrl(song.id));
+      const coverArtUrl = await ensureQuery(
+        subsonicQueries.coverArtUrl(song.id, 64)
+      );
+      tracksToAdd.push({
+        id: song.id,
+        url: streamUrl,
+        title: song.title,
+        artist: song.artist,
+        artistId: song.artistId,
+        album: song.album,
+        albumId: song.albumId,
+        artwork: coverArtUrl,
+      });
+    }
+
+    await subsonicTrackPlayer.add(...tracksToAdd);
+
     TrackPlayer.play();
   };
 
   return (
     <View>
       <FlatList
-        data={albumQuery.data?.album.song ?? []}
+        data={albumData}
+        keyExtractor={(child) => child.id}
         ListHeaderComponent={
           <View style={{ padding: 16, alignItems: "center" }}>
             <CoverArt id={albumId} size={320} elevated />
@@ -89,6 +97,7 @@ export default function AlbumTracks() {
         renderItem={({ item }) => {
           const isActive = item.id === activeTrack?.id;
           const activeColor = Colors.light.tint;
+
           return (
             <TouchableOpacity
               disabled={bufferingDuringPlay}
@@ -119,7 +128,7 @@ export default function AlbumTracks() {
                         style={{
                           position: "absolute",
                           top: 6,
-                          left: 7,
+                          left: playing ? 6 : 7,
                           color: "red",
                         }}
                       />
