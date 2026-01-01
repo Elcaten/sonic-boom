@@ -1,7 +1,6 @@
-import { SongProgress } from "@/components/CircularProgress";
 import { CoverArt } from "@/components/CoverArt";
 import { ThemedText } from "@/components/themed-text";
-import { Colors } from "@/constants/theme";
+import { TrackProgressIndicator } from "@/components/TrackProgressIndicator";
 import {
   useEnsureSubsonicQuery,
   useSubsonicQuery,
@@ -12,7 +11,6 @@ import {
   SubsonicTrack,
   subsonicTrackPlayer,
 } from "@/utils/subsonicTrackPlayer";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -96,7 +94,6 @@ export default function AlbumTracks() {
         }
         renderItem={({ item }) => {
           const isActive = item.id === activeTrack?.id;
-          const activeColor = Colors.light.tint;
 
           return (
             <TouchableOpacity
@@ -119,21 +116,11 @@ export default function AlbumTracks() {
                   }}
                 >
                   {isActive && (
-                    <View style={{ position: "relative" }}>
-                      {/* TODO: Pause icon is misaligned */}
-                      <Ionicons
-                        name={playing ? "pause-sharp" : "play-sharp"}
-                        size={12}
-                        color={activeColor}
-                        style={{
-                          position: "absolute",
-                          top: 6,
-                          left: playing ? 6 : 7,
-                          color: "red",
-                        }}
-                      />
-                      <SongProgress progress={position / duration} size={24} />
-                    </View>
+                    <TrackProgressIndicator
+                      isPlaying={!!playing}
+                      progress={position / duration}
+                      trackNumber={item.track!}
+                    />
                   )}
                   {!isActive && (
                     <ThemedText style={{ color: textSecondary }}>
