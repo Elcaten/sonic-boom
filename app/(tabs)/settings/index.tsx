@@ -1,6 +1,7 @@
 import { useAuth } from "@/context/auth-context";
 import { Button, Form, Host, Section } from "@expo/ui/swift-ui";
 import { padding } from "@expo/ui/swift-ui/modifiers";
+import { Link } from "expo-router";
 
 export default function SettingsView() {
   const auth = useAuth();
@@ -14,6 +15,16 @@ export default function SettingsView() {
   return (
     <Host style={{ flex: 1 }}>
       <Form>
+         <Section>
+          <Link href="/settings/animations" asChild>
+          <Button
+            systemImage="play.circle"
+            modifiers={[padding({ horizontal: 8 })]}
+          >
+            Animations
+          </Button>
+          </Link>
+        </Section>
         <Section>
           <Button
             systemImage="dollarsign.square"
