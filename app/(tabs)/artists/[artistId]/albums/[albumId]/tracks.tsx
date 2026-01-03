@@ -3,7 +3,6 @@ import {
   useEnsureSubsonicQuery,
   useSubsonicQuery,
 } from "@/hooks/use-subsonic-query";
-import { useThemeColor } from "@/hooks/use-theme-color";
 import { subsonicQueries } from "@/utils/subsonicQueries";
 import {
   SubsonicTrack,
@@ -27,7 +26,6 @@ import { useWindowDimensions } from "react-native";
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
-  useProgress,
 } from "react-native-track-player";
 
 export default function AlbumTracks() {
@@ -40,37 +38,15 @@ export default function AlbumTracks() {
   });
   const albumData = albumQuery.data?.album.song ?? [];
 
-  const textSecondary = useThemeColor({}, "textSecondary");
-  const separator = useThemeColor({}, "separator");
-
   const { playing, bufferingDuringPlay } = useIsPlaying();
-  const { position, duration } = useProgress();
   //TODO: fix typing
   const activeTrack = useActiveTrack() as SubsonicTrack;
 
   const ensureQuery = useEnsureSubsonicQuery();
-  const handlePlayPress = async (trackId: string) => {
-    //TODO: handle errors
-    if (trackId === activeTrack?.id) {
-      if (bufferingDuringPlay) {
-        return;
-      }
 
-      if (playing) {
-        TrackPlayer.pause();
-      } else {
-        TrackPlayer.play();
-      }
-      return;
-    }
-
-    await TrackPlayer.reset();
-
-    const startIndex = albumData.findIndex((song) => song.id === trackId);
-    const albumSlice = albumData.slice(startIndex);
-
+  const handlePlayAlbumPress = async () => {
     const tracksToAdd: SubsonicTrack[] = [];
-    for (const song of albumSlice) {
+    for (const song of albumData) {
       const streamUrl = await ensureQuery(subsonicQueries.streamUrl(song.id));
       const coverArtUrl = await ensureQuery(
         subsonicQueries.coverArtUrl(song.id, 64)
@@ -87,8 +63,51 @@ export default function AlbumTracks() {
       });
     }
 
-    await subsonicTrackPlayer.add(...tracksToAdd);
+    await subsonicTrackPlayer.setQueue(tracksToAdd);
+    TrackPlayer.play();
+  };
 
+  const handleShuffleAlbumPress = async () => {
+    alert("handleShuffleAlbumPress");
+  };
+
+  const handleTrackItemPress = async (trackId: string) => {
+    //TODO: handle errors
+    if (trackId === activeTrack?.id) {
+      if (bufferingDuringPlay) {
+        return;
+      }
+
+      if (playing) {
+        TrackPlayer.pause();
+      } else {
+        TrackPlayer.play();
+      }
+      return;
+    }
+
+    //TODO: refactor and resuse code with play album button
+    const tracksToAdd: SubsonicTrack[] = [];
+    for (const song of albumData) {
+      const streamUrl = await ensureQuery(subsonicQueries.streamUrl(song.id));
+      const coverArtUrl = await ensureQuery(
+        subsonicQueries.coverArtUrl(song.id, 64)
+      );
+      tracksToAdd.push({
+        id: song.id,
+        url: streamUrl,
+        title: song.title,
+        artist: song.artist,
+        artistId: song.artistId,
+        album: song.album,
+        albumId: song.albumId,
+        artwork: coverArtUrl,
+      });
+    }
+
+    await subsonicTrackPlayer.setQueue(tracksToAdd);
+    const startIndex = albumData.findIndex((song) => song.id === trackId);
+    await TrackPlayer.skip(startIndex);
     TrackPlayer.play();
   };
 
@@ -114,7 +133,11 @@ export default function AlbumTracks() {
         </Text>
       </VStack>
       <HStack spacing={12}>
-        <Button variant="bordered" onPress={() => {}} controlSize="large">
+        <Button
+          variant="bordered"
+          onPress={handlePlayAlbumPress}
+          controlSize="large"
+        >
           <HStack
             modifiers={[
               frame({
@@ -127,7 +150,12 @@ export default function AlbumTracks() {
             <Text>Play</Text>
           </HStack>
         </Button>
-        <Button variant="bordered" onPress={() => {}} controlSize="large">
+        <Button
+          variant="bordered"
+          onPress={handleShuffleAlbumPress}
+          controlSize="large"
+          disabled
+        >
           <HStack
             modifiers={[
               frame({
@@ -168,7 +196,7 @@ export default function AlbumTracks() {
               <Button
                 key={item.id}
                 disabled={bufferingDuringPlay}
-                onPress={() => handlePlayPress(item.id)}
+                onPress={() => handleTrackItemPress(item.id)}
               >
                 <HStack spacing={12}>
                   <Text
