@@ -1,6 +1,4 @@
 import { CoverArt } from "@/components/CoverArt";
-import { ThemedText } from "@/components/themed-text";
-import { TrackProgressIndicator } from "@/components/TrackProgressIndicator";
 import {
   useEnsureSubsonicQuery,
   useSubsonicQuery,
@@ -11,9 +9,21 @@ import {
   SubsonicTrack,
   subsonicTrackPlayer,
 } from "@/utils/subsonicTrackPlayer";
+import {
+  Button,
+  Host,
+  HStack,
+  Image,
+  List,
+  Section,
+  Spacer,
+  Text,
+  VStack,
+} from "@expo/ui/swift-ui";
+import { frame } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useWindowDimensions } from "react-native";
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
@@ -82,64 +92,105 @@ export default function AlbumTracks() {
     TrackPlayer.play();
   };
 
-  return (
-    <View>
-      <FlatList
-        data={albumData}
-        keyExtractor={(child) => child.id}
-        ListHeaderComponent={
-          <View style={{ padding: 16, alignItems: "center" }}>
-            <CoverArt id={albumId} size={320} elevated />
-          </View>
-        }
-        renderItem={({ item }) => {
-          const isActive = item.id === activeTrack?.id;
+  const { width, height } = useWindowDimensions();
+  const isWideLayout = width > height;
 
-          return (
-            <TouchableOpacity
-              disabled={bufferingDuringPlay}
-              onPress={() => handlePlayPress(item.id)}
-              style={{
-                padding: 12,
-                paddingHorizontal: 16,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                borderColor: separator,
-              }}
-            >
-              <View style={{ flexDirection: "row", gap: 12 }}>
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {isActive && (
-                    <TrackProgressIndicator
-                      isPlaying={!!playing}
-                      progress={position / duration}
-                      trackNumber={item.track!}
-                    />
-                  )}
-                  {!isActive && (
-                    <ThemedText style={{ color: textSecondary }}>
-                      {item.track}
-                    </ThemedText>
-                  )}
-                </View>
-                <ThemedText>{item.title}</ThemedText>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-        ListFooterComponent={ListFooter}
-      />
-    </View>
+  const topSectionSpacing = 16;
+
+  const coverArt = (
+    <VStack modifiers={[frame({ width: 256, height: 256 })]}>
+      <CoverArt id={albumId} size={256} elevated />
+    </VStack>
   );
-}
 
-function ListFooter() {
-  //TODO: correctly account for tabs + floating player
-  return <View style={{ height: 200 }}></View>;
+  const albumArtistActions = (
+    <VStack spacing={topSectionSpacing}>
+      <VStack modifiers={[frame({ maxHeight: Infinity })]} spacing={4}>
+        <Text weight="semibold" size={20}>
+          {albumQuery.data?.album.name || " "}
+        </Text>
+        <Text size={20} color="secondary" weight="medium">
+          {albumQuery.data?.album.artist || " "}
+        </Text>
+      </VStack>
+      <HStack spacing={12}>
+        <Button variant="bordered" onPress={() => {}} controlSize="large">
+          <HStack
+            modifiers={[
+              frame({
+                maxWidth: Infinity,
+              }),
+            ]}
+            spacing={8}
+          >
+            <Image systemName="play.fill" size={18} />
+            <Text>Play</Text>
+          </HStack>
+        </Button>
+        <Button variant="bordered" onPress={() => {}} controlSize="large">
+          <HStack
+            modifiers={[
+              frame({
+                maxWidth: Infinity,
+              }),
+            ]}
+            spacing={8}
+          >
+            <Image systemName="shuffle" size={18} />
+            <Text>Shuffle</Text>
+          </HStack>
+        </Button>
+      </HStack>
+    </VStack>
+  );
+
+  return (
+    <Host style={{ flex: 1 }}>
+      <List listStyle="inset">
+        {/* // TODO: add listRowSeparator modifier when available */}
+        {isWideLayout ? (
+          <HStack spacing={topSectionSpacing}>
+            {coverArt}
+            {albumArtistActions}
+          </HStack>
+        ) : (
+          <VStack spacing={topSectionSpacing}>
+            {coverArt}
+            {albumArtistActions}
+          </VStack>
+        )}
+
+        <Section>
+          {albumData.map((item) => {
+            const isActive = item.id === activeTrack?.id;
+
+            return (
+              <Button
+                key={item.id}
+                disabled={bufferingDuringPlay}
+                onPress={() => handlePlayPress(item.id)}
+              >
+                <HStack spacing={12}>
+                  <Text
+                    color={isActive ? "primary" : "secondary"}
+                    weight={isActive ? "semibold" : "regular"}
+                    modifiers={[frame({ width: 32 })]}
+                  >
+                    {String(item.track)}
+                  </Text>
+                  <Text weight={isActive ? "semibold" : "regular"}>
+                    {item.title}
+                  </Text>
+                  <Spacer />
+                  <Text> </Text>
+                </HStack>
+              </Button>
+            );
+          })}
+        </Section>
+
+        <Section modifiers={[frame({ height: 64 })]}></Section>
+      </List>
+    </Host>
+  );
 }

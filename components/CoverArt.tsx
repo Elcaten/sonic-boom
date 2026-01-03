@@ -1,7 +1,13 @@
 import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
 import { subsonicQueries } from "@/utils/subsonicQueries";
 import { Image } from "expo-image";
-import { ImageStyle, StyleProp, useColorScheme, View } from "react-native";
+import {
+  ImageStyle,
+  StyleProp,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
 
 export function CoverArt({
   id,
@@ -27,25 +33,10 @@ export function CoverArt({
     Full: 12,
   }[size];
 
-  const shadowContainer = {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 16,
-  };
-  const shadowContainerDark = {
-    shadowColor: "#282828",
-    shadowOpacity: 0.6,
-    shadowRadius: 20,
-  };
   const themedShadowContainer =
     theme === "light"
-      ? shadowContainer
-      : { ...shadowContainer, ...shadowContainerDark };
+      ? [styles.shadowContainer]
+      : [styles.shadowContainer, styles.shadowContainerDark];
   const shadow = {
     48: themedShadowContainer,
     64: themedShadowContainer,
@@ -58,7 +49,7 @@ export function CoverArt({
   const imgSize = size === "Full" ? "100%" : size;
 
   return (
-    <View style={elevated ? shadow : undefined}>
+    <View style={[{ width: imgSize, height: imgSize }, elevated && shadow]}>
       <Image
         placeholder={{
           blurhash: getRandomBlurhash(),
@@ -69,6 +60,24 @@ export function CoverArt({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  shadowContainer: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 12,
+  },
+  shadowContainerDark: {
+    shadowColor: "#282828",
+    shadowOpacity: 0.6,
+    shadowRadius: 20,
+  },
+});
 
 const blurhashList = [
   "njG9jfn$M{ofRj_NoJWrt6Rjx]WWofs:RkWVR+RjoLofNGWBM{WBt7RkjsRjR*of",

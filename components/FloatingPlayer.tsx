@@ -118,7 +118,7 @@ function Content({
               <Image
                 systemName={
                   bufferingDuringPlay
-                    ? "progress.indicator"
+                    ? "pause.fill"
                     : playing
                     ? "pause.fill"
                     : "play.fill"
