@@ -87,7 +87,7 @@ export default function ArtistsScreen() {
             ? Platform.isPad
               ? "insetGrouped"
               : "grouped"
-            : "sidebar"
+            : "automatic"
         }
       >
         {data.map((item) => {

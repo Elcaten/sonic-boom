@@ -65,7 +65,7 @@ export const subsonicQueries = {
     size: 48 | 64 | 256 | 320 | 512 | "Full"
   ) {
     return susbsonicQueryOptions({
-      queryKey: ["cover-art", entityId],
+      queryKey: ["cover-art", entityId, size],
       callApi: (...[api, session]: CallApiParams) => {
         const url = new URL(`${api.baseURL()}rest/getCoverArt.view`);
         url.searchParams.set("v", "1.16.1");
