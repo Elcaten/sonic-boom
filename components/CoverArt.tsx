@@ -16,12 +16,13 @@ export function CoverArt({
   elevated = false,
 }: {
   /** The ID of a song, album or artist. */
-  id: string;
+  id: string | undefined;
   style?: StyleProp<ImageStyle>;
   size: Parameters<(typeof subsonicQueries)["coverArtUrl"]>[1];
   elevated?: boolean;
 }) {
   const theme = useColorScheme() ?? "light";
+  console.log(id, size);
   const coverArtQuery = useSubsonicQuery(subsonicQueries.coverArtUrl(id, size));
 
   const borderRadius = {
@@ -54,6 +55,7 @@ export function CoverArt({
         placeholder={{
           blurhash: getRandomBlurhash(),
         }}
+        placeholderContentFit="fill"
         source={coverArtQuery.isLoading ? undefined : coverArtQuery?.data}
         style={[{ width: imgSize, height: imgSize, borderRadius }, style]}
       />

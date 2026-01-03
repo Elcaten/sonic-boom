@@ -61,7 +61,7 @@ export const subsonicQueries = {
   },
 
   coverArtUrl: function (
-    entityId: string,
+    entityId: string | undefined,
     size: 48 | 64 | 256 | 320 | 512 | "Full"
   ) {
     return susbsonicQueryOptions({
@@ -71,7 +71,7 @@ export const subsonicQueries = {
         url.searchParams.set("v", "1.16.1");
         url.searchParams.set("c", "subsonic-api");
         url.searchParams.set("f", "json");
-        url.searchParams.set("id", entityId);
+        url.searchParams.set("id", entityId!);
         if (size !== "Full") {
           // url.searchParams.set("size", size.toString());
         }
@@ -82,6 +82,7 @@ export const subsonicQueries = {
         return url.toString();
       },
       staleTime: Infinity,
+      enabled: Boolean(entityId),
     });
   },
 
