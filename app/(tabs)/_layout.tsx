@@ -10,6 +10,7 @@ export default function TabLayout() {
         name="artists"
         options={{
           headerShown: false,
+          tabBarLabel: "Artists",
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? "people" : "people-outline"}
@@ -23,6 +24,7 @@ export default function TabLayout() {
         name="settings"
         options={{
           headerShown: false,
+          tabBarLabel: "Settings",
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? "settings" : "settings-outline"}
@@ -36,6 +38,7 @@ export default function TabLayout() {
         name="search"
         options={{
           headerShown: false,
+          tabBarLabel: "Search",
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? "search" : "search-outline"}
