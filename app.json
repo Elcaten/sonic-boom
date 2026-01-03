@@ -1,5 +1,8 @@
 {
   "expo": {
+    "developmentClient": {
+      "silentLaunch": true 
+    },
     "name": "sonic-boom",
     "slug": "sonic-boom",
     "version": "1.0.0",
