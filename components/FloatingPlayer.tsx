@@ -9,14 +9,12 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
-import Slider from "@react-native-community/slider";
-import { useWindowDimensions, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 import { useRouter } from "expo-router";
 import TrackPlayer, {
   useActiveTrack,
   useIsPlaying,
-  useProgress,
 } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
 import { ThemedView } from "./themed-view";
@@ -54,7 +52,6 @@ function Content({
   const { width, height } = useWindowDimensions();
 
   const { playing, bufferingDuringPlay } = useIsPlaying();
-  const { position, duration } = useProgress();
 
   const handlePlayPausePress = () => {
     if (bufferingDuringPlay) {
@@ -76,39 +73,17 @@ function Content({
     TrackPlayer.skipToNext();
   };
 
-  const MARGIN = 16;
+  const isWideLayout = width > height;
 
   return (
-    <View
-      style={{
-        position: "absolute",
-        width: "100%",
-        bottom: 0,
-      }}
-    >
+    <View style={style.wrapper}>
       <ThemedView
         style={[
-          {
-            borderRadius: 12,
-            marginHorizontal: MARGIN,
-            marginBottom: MARGIN,
-            paddingHorizontal: 8,
-            paddingVertical: 8,
-
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 0,
-            },
-            shadowOpacity: 0.15,
-            shadowRadius: 15,
+          style.card,
+          isWideLayout && {
+            ...style.wideCard,
+            minWidth: height,
           },
-          width > height
-            ? {
-                marginHorizontal: "auto",
-                minWidth: height,
-              }
-            : {},
         ]}
       >
         <Host style={{ flex: 1 }}>
@@ -160,14 +135,32 @@ function Content({
             </Button>
           </HStack>
         </Host>
-        <Slider
-          minimumValue={0}
-          maximumValue={duration}
-          value={position}
-          onSlidingComplete={(time) => TrackPlayer.seekTo(time)}
-          tapToSeek={true}
-        />
       </ThemedView>
     </View>
   );
 }
+
+const style = StyleSheet.create({
+  wrapper: {
+    position: "absolute",
+    width: "100%",
+    bottom: 0,
+  },
+  card: {
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 15,
+  },
+  wideCard: {
+    borderRadius: 12,
+    marginHorizontal: "auto",
+    bottom: 12,
+  },
+});
