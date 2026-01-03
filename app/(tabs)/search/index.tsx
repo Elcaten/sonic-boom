@@ -1,126 +1,139 @@
 import { ListItem } from "@/components/ListItem";
 import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
-import { ThemedText } from "@/components/themed-text";
-import { useDebouncedState } from "@/hooks/use-debounce-state";
-import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
-import { subsonicQueries } from "@/utils/subsonicQueries";
-import { Host, HStack, List, Section, Text } from "@expo/ui/swift-ui";
+import { useSearch } from "@/hooks/use-recently-searched";
+import { useThemeColor } from "@/hooks/use-theme-color";
+import {
+  ContentUnavailableView,
+  Host,
+  HStack,
+  List,
+  Section,
+} from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
 import { useEffect } from "react";
+import { ActivityIndicator } from "react-native";
 import { Artist, Child } from "subsonic-api";
 
-type SearchItem =
-  | {
-      type: "Album";
-      album: Child;
-    }
-  | { type: "Song"; song: Child }
-  | { type: "Artist"; artist: Artist };
-
 export default function SearchIndex() {
-  const [_, debounceSearch, setSearch] = useDebouncedState("", 300);
-
+  const bgSecondary = useThemeColor({}, "bgSecondary");
   const navigation = useNavigation();
+
+  const search = useSearch();
+
   useEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
-        // placement: "stacked",
         placeholder: "Search",
-        onChangeText: (e) => setSearch(e.nativeEvent.text),
+        onChangeText: (e) => search.setQuery(e.nativeEvent.text),
       },
     });
-  }, [navigation, setSearch]);
+  }, [navigation]);
 
-  const searchQuery = useSubsonicQuery({
-    ...subsonicQueries.search({ query: debounceSearch }),
-    enabled: !!debounceSearch,
-  });
+  const renderSong = (song: Child) => (
+    <ListItem
+      key={song.id}
+      href={{
+        pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
+        params: { albumId: song.albumId, artistId: song.artistId },
+      }}
+      onPress={() => search.handleResultSelect({ type: "Song", song })}
+      title={song.title}
+      subtitle={`Song · ${song.artist}`}
+      coverId={song.id}
+    />
+  );
 
-  const data = searchQuery.data;
+  const renderAlbum = (album: Child) => (
+    <ListItem
+      key={album.id}
+      href={{
+        pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
+        params: { albumId: album.id, artistId: album.artistId! },
+      }}
+      onPress={() => search.handleResultSelect({ type: "Album", album })}
+      title={album.title}
+      subtitle={`Album · ${album.artist}`}
+      coverId={album.id}
+    />
+  );
 
-  if (searchQuery.isLoading) {
-    return null;
-  }
+  const renderArtist = (artist: Artist) => (
+    <ListItem
+      key={artist.id}
+      href={{
+        pathname: "/(tabs)/artists/[artistId]/albums",
+        params: { artistId: artist.id },
+      }}
+      onPress={() => search.handleResultSelect({ type: "Artist", artist })}
+      title={artist.name}
+      subtitle="Artist"
+      coverId={artist.id}
+    />
+  );
 
-  if (_ === "") {
+  if (search.isLoading) {
     return (
-      // <ThemedSafeAreaView style={{ flex: 1 }}>
-      <Host style={{ flex: 1 }}>
-        <List>
-          <Section title="Recently Searched">
-            <HStack>
-              <Text>hell</Text>
-            </HStack>
-            <HStack>
-              <Text>hell</Text>
-            </HStack>
-          </Section>
-        </List>
-      </Host>
-      // </ThemedSafeAreaView>
+      <ThemedSafeAreaView
+        style={{
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: bgSecondary,
+        }}
+      >
+        <ActivityIndicator size="large" />
+      </ThemedSafeAreaView>
     );
   }
 
-  if (!data?.album && !data?.artist && !data?.song) {
+  if (search.query === "") {
     return (
-      <ThemedSafeAreaView>
-        <ThemedText>NOTHING FOUND</ThemedText>
-      </ThemedSafeAreaView>
+      <Host style={{ flex: 1 }}>
+        <List>
+          <Section title="Recently Searched">
+            {search.recentSearches.map((item, index) => (
+              <HStack key={index}>
+                {item.type === "Album" && renderAlbum(item.album)}
+                {item.type === "Artist" && renderArtist(item.artist)}
+                {item.type === "Song" && renderSong(item.song)}
+              </HStack>
+            ))}
+          </Section>
+        </List>
+      </Host>
+    );
+  }
+
+  if (
+    !search.results?.album &&
+    !search.results?.artist &&
+    !search.results?.song
+  ) {
+    return (
+      <Host style={{ flex: 1 }}>
+        <ContentUnavailableView
+          title={`No results for ${search.debouncedQuery}`}
+          description="Try a new search"
+          systemImage="magnifyingglass"
+        ></ContentUnavailableView>
+      </Host>
     );
   }
 
   return (
     <Host style={{ flex: 1 }}>
       <List>
-        {data?.song && data.song.length > 0 && (
-          <Section title="Songs">
-            {data.song.map((song) => (
-              <ListItem
-                key={song.id}
-                href={{
-                  //TODO: navigate and start playing or start playing?
-                  pathname:
-                    "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
-                  params: { albumId: song.albumId, artistId: song.artistId },
-                }}
-                title={song.title}
-                subtitle={`Song · ${song.artist}`}
-                coverId={song.id}
-              />
-            ))}
-          </Section>
+        {search.results?.song && search.results.song.length > 0 && (
+          <Section title="Songs">{search.results.song.map(renderSong)}</Section>
         )}
-        {data?.album && data.album.length > 0 && (
+        {search.results?.album && search.results?.album.length > 0 && (
           <Section title="Albums">
-            {data.album.map((album) => (
-              <ListItem
-                key={album.id}
-                href={{
-                  pathname:
-                    "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
-                  params: { albumId: album.id, artistId: album.artistId! },
-                }}
-                title={album.title}
-                subtitle={`Album · ${album.artist}`}
-                coverId={album.id}
-              />
-            ))}
+            {search.results.album.map(renderAlbum)}
           </Section>
         )}
-        {data?.artist && data.artist.length > 0 && (
+        {search.results?.artist && search.results?.artist.length > 0 && (
           <Section title="Artists">
-            {data.artist.map((artist) => (
-              <ListItem
-                key={artist.id}
-                href={{
-                  pathname: "/(tabs)/artists/[artistId]/albums",
-                  params: { artistId: artist.id },
-                }}
-                title={artist.name}
-                subtitle="Artist"
-                coverId={artist.id}
-              />
-            ))}
+            {search.results?.artist.map(renderArtist)}
           </Section>
         )}
       </List>

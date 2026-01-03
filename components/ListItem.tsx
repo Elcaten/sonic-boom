@@ -21,7 +21,9 @@ export function ListItem({
             <Text color="primary" lineLimit={1}>
               {title}
             </Text>
-            <Text color="secondary">{subtitle}</Text>
+            <Text color="secondary" lineLimit={1}>
+              {subtitle}
+            </Text>
           </VStack>
           <Spacer />
           <Image systemName="chevron.right" size={14} color="secondary" />
