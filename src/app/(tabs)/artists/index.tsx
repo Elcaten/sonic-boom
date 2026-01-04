@@ -40,9 +40,7 @@ export default function ArtistsScreen() {
       }))
     ) ?? []
   )
-    .filter((artist) =>
-      artist.artist.name.toLocaleLowerCase().includes(sanitizedSearch)
-    )
+    .filter((artist) => artist.artist.name.toLocaleLowerCase().includes(sanitizedSearch))
     .reduce<Record<string, ArtistID3[]>>((acc, curr) => {
       if (!acc[curr.section]) {
         acc[curr.section] = [];
@@ -62,7 +60,7 @@ export default function ArtistsScreen() {
         <ContentUnavailableView
           title={`Loading`}
           description="Wait"
-          systemImage="hourglass.tophalf.fill"
+          systemImage="progress.indicator"
         ></ContentUnavailableView>
       </Host>
     );
@@ -84,11 +82,7 @@ export default function ArtistsScreen() {
     <Host style={{ flex: 1 }}>
       <List
         listStyle={
-          Platform.OS === "ios"
-            ? Platform.isPad
-              ? "insetGrouped"
-              : "grouped"
-            : "automatic"
+          Platform.OS === "ios" ? (Platform.isPad ? "insetGrouped" : "grouped") : "automatic"
         }
       >
         {data.map((item) => {

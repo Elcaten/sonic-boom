@@ -16,7 +16,6 @@ export function CoverArt({
   elevated?: boolean;
 }) {
   const theme = useColorScheme() ?? "light";
-  console.log(id, size);
   const coverArtQuery = useSubsonicQuery(subsonicQuery.coverArtUrl(id, size));
 
   const borderRadius = {
