@@ -1,4 +1,4 @@
-import { CallApiParams } from "@/hooks/use-subsonic-query";
+import { CallApiParams } from "@/queries/use-subsonic-query";
 import {
   DataTag,
   DefaultError,

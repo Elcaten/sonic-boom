@@ -1,9 +1,9 @@
 import { CoverArt } from "@/components/CoverArt";
+import { subsonicQueries } from "@/queries/subsonicQueries";
 import {
   useEnsureSubsonicQuery,
   useSubsonicQuery,
-} from "@/hooks/use-subsonic-query";
-import { subsonicQueries } from "@/utils/subsonicQueries";
+} from "@/queries/use-subsonic-query";
 import {
   SubsonicTrack,
   subsonicTrackPlayer,

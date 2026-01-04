@@ -1,5 +1,5 @@
 import { ListItem } from "@/components/ListItem";
-import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
+import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";

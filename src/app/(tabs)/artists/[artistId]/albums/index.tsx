@@ -1,5 +1,5 @@
 import { ListItem } from "@/components/ListItem";
-import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
+import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { formatDuration } from "@/utils/formatDuration";
 import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
 import { useLocalSearchParams, useNavigation } from "expo-router";

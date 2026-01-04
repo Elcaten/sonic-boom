@@ -1,10 +1,10 @@
 // hooks/useSearch.ts
-import { subsonicQueries } from "@/utils/subsonicQueries";
+import { subsonicQueries } from "@/queries/subsonicQueries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { Artist, Child } from "subsonic-api";
+import { useSubsonicQuery } from "../queries/use-subsonic-query";
 import { useDebouncedState } from "./use-debounce-state";
-import { useSubsonicQuery } from "./use-subsonic-query";
 
 const STORAGE_KEY = "recentSearches";
 const RECENTLY_SEARCH_COUNT = 5;

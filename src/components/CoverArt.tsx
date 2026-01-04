@@ -1,5 +1,5 @@
-import { useSubsonicQuery } from "@/hooks/use-subsonic-query";
-import { subsonicQueries } from "@/utils/subsonicQueries";
+import { subsonicQueries } from "@/queries/subsonicQueries";
+import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { Image } from "expo-image";
 import {
   ImageStyle,
