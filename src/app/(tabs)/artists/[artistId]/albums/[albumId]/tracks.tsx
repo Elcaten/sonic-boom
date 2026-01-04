@@ -1,5 +1,5 @@
 import { CoverArt } from "@/components/CoverArt";
-import { subsonicQueries } from "@/queries/subsonicQueries";
+import { subsonicQueries } from "@/queries/subsonic-query";
 import {
   useEnsureSubsonicQuery,
   useSubsonicQuery,

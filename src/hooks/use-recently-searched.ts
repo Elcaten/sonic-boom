@@ -1,5 +1,5 @@
 // hooks/useSearch.ts
-import { subsonicQueries } from "@/queries/subsonicQueries";
+import { subsonicQueries } from "@/queries/subsonic-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { Artist, Child } from "subsonic-api";

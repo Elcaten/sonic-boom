@@ -1,4 +1,4 @@
-import { subsonicQueries } from "@/queries/subsonicQueries";
+import { subsonicQueries } from "@/queries/subsonic-query";
 import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { Image } from "expo-image";
 import {
