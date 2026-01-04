@@ -1,6 +1,5 @@
 import { CallApiParams } from "@/queries/use-subsonic-query";
 import {
-  DataTag,
   DefaultError,
   QueryKey,
   queryOptions,
@@ -8,7 +7,8 @@ import {
 } from "@tanstack/react-query";
 
 function susbsonicQueryOptions<
-  TQueryFnData = unknown,
+  TCallApiResult = unknown,
+  TQueryFnData = TCallApiResult extends Promise<infer U> ? U : TCallApiResult,
   TError = DefaultError,
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
@@ -19,12 +19,9 @@ function susbsonicQueryOptions<
     TData,
     TQueryKey
   > & {
-    callApi: (...[api, session]: CallApiParams) => TQueryFnData;
+    callApi: (...[api, session]: CallApiParams) => TCallApiResult;
   }
-): UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
-  queryKey: DataTag<TQueryKey, TQueryFnData, TError>;
-  callApi: (...[api, session]: CallApiParams) => TQueryFnData;
-} {
+) {
   return { ...queryOptions(options), callApi: options.callApi };
 }
 
