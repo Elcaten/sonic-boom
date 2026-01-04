@@ -64,7 +64,6 @@ export default function LoginForm() {
                 onChangeText={setServerAddress}
                 keyboardType="url"
                 autocorrection={false}
-                a
               ></TextField>
             </VStack>
 
