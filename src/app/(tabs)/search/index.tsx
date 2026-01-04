@@ -10,6 +10,7 @@ import {
   Section,
 } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
+import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 import { Artist, Child } from "subsonic-api";
@@ -26,22 +27,28 @@ export default function SearchIndex() {
         placeholder: "Search",
         onChangeText: (e) => search.setQuery(e.nativeEvent.text),
       },
-    });
+    } satisfies ExtendedStackNavigationOptions);
   }, [navigation]);
 
-  const renderSong = (song: Child) => (
-    <ListItem
-      key={song.id}
-      href={{
-        pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
-        params: { albumId: song.albumId, artistId: song.artistId },
-      }}
-      onPress={() => search.handleResultSelect({ type: "Song", song })}
-      title={song.title}
-      subtitle={`Song · ${song.artist}`}
-      coverId={song.id}
-    />
-  );
+  const renderSong = (song: Child) => {
+    if (!song.albumId || !song.artistId) {
+      return null;
+    }
+
+    return (
+      <ListItem
+        key={song.id}
+        href={{
+          pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
+          params: { albumId: song.albumId, artistId: song.artistId },
+        }}
+        onPress={() => search.handleResultSelect({ type: "Song", song })}
+        title={song.title}
+        subtitle={`Song · ${song.artist}`}
+        coverId={song.id}
+      />
+    );
+  };
 
   const renderAlbum = (album: Child) => (
     <ListItem

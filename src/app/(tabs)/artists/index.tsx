@@ -2,6 +2,7 @@ import { ListItem } from "@/components/ListItem";
 import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
+import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import { ArtistID3 } from "subsonic-api";
@@ -13,7 +14,7 @@ export default function ArtistsScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
-        autoCapitalize: false,
+        autoCapitalize: "none",
         placeholder: "Search",
         onChangeText(e) {
           setSearch(e.nativeEvent.text);
@@ -22,7 +23,7 @@ export default function ArtistsScreen() {
           setSearch("");
         },
       },
-    });
+    } satisfies ExtendedStackNavigationOptions);
   }, [navigation]);
 
   const artistsQuery = useSubsonicQuery({

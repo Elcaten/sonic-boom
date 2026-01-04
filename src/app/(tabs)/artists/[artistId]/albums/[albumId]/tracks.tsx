@@ -217,7 +217,7 @@ export default function AlbumTracks() {
           })}
         </Section>
 
-        <Section modifiers={[frame({ height: 64 })]}></Section>
+        <Section modifiers={[frame({ height: 64 })]} children={null}></Section>
       </List>
     </Host>
   );

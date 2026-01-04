@@ -3,6 +3,7 @@ import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { formatDuration } from "@/utils/formatDuration";
 import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 
@@ -16,7 +17,7 @@ export default function ArtistAlbums() {
   useEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
-        autoCapitalize: false,
+        autoCapitalize: "none",
         placeholder: "Search",
         onChangeText(e) {
           setSearch(e.nativeEvent.text);
@@ -25,7 +26,7 @@ export default function ArtistAlbums() {
           setSearch("");
         },
       },
-    });
+    } satisfies ExtendedStackNavigationOptions);
   }, [navigation]);
 
   const artistQuery = useSubsonicQuery({
