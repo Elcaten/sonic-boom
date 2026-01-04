@@ -2,7 +2,6 @@ import { useAuth } from "@/context/auth-context";
 import {
   DefaultError,
   QueryKey,
-  UseQueryOptions,
   UseQueryResult,
   queryOptions,
   useQuery,
@@ -11,11 +10,7 @@ import {
 import * as Crypto from "expo-crypto";
 import { useCallback } from "react";
 import { SubsonicAPI } from "subsonic-api";
-
-export type CallApiParams = [
-  api: SubsonicAPI,
-  session: Awaited<ReturnType<SubsonicAPI["navidromeSession"]>>
-];
+import { UseSubsonicQueryOptions } from "./subsonicQueries";
 
 function sessionQueryOptions(params: {
   username: string;
@@ -33,14 +28,19 @@ function sessionQueryOptions(params: {
 }
 
 export function useSubsonicQuery<
+  TCallApiResult = unknown,
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
 >(
-  options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey> & {
-    callApi: (...params: CallApiParams) => TQueryFnData | Promise<TQueryFnData>;
-  }
+  options: UseSubsonicQueryOptions<
+    TCallApiResult,
+    TQueryFnData,
+    TError,
+    TData,
+    TQueryKey
+  >
 ): UseQueryResult<NoInfer<TData>, TError> {
   const getApi = useGetApi();
   const auth = useAuth();
@@ -65,18 +65,21 @@ export function useEnsureSubsonicQuery() {
   const auth = useAuth();
 
   return useCallback(
-    async <
+    async function <
+      TCallApiResult = unknown,
       TQueryFnData = unknown,
       TError = DefaultError,
       TData = TQueryFnData,
       TQueryKey extends QueryKey = QueryKey
     >(
-      options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey> & {
-        callApi: (
-          ...params: CallApiParams
-        ) => TQueryFnData | Promise<TQueryFnData>;
-      }
-    ): Promise<TQueryFnData> => {
+      options: UseSubsonicQueryOptions<
+        TCallApiResult,
+        TQueryFnData,
+        TError,
+        TData,
+        TQueryKey
+      >
+    ): Promise<TQueryFnData> {
       const navidromeSession = await queryClient.ensureQueryData(
         sessionQueryOptions({ username: auth.username, getApi })
       );

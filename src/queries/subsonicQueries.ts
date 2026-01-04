@@ -1,10 +1,25 @@
-import { CallApiParams } from "@/queries/use-subsonic-query";
 import {
   DefaultError,
   QueryKey,
   queryOptions,
   UndefinedInitialDataOptions,
 } from "@tanstack/react-query";
+import { SubsonicAPI } from "subsonic-api";
+
+type CallApiParams = [
+  api: SubsonicAPI,
+  session: Awaited<ReturnType<SubsonicAPI["navidromeSession"]>>
+];
+
+export type UseSubsonicQueryOptions<
+  TCallApiResult = unknown,
+  TQueryFnData = TCallApiResult extends Promise<infer U> ? U : TCallApiResult,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey
+> = UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
+  callApi: (...params: CallApiParams) => TQueryFnData | Promise<TQueryFnData>;
+};
 
 function susbsonicQueryOptions<
   TCallApiResult = unknown,
@@ -13,31 +28,18 @@ function susbsonicQueryOptions<
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
 >(
-  options: UndefinedInitialDataOptions<
+  options: UseSubsonicQueryOptions<
+    TCallApiResult,
     TQueryFnData,
     TError,
     TData,
     TQueryKey
-  > & {
-    callApi: (...[api, session]: CallApiParams) => TCallApiResult;
-  }
+  >
 ) {
   return { ...queryOptions(options), callApi: options.callApi };
 }
 
 export const subsonicQueries = {
-  currentNavidromeSession: function () {
-    return susbsonicQueryOptions({
-      queryKey: ["currentNavidromeSession"],
-      callApi: (...[_, session]: CallApiParams) => session ?? null,
-    });
-  },
-  randomSong: function () {
-    return susbsonicQueryOptions({
-      queryKey: ["random-song"],
-      callApi: (...[api]: CallApiParams) => api.getRandomSongs(),
-    });
-  },
   streamUrl: function (trackId: string) {
     return susbsonicQueryOptions({
       queryKey: ["stream-url", trackId],
