@@ -1,3 +1,4 @@
+import { APIProvider } from "@/context/api-context";
 import { AuthProvider, useAuth } from "@/context/auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useSetupTrackPlayer } from "@/hooks/use-setup-track-player";
@@ -69,12 +70,14 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <AuthProvider onLoad={() => setAuthReady(true)}>
-          <PersistQueryClientProvider
-            client={queryClient}
-            persistOptions={{ persister: asyncStoragePersister }}
-          >
-            <Content />
-          </PersistQueryClientProvider>
+          <APIProvider>
+            <PersistQueryClientProvider
+              client={queryClient}
+              persistOptions={{ persister: asyncStoragePersister }}
+            >
+              <Content />
+            </PersistQueryClientProvider>
+          </APIProvider>
         </AuthProvider>
       </ThemeProvider>
     </SafeAreaProvider>
