@@ -1,13 +1,7 @@
-import { subsonicQueries } from "@/queries/subsonic-query";
+import { subsonicQuery } from "@/queries/subsonic-query";
 import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { Image } from "expo-image";
-import {
-  ImageStyle,
-  StyleProp,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
+import { ImageStyle, StyleProp, StyleSheet, useColorScheme, View } from "react-native";
 
 export function CoverArt({
   id,
@@ -18,12 +12,12 @@ export function CoverArt({
   /** The ID of a song, album or artist. */
   id: string | undefined;
   style?: StyleProp<ImageStyle>;
-  size: Parameters<(typeof subsonicQueries)["coverArtUrl"]>[1];
+  size: Parameters<(typeof subsonicQuery)["coverArtUrl"]>[1];
   elevated?: boolean;
 }) {
   const theme = useColorScheme() ?? "light";
   console.log(id, size);
-  const coverArtQuery = useSubsonicQuery(subsonicQueries.coverArtUrl(id, size));
+  const coverArtQuery = useSubsonicQuery(subsonicQuery.coverArtUrl(id, size));
 
   const borderRadius = {
     48: 6,

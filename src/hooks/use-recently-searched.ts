@@ -1,5 +1,5 @@
 // hooks/useSearch.ts
-import { subsonicQueries } from "@/queries/subsonic-query";
+import { subsonicQuery } from "@/queries/subsonic-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { Artist, Child } from "subsonic-api";
@@ -16,10 +16,7 @@ export type SearchItem =
   | { type: "Artist"; artist: Artist };
 
 export function useSearch() {
-  const [query, debouncedQuery, setQuery] = useDebouncedState(
-    "",
-    DEBOUNCE_TIME
-  );
+  const [query, debouncedQuery, setQuery] = useDebouncedState("", DEBOUNCE_TIME);
   const [recentSearches, setRecentSearches] = useState<SearchItem[]>([]);
 
   // Load recent searches on mount
@@ -43,7 +40,7 @@ export function useSearch() {
     isLoading,
     error,
   } = useSubsonicQuery({
-    ...subsonicQueries.search({ query: debouncedQuery }),
+    ...subsonicQuery.search({ query: debouncedQuery }),
     enabled: !!debouncedQuery,
   });
 

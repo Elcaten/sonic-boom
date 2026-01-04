@@ -1,13 +1,7 @@
 import { CoverArt } from "@/components/CoverArt";
-import { subsonicQueries } from "@/queries/subsonic-query";
-import {
-  useEnsureSubsonicQuery,
-  useSubsonicQuery,
-} from "@/queries/use-subsonic-query";
-import {
-  SubsonicTrack,
-  subsonicTrackPlayer,
-} from "@/utils/subsonicTrackPlayer";
+import { subsonicQuery } from "@/queries/subsonic-query";
+import { useEnsureSubsonicQuery, useSubsonicQuery } from "@/queries/use-subsonic-query";
+import { SubsonicTrack, subsonicTrackPlayer } from "@/utils/subsonicTrackPlayer";
 import {
   Button,
   Host,
@@ -23,10 +17,7 @@ import { frame } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import TrackPlayer, {
-  useActiveTrack,
-  useIsPlaying,
-} from "react-native-track-player";
+import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 
 export default function AlbumTracks() {
   const { albumId, artistId } =
@@ -47,10 +38,8 @@ export default function AlbumTracks() {
   const handlePlayAlbumPress = async () => {
     const tracksToAdd: SubsonicTrack[] = [];
     for (const song of albumData) {
-      const streamUrl = await ensureQuery(subsonicQueries.streamUrl(song.id));
-      const coverArtUrl = await ensureQuery(
-        subsonicQueries.coverArtUrl(song.id, 64)
-      );
+      const streamUrl = await ensureQuery(subsonicQuery.streamUrl(song.id));
+      const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 64));
       tracksToAdd.push({
         id: song.id,
         url: streamUrl,
@@ -89,10 +78,8 @@ export default function AlbumTracks() {
     //TODO: refactor and resuse code with play album button
     const tracksToAdd: SubsonicTrack[] = [];
     for (const song of albumData) {
-      const streamUrl = await ensureQuery(subsonicQueries.streamUrl(song.id));
-      const coverArtUrl = await ensureQuery(
-        subsonicQueries.coverArtUrl(song.id, 64)
-      );
+      const streamUrl = await ensureQuery(subsonicQuery.streamUrl(song.id));
+      const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 64));
       tracksToAdd.push({
         id: song.id,
         url: streamUrl,
@@ -133,11 +120,7 @@ export default function AlbumTracks() {
         </Text>
       </VStack>
       <HStack spacing={12}>
-        <Button
-          variant="bordered"
-          onPress={handlePlayAlbumPress}
-          controlSize="large"
-        >
+        <Button variant="bordered" onPress={handlePlayAlbumPress} controlSize="large">
           <HStack
             modifiers={[
               frame({
@@ -150,12 +133,7 @@ export default function AlbumTracks() {
             <Text>Play</Text>
           </HStack>
         </Button>
-        <Button
-          variant="bordered"
-          onPress={handleShuffleAlbumPress}
-          controlSize="large"
-          disabled
-        >
+        <Button variant="bordered" onPress={handleShuffleAlbumPress} controlSize="large" disabled>
           <HStack
             modifiers={[
               frame({
@@ -206,9 +184,7 @@ export default function AlbumTracks() {
                   >
                     {String(item.track)}
                   </Text>
-                  <Text weight={isActive ? "semibold" : "regular"}>
-                    {item.title}
-                  </Text>
+                  <Text weight={isActive ? "semibold" : "regular"}>{item.title}</Text>
                   <Spacer />
                   <Text> </Text>
                 </HStack>
