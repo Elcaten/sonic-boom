@@ -1,49 +1,13 @@
 import {
-  DefaultError,
-  QueryKey,
-  queryOptions,
-  UndefinedInitialDataOptions,
-} from "@tanstack/react-query";
-import { SubsonicAPI } from "subsonic-api";
-
-type CallApiParams = [
-  api: SubsonicAPI,
-  session: Awaited<ReturnType<SubsonicAPI["navidromeSession"]>>
-];
-
-export type UseSubsonicQueryOptions<
-  TCallApiResult = unknown,
-  TQueryFnData = TCallApiResult extends Promise<infer U> ? U : TCallApiResult,
-  TError = DefaultError,
-  TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey
-> = UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
-  callApi: (...params: CallApiParams) => TQueryFnData | Promise<TQueryFnData>;
-};
-
-function susbsonicQueryOptions<
-  TCallApiResult = unknown,
-  TQueryFnData = TCallApiResult extends Promise<infer U> ? U : TCallApiResult,
-  TError = DefaultError,
-  TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey
->(
-  options: UseSubsonicQueryOptions<
-    TCallApiResult,
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryKey
-  >
-) {
-  return { ...queryOptions(options), callApi: options.callApi };
-}
+  susbsonicQueryOptions,
+  UseSubsonicQueryOptions,
+} from "./susbsonic-query-options";
 
 export const subsonicQueries = {
   streamUrl: function (trackId: string) {
     return susbsonicQueryOptions({
       queryKey: ["stream-url", trackId],
-      callApi: (...[api, session]: CallApiParams) => {
+      callApi: (...[api, session]) => {
         const url = new URL(`${api.baseURL()}rest/stream.view`);
         url.searchParams.set("v", "1.16");
         url.searchParams.set("c", "subsonic-api");
@@ -65,7 +29,7 @@ export const subsonicQueries = {
   ) {
     return susbsonicQueryOptions({
       queryKey: ["cover-art", entityId, size],
-      callApi: (...[api, session]: CallApiParams) => {
+      callApi: (...[api, session]) => {
         const url = new URL(`${api.baseURL()}rest/getCoverArt.view`);
         url.searchParams.set("v", "1.16.1");
         url.searchParams.set("c", "subsonic-api");
@@ -88,14 +52,14 @@ export const subsonicQueries = {
   song: function (trackId: string) {
     return susbsonicQueryOptions({
       queryKey: ["song", trackId],
-      callApi: (...[api]: CallApiParams) => api.getSong({ id: trackId }),
+      callApi: (...[api]) => api.getSong({ id: trackId }),
     });
   },
 
   search: function ({ query }: { query: string }) {
     return susbsonicQueryOptions({
       queryKey: ["song", query],
-      callApi: (...[api]: CallApiParams) =>
+      callApi: (...[api]) =>
         api
           .search2({ query, songCount: 100, albumCount: 5, artistCount: 5 })
           .then((result) => result.searchResult2)
@@ -116,4 +80,7 @@ export const subsonicQueries = {
           }),
     });
   },
-};
+} satisfies Record<
+  string,
+  (..._: any) => UseSubsonicQueryOptions<any, any, any, any, any>
+>;

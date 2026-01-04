@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { SubsonicAPI } from "subsonic-api";
-import { UseSubsonicQueryOptions } from "./subsonic-query";
+import { UseSubsonicQueryOptions } from "./susbsonic-query-options";
 
 function sessionQueryOptions(params: { username: string; api: SubsonicAPI }) {
   return queryOptions({
