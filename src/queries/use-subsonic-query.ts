@@ -35,13 +35,13 @@ function sessionQueryOptions(params: {
 export function useSubsonicQuery<
   TQueryFnData = unknown,
   TError = DefaultError,
-  TData = Awaited<TQueryFnData>,
+  TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
 >(
   options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey> & {
-    callApi: (...params: CallApiParams) => TQueryFnData;
+    callApi: (...params: CallApiParams) => TQueryFnData | Promise<TQueryFnData>;
   }
-): UseQueryResult<NoInfer<Awaited<TData>>, TError> {
+): UseQueryResult<NoInfer<TData>, TError> {
   const getApi = useGetApi();
   const auth = useAuth();
   const navidromeSession = useQuery(
@@ -65,10 +65,18 @@ export function useEnsureSubsonicQuery() {
   const auth = useAuth();
 
   return useCallback(
-    async <TQueryFnData = unknown>(options: {
-      queryKey: QueryKey;
-      callApi: (...params: CallApiParams) => TQueryFnData;
-    }): Promise<Awaited<TQueryFnData>> => {
+    async <
+      TQueryFnData = unknown,
+      TError = DefaultError,
+      TData = TQueryFnData,
+      TQueryKey extends QueryKey = QueryKey
+    >(
+      options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey> & {
+        callApi: (
+          ...params: CallApiParams
+        ) => TQueryFnData | Promise<TQueryFnData>;
+      }
+    ): Promise<TQueryFnData> => {
       const navidromeSession = await queryClient.ensureQueryData(
         sessionQueryOptions({ username: auth.username, getApi })
       );
