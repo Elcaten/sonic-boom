@@ -20,8 +20,8 @@ export function FloatingPlayer() {
     }
 
     router.navigate({
-      pathname: "/modal",
-      // params: { albumId: track.albumId, artistId: track.artistId },
+      pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
+      params: { albumId: track.albumId, artistId: track.artistId },
     });
   };
 
