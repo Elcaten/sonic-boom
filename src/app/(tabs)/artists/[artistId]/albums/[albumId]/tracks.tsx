@@ -1,6 +1,7 @@
 import { CoverArt } from "@/components/CoverArt";
 import { subsonicQuery } from "@/queries/subsonic-query";
 import { useEnsureSubsonicQuery, useSubsonicQuery } from "@/queries/use-subsonic-query";
+import { formatDuration } from "@/utils/formatDuration";
 import { SubsonicTrack, subsonicTrackPlayer } from "@/utils/subsonicTrackPlayer";
 import {
   Button,
@@ -13,7 +14,7 @@ import {
   Text,
   VStack,
 } from "@expo/ui/swift-ui";
-import { frame } from "@expo/ui/swift-ui/modifiers";
+import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { useWindowDimensions } from "react-native";
@@ -173,7 +174,7 @@ export default function AlbumTracks() {
             return (
               <Button
                 key={item.id}
-                disabled={bufferingDuringPlay}
+                // disabled={bufferingDuringPlay}
                 onPress={() => handleTrackItemPress(item.id)}
               >
                 <HStack spacing={12}>
@@ -186,7 +187,11 @@ export default function AlbumTracks() {
                   </Text>
                   <Text weight={isActive ? "semibold" : "regular"}>{item.title}</Text>
                   <Spacer />
-                  <Text> </Text>
+                  {item.duration && (
+                    <Text color="secondary" modifiers={[padding({ trailing: 16 })]}>
+                      {formatDuration(item.duration)}
+                    </Text>
+                  )}
                 </HStack>
               </Button>
             );
