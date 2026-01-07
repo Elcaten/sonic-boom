@@ -1,4 +1,5 @@
 import { ListItem } from "@/components/ListItem";
+import { subsonicQuery } from "@/queries/subsonic-query";
 import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
@@ -26,10 +27,7 @@ export default function ArtistsScreen() {
     } satisfies ExtendedStackNavigationOptions);
   }, [navigation]);
 
-  const artistsQuery = useSubsonicQuery({
-    queryKey: ["artists"],
-    callApi: (api) => api.getArtists(),
-  });
+  const artistsQuery = useSubsonicQuery(subsonicQuery.artists());
 
   const sanitizedSearch = search.toLocaleLowerCase();
   const _data = (

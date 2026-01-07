@@ -21,13 +21,9 @@ import { useWindowDimensions } from "react-native";
 import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 
 export default function AlbumTracks() {
-  const { albumId, artistId } =
-    useLocalSearchParams<"/(tabs)/artists/[artistId]/albums/[albumId]/tracks">();
-
-  const albumQuery = useSubsonicQuery({
-    queryKey: ["albums", artistId, albumId],
-    callApi: (api) => api.getAlbum({ id: albumId }),
-  });
+  const { albumId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums/[albumId]/tracks">();
+  ``;
+  const albumQuery = useSubsonicQuery(subsonicQuery.album(albumId));
   const albumData = albumQuery.data?.album.song ?? [];
 
   const { playing, bufferingDuringPlay } = useIsPlaying();

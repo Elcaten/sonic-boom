@@ -74,4 +74,25 @@ export const subsonicQuery = {
           }),
     });
   },
+
+  album: function (albumId: string) {
+    return susbsonicQueryOptions({
+      queryKey: ["album", albumId],
+      callApi: (api) => api.getAlbum({ id: albumId }),
+    });
+  },
+
+  artists: function () {
+    return susbsonicQueryOptions({
+      queryKey: ["artists"],
+      callApi: (api) => api.getArtists(),
+    });
+  },
+
+  artist: function (artistId: string) {
+    return susbsonicQueryOptions({
+      queryKey: ["artist", artistId],
+      callApi: (api) => api.getArtist({ id: artistId }),
+    });
+  },
 } satisfies Record<string, (..._: any) => UseSubsonicQueryOptions<any, any, any, any, any>>;

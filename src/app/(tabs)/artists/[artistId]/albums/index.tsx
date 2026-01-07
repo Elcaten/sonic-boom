@@ -1,4 +1,5 @@
 import { ListItem } from "@/components/ListItem";
+import { subsonicQuery } from "@/queries/subsonic-query";
 import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { formatDuration } from "@/utils/formatDuration";
 import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
@@ -29,10 +30,7 @@ export default function ArtistAlbums() {
     } satisfies ExtendedStackNavigationOptions);
   }, [navigation]);
 
-  const artistQuery = useSubsonicQuery({
-    queryKey: ["artist", artistId],
-    callApi: (api) => api.getArtist({ id: artistId }),
-  });
+  const artistQuery = useSubsonicQuery(subsonicQuery.artist(artistId));
 
   const data = (artistQuery.data?.artist.album ?? []).filter((album) => {
     const sanitizedSearch = search.toLocaleLowerCase();
