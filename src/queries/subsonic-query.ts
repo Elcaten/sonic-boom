@@ -1,4 +1,4 @@
-import { susbsonicQueryOptions, UseSubsonicQueryOptions } from "./susbsonic-query-options";
+import { susbsonicQueryOptions } from "./susbsonic-query-options";
 
 export const subsonicQuery = {
   streamUrl: function (trackId: string) {
@@ -95,4 +95,4 @@ export const subsonicQuery = {
       callApi: (api) => api.getArtist({ id: artistId }),
     });
   },
-} satisfies Record<string, (..._: any) => UseSubsonicQueryOptions<any, any, any, any, any>>;
+} satisfies Record<string, (...args: any[]) => ReturnType<typeof susbsonicQueryOptions>>;

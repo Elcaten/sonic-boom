@@ -22,7 +22,6 @@ import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-pl
 
 export default function AlbumTracks() {
   const { albumId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums/[albumId]/tracks">();
-  ``;
   const albumQuery = useSubsonicQuery(subsonicQuery.album(albumId));
   const albumData = albumQuery.data?.album.song ?? [];
 
