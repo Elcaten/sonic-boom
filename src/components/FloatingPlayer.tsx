@@ -1,22 +1,11 @@
 import { SubsonicTrack } from "@/utils/subsonicTrackPlayer";
-import {
-  Button,
-  Host,
-  HStack,
-  Image,
-  Spacer,
-  Text,
-  VStack,
-} from "@expo/ui/swift-ui";
+import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 import { useRouter } from "expo-router";
 import { PropsWithChildren } from "react";
-import TrackPlayer, {
-  useActiveTrack,
-  useIsPlaying,
-} from "react-native-track-player";
+import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
 import { ThemedView } from "./themed-view";
 
@@ -91,8 +80,10 @@ const style = StyleSheet.create({
     position: "absolute",
     width: "100%",
     bottom: 0,
+    padding: 12,
   },
   card: {
+    borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 8,
 
@@ -105,9 +96,7 @@ const style = StyleSheet.create({
     shadowRadius: 15,
   },
   wideCard: {
-    borderRadius: 12,
     marginHorizontal: "auto",
-    bottom: 12,
   },
 });
 
@@ -160,10 +149,7 @@ function Content({
             )}
           </VStack>
           <Spacer />
-          <Button
-            onPress={handlePrevPress}
-            modifiers={[padding({ trailing: 8 })]}
-          >
+          <Button onPress={handlePrevPress} modifiers={[padding({ trailing: 8 })]}>
             <Image systemName={"backward.fill"} size={16} color="primary" />
           </Button>
           <Button
@@ -172,21 +158,12 @@ function Content({
             modifiers={[padding({ trailing: 8 })]}
           >
             <Image
-              systemName={
-                bufferingDuringPlay
-                  ? "pause.fill"
-                  : playing
-                  ? "pause.fill"
-                  : "play.fill"
-              }
+              systemName={bufferingDuringPlay ? "pause.fill" : playing ? "pause.fill" : "play.fill"}
               size={24}
               color="primary"
             />
           </Button>
-          <Button
-            onPress={handleNextPress}
-            modifiers={[padding({ trailing: 8 })]}
-          >
+          <Button onPress={handleNextPress} modifiers={[padding({ trailing: 8 })]}>
             <Image systemName={"forward.fill"} size={16} color="primary" />
           </Button>
         </HStack>
