@@ -4,11 +4,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useSetupTrackPlayer } from "@/hooks/use-setup-track-player";
 import { playbackService } from "@/utils/playbackService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
@@ -86,19 +82,13 @@ export default function RootLayout() {
 
 function Content() {
   const auth = useAuth();
-  const isLoggedIn = Boolean(
-    auth.serverAddress && auth.username && auth.password
-  );
+  const isLoggedIn = Boolean(auth.serverAddress && auth.username && auth.password);
 
   return (
     <>
       <Stack>
         <Stack.Protected guard={isLoggedIn}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", title: "Modal" }}
-          />
         </Stack.Protected>
         <Stack.Protected guard={!isLoggedIn}>
           <Stack.Screen name="sign-in" options={{ headerShown: false }} />
