@@ -3,5 +3,12 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/Thumbs.db": true,
+    ".expo": true,
+    ".vscode": true
   }
 }
