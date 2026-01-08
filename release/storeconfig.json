@@ -1,0 +1,37 @@
+{
+  "name": "NMLS source",
+  "subtitle": "A source for all of my apps",
+  "description": "",
+  "iconURL": "https://i.imgur.com/pqIZoZo.jpeg",
+  "tintColor": "#6156e2",
+  "apps": [
+    {
+      "name": "sonicboom",
+      "bundleIdentifier": "com.heavy.hope.sonicboom",
+      "developerName": "NMLS",
+      "subtitle": "Subsonic compatible player",
+      "localizedDescription": "",
+      "iconURL": "https://i.imgur.com/hOuYlee.png",
+      "tintColor": "#0e7ff0",
+      "category": "entertainment",
+      "screenshots": [],
+      "versions": [
+        {
+          "downloadURL": "https://github.com/Elcaten/sonic-boom/raw/refs/heads/main/release/sonicboom.ipa",
+          "size": 12700000,
+          "version": "1.0.0",
+          "date": "2026-01-08T23:15:00+01:00",
+          "localizedDescription": null,
+          "minOSVersion": null
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {
+          "NSFaceIDUsageDescription": "Allow sonicboom to access your Face ID biometric data."
+        }
+      }
+    }
+  ],
+  "news": []
+}
