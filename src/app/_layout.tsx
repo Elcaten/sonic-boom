@@ -1,14 +1,13 @@
 import { APIProvider } from "@/context/api-context";
 import { AuthProvider, useAuth } from "@/context/auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { useSetupTrackPlayer } from "@/hooks/use-setup-track-player";
-import { playbackService } from "@/utils/playbackService";
+import { registerPlaybackService } from "@/track-player/register-playback-service";
+import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { setAudioModeAsync } from "expo-audio";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -23,13 +22,7 @@ export const unstable_settings = {
   anchor: "(tabs)",
 };
 
-setAudioModeAsync({
-  playsInSilentMode: true,
-  shouldPlayInBackground: true,
-  interruptionMode: "mixWithOthers",
-});
-
-TrackPlayer.registerPlaybackService(() => playbackService);
+registerPlaybackService();
 
 const queryClient = new QueryClient({
   defaultOptions: {

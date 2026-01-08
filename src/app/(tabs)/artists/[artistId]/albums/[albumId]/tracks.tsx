@@ -2,7 +2,6 @@ import { CoverArt } from "@/components/CoverArt";
 import { subsonicQuery } from "@/queries/subsonic-query";
 import { useEnsureSubsonicQuery, useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { formatDuration } from "@/utils/formatDuration";
-import { SubsonicTrack, subsonicTrackPlayer } from "@/utils/subsonicTrackPlayer";
 import {
   Button,
   Host,
@@ -18,7 +17,7 @@ import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
+import TrackPlayer, { Track, useActiveTrack, useIsPlaying } from "react-native-track-player";
 
 export default function AlbumTracks() {
   const { albumId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums/[albumId]/tracks">();
@@ -26,13 +25,12 @@ export default function AlbumTracks() {
   const albumData = albumQuery.data?.album.song ?? [];
 
   const { playing, bufferingDuringPlay } = useIsPlaying();
-  //TODO: fix typing
-  const activeTrack = useActiveTrack() as SubsonicTrack;
+  const activeTrack = useActiveTrack();
 
   const ensureQuery = useEnsureSubsonicQuery();
 
   const handlePlayAlbumPress = async () => {
-    const tracksToAdd: SubsonicTrack[] = [];
+    const tracksToAdd: Track[] = [];
     for (const song of albumData) {
       const streamUrl = await ensureQuery(subsonicQuery.streamUrl(song.id));
       const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 64));
@@ -48,7 +46,7 @@ export default function AlbumTracks() {
       });
     }
 
-    await subsonicTrackPlayer.setQueue(tracksToAdd);
+    await TrackPlayer.setQueue(tracksToAdd);
     TrackPlayer.play();
   };
 
@@ -72,7 +70,7 @@ export default function AlbumTracks() {
     }
 
     //TODO: refactor and resuse code with play album button
-    const tracksToAdd: SubsonicTrack[] = [];
+    const tracksToAdd: Track[] = [];
     for (const song of albumData) {
       const streamUrl = await ensureQuery(subsonicQuery.streamUrl(song.id));
       const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 64));
@@ -88,7 +86,7 @@ export default function AlbumTracks() {
       });
     }
 
-    await subsonicTrackPlayer.setQueue(tracksToAdd);
+    await TrackPlayer.setQueue(tracksToAdd);
     const startIndex = albumData.findIndex((song) => song.id === trackId);
     await TrackPlayer.skip(startIndex);
     TrackPlayer.play();

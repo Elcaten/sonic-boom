@@ -6,7 +6,7 @@ import TrackPlayer, {
   RepeatMode,
 } from "react-native-track-player";
 
-const setupPlayer = async () => {
+const setupTrackPlayer = async () => {
   await TrackPlayer.setupPlayer({
     maxCacheSize: 1024 * 10,
   });
@@ -37,7 +37,7 @@ export const useSetupTrackPlayer = ({ onLoad }: { onLoad?: () => void }) => {
   useEffect(() => {
     if (isInitialized.current) return;
 
-    setupPlayer()
+    setupTrackPlayer()
       .then(() => {
         isInitialized.current = true;
         onLoad?.();

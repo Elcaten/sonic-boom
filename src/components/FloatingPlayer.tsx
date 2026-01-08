@@ -1,20 +1,18 @@
-import { SubsonicTrack } from "@/utils/subsonicTrackPlayer";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 import { useRouter } from "expo-router";
 import { PropsWithChildren } from "react";
-import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
+import TrackPlayer, { Track, useActiveTrack, useIsPlaying } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
 import { ThemedView } from "./themed-view";
 
 export function FloatingPlayer() {
-  //TODO: fix typing
-  const activeTrack = useActiveTrack() as SubsonicTrack;
+  const activeTrack = useActiveTrack();
 
   const router = useRouter();
-  const onPress = ({ track }: { track: SubsonicTrack }) => {
+  const onPress = ({ track }: { track: Track }) => {
     if (!track.albumId || !track.artistId) {
       return;
     }
@@ -100,13 +98,7 @@ const style = StyleSheet.create({
   },
 });
 
-function Content({
-  track,
-  onPress,
-}: {
-  track: SubsonicTrack;
-  onPress: (_: { track: SubsonicTrack }) => void;
-}) {
+function Content({ track, onPress }: { track: Track; onPress: (_: { track: Track }) => void }) {
   const { playing, bufferingDuringPlay } = useIsPlaying();
 
   const handlePlayPausePress = () => {
