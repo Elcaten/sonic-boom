@@ -1,6 +1,6 @@
 import { CoverArt } from "@/components/CoverArt";
 import { subsonicQuery } from "@/queries/subsonic-query";
-import { useEnsureSubsonicQuery, useSubsonicQuery } from "@/queries/use-subsonic-query";
+import { useSubsonicQuery } from "@/queries/use-subsonic-query";
 import { formatDuration } from "@/utils/formatDuration";
 import {
   Button,
@@ -17,37 +17,22 @@ import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import TrackPlayer, { Track, useActiveTrack, useIsPlaying } from "react-native-track-player";
+import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 
 export default function AlbumTracks() {
   const { albumId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums/[albumId]/tracks">();
   const albumQuery = useSubsonicQuery(subsonicQuery.album(albumId));
-  const albumData = albumQuery.data?.album.song ?? [];
 
-  const { playing, bufferingDuringPlay } = useIsPlaying();
+  const { playing } = useIsPlaying();
   const activeTrack = useActiveTrack();
 
-  const ensureQuery = useEnsureSubsonicQuery();
-
   const handlePlayAlbumPress = async () => {
-    const tracksToAdd: Track[] = [];
-    for (const song of albumData) {
-      const streamUrl = await ensureQuery(subsonicQuery.streamUrl(song.id));
-      const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 512));
-      tracksToAdd.push({
-        id: song.id,
-        url: streamUrl,
-        title: song.title,
-        artist: song.artist,
-        artistId: song.artistId,
-        album: song.album,
-        albumId: song.albumId,
-        artwork: coverArtUrl,
-      });
+    if (!albumQuery.data?.tracks) {
+      return;
     }
 
-    await TrackPlayer.setQueue(tracksToAdd);
-    TrackPlayer.play();
+    await TrackPlayer.setQueue(albumQuery.data?.tracks);
+    await TrackPlayer.play();
   };
 
   const handleShuffleAlbumPress = async () => {
@@ -55,41 +40,23 @@ export default function AlbumTracks() {
   };
 
   const handleTrackItemPress = async (trackId: string) => {
-    //TODO: handle errors
-    if (trackId === activeTrack?.id) {
-      if (bufferingDuringPlay) {
-        return;
-      }
+    if (!albumQuery.data?.tracks) {
+      return;
+    }
 
+    if (trackId === activeTrack?.id) {
       if (playing) {
-        TrackPlayer.pause();
+        await TrackPlayer.pause();
       } else {
-        TrackPlayer.play();
+        await TrackPlayer.play();
       }
       return;
     }
 
-    //TODO: refactor and resuse code with play album button
-    const tracksToAdd: Track[] = [];
-    for (const song of albumData) {
-      const streamUrl = await ensureQuery(subsonicQuery.streamUrl(song.id));
-      const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 512));
-      tracksToAdd.push({
-        id: song.id,
-        url: streamUrl,
-        title: song.title,
-        artist: song.artist,
-        artistId: song.artistId,
-        album: song.album,
-        albumId: song.albumId,
-        artwork: coverArtUrl,
-      });
-    }
-
-    await TrackPlayer.setQueue(tracksToAdd);
-    const startIndex = albumData.findIndex((song) => song.id === trackId);
+    await TrackPlayer.setQueue(albumQuery.data.tracks);
+    const startIndex = albumQuery.data.tracks.findIndex((song) => song.id === trackId);
     await TrackPlayer.skip(startIndex);
-    TrackPlayer.play();
+    await TrackPlayer.play();
   };
 
   const { width, height } = useWindowDimensions();
@@ -161,7 +128,7 @@ export default function AlbumTracks() {
         )}
 
         <Section>
-          {albumData.map((item) => {
+          {albumQuery.data?.album.song?.map((item) => {
             const isActive = item.id === activeTrack?.id;
 
             return (
@@ -191,7 +158,7 @@ export default function AlbumTracks() {
           })}
         </Section>
 
-        <Section modifiers={[frame({ height: 64 })]} children={null}></Section>
+        <Section modifiers={[frame({ height: 64 })]}>{null}</Section>
       </List>
     </Host>
   );

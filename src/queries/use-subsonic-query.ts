@@ -37,7 +37,30 @@ export function useSubsonicQuery<
 
   const query = useQuery({
     ...options,
-    queryFn: () => options.callApi(api, navidromeSession.data!),
+    queryFn: () => {
+      const buildUrl = ({
+        pathName,
+        params = {},
+      }: {
+        pathName: string;
+        params?: Record<string, string>;
+      }) => {
+        const url = new URL(`${api.baseURL()}rest/${pathName}`);
+        url.searchParams.set("u", navidromeSession.data!.username);
+        url.searchParams.set("t", navidromeSession.data!.subsonicToken);
+        url.searchParams.set("s", navidromeSession.data!.subsonicSalt);
+        url.searchParams.set("v", "1.16");
+        url.searchParams.set("c", "subsonic-api");
+        url.searchParams.set("f", "json");
+        for (const [key, value] of Object.entries(params)) {
+          url.searchParams.set(key, value);
+        }
+
+        return url.toString();
+      };
+
+      return options.callApi({ api, buildUrl });
+    },
   });
 
   return query;
@@ -61,9 +84,30 @@ export function useEnsureSubsonicQuery() {
       sessionQueryOptions({ username: auth.username, api })
     );
 
+    const buildUrl = ({
+      pathName,
+      params = {},
+    }: {
+      pathName: string;
+      params?: Record<string, string>;
+    }) => {
+      const url = new URL(`${api.baseURL()}rest/${pathName}`);
+      url.searchParams.set("u", navidromeSessionQueryData!.username);
+      url.searchParams.set("t", navidromeSessionQueryData!.subsonicToken);
+      url.searchParams.set("s", navidromeSessionQueryData!.subsonicSalt);
+      url.searchParams.set("v", "1.16");
+      url.searchParams.set("c", "subsonic-api");
+      url.searchParams.set("f", "json");
+      for (const [key, value] of Object.entries(params)) {
+        url.searchParams.set(key, value);
+      }
+
+      return url.toString();
+    };
+
     const queryData = queryClient.ensureQueryData({
       ...options,
-      queryFn: () => options.callApi(api, navidromeSessionQueryData),
+      queryFn: () => options.callApi({ api, buildUrl }),
     });
 
     return queryData;

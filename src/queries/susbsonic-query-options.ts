@@ -6,10 +6,10 @@ import {
 } from "@tanstack/react-query";
 import { SubsonicAPI } from "subsonic-api";
 
-type CallApiParams = [
-  api: SubsonicAPI,
-  session: Awaited<ReturnType<SubsonicAPI["navidromeSession"]>>
-];
+type CallApiParams = {
+  api: SubsonicAPI;
+  buildUrl: (_: { pathName: string; params?: Record<string, string> }) => string;
+};
 
 export type UseSubsonicQueryOptions<
   TCallApiResult = unknown,
@@ -18,7 +18,7 @@ export type UseSubsonicQueryOptions<
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
 > = UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
-  callApi: (...params: CallApiParams) => TQueryFnData | Promise<TQueryFnData>;
+  callApi: (_: CallApiParams) => TQueryFnData | Promise<TQueryFnData>;
 };
 
 export function susbsonicQueryOptions<
@@ -27,14 +27,6 @@ export function susbsonicQueryOptions<
   TError = DefaultError,
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
->(
-  options: UseSubsonicQueryOptions<
-    TCallApiResult,
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryKey
-  >
-) {
+>(options: UseSubsonicQueryOptions<TCallApiResult, TQueryFnData, TError, TData, TQueryKey>) {
   return { ...queryOptions(options), callApi: options.callApi };
 }

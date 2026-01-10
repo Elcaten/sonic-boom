@@ -1,21 +1,11 @@
+import { Track } from "react-native-track-player";
 import { susbsonicQueryOptions } from "./susbsonic-query-options";
 
 export const subsonicQuery = {
   streamUrl: function (trackId: string) {
     return susbsonicQueryOptions({
       queryKey: ["stream-url", trackId],
-      callApi: (api, session) => {
-        const url = new URL(`${api.baseURL()}rest/stream.view`);
-        url.searchParams.set("v", "1.16");
-        url.searchParams.set("c", "subsonic-api");
-        url.searchParams.set("f", "json");
-        url.searchParams.set("id", trackId);
-        url.searchParams.set("u", session.username);
-        url.searchParams.set("t", session.subsonicToken);
-        url.searchParams.set("s", session.subsonicSalt);
-
-        return url.toString();
-      },
+      callApi: ({ buildUrl }) => buildUrl({ pathName: "stream.view", params: { id: trackId } }),
       staleTime: Infinity,
     });
   },
@@ -23,21 +13,11 @@ export const subsonicQuery = {
   coverArtUrl: function (entityId: string | undefined, size: 48 | 64 | 256 | 320 | 512 | "Full") {
     return susbsonicQueryOptions({
       queryKey: ["cover-art", entityId, size],
-      callApi: (api, session) => {
-        const url = new URL(`${api.baseURL()}rest/getCoverArt.view`);
-        url.searchParams.set("v", "1.16.1");
-        url.searchParams.set("c", "subsonic-api");
-        url.searchParams.set("f", "json");
-        url.searchParams.set("id", entityId!);
-        if (size !== "Full") {
-          url.searchParams.set("size", size.toString());
-        }
-        url.searchParams.set("u", session.username);
-        url.searchParams.set("t", session.subsonicToken);
-        url.searchParams.set("s", session.subsonicSalt);
-
-        return url.toString();
-      },
+      callApi: ({ buildUrl }) =>
+        buildUrl({
+          pathName: "getCoverArt.view",
+          params: { id: entityId!, ...(size === "Full" ? {} : { size: size.toString() }) },
+        }),
       staleTime: Infinity,
       enabled: Boolean(entityId),
     });
@@ -46,14 +26,14 @@ export const subsonicQuery = {
   song: function (trackId: string) {
     return susbsonicQueryOptions({
       queryKey: ["song", trackId],
-      callApi: (api) => api.getSong({ id: trackId }),
+      callApi: ({ api }) => api.getSong({ id: trackId }),
     });
   },
 
   search: function ({ query }: { query: string }) {
     return susbsonicQueryOptions({
       queryKey: ["song", query],
-      callApi: (api) =>
+      callApi: ({ api }) =>
         api
           .search2({ query, songCount: 100, albumCount: 5, artistCount: 5 })
           .then((result) => result.searchResult2)
@@ -78,21 +58,37 @@ export const subsonicQuery = {
   album: function (albumId: string) {
     return susbsonicQueryOptions({
       queryKey: ["album", albumId],
-      callApi: (api) => api.getAlbum({ id: albumId }),
+      callApi: ({ api, buildUrl }) =>
+        api.getAlbum({ id: albumId }).then((album) => {
+          return {
+            ...album,
+            tracks: album.album.song?.map<Track>((song) => ({
+              id: song.id,
+              url: buildUrl({ pathName: "stream.view", params: { id: song.id } }),
+              title: song.title,
+              artist: song.artist,
+              artistId: song.artistId,
+              album: song.album,
+              albumId: song.albumId,
+              artwork: buildUrl({ pathName: "getCoverArt.view", params: { id: song.id } }),
+            })),
+          };
+        }),
+      staleTime: Infinity,
     });
   },
 
   artists: function () {
     return susbsonicQueryOptions({
       queryKey: ["artists"],
-      callApi: (api) => api.getArtists(),
+      callApi: ({ api }) => api.getArtists(),
     });
   },
 
   artist: function (artistId: string) {
     return susbsonicQueryOptions({
       queryKey: ["artist", artistId],
-      callApi: (api) => api.getArtist({ id: artistId }),
+      callApi: ({ api }) => api.getArtist({ id: artistId }),
     });
   },
 } satisfies Record<string, (...args: any[]) => ReturnType<typeof susbsonicQueryOptions>>;
