@@ -33,7 +33,7 @@ export default function AlbumTracks() {
     const tracksToAdd: Track[] = [];
     for (const song of albumData) {
       const streamUrl = await ensureQuery(subsonicQuery.streamUrl(song.id));
-      const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 64));
+      const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 512));
       tracksToAdd.push({
         id: song.id,
         url: streamUrl,
@@ -73,7 +73,7 @@ export default function AlbumTracks() {
     const tracksToAdd: Track[] = [];
     for (const song of albumData) {
       const streamUrl = await ensureQuery(subsonicQuery.streamUrl(song.id));
-      const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 64));
+      const coverArtUrl = await ensureQuery(subsonicQuery.coverArtUrl(song.id, 512));
       tracksToAdd.push({
         id: song.id,
         url: streamUrl,
