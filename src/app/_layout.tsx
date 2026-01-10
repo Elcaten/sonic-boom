@@ -6,8 +6,7 @@ import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -32,6 +31,7 @@ const queryClient = new QueryClient({
   },
 });
 
+//TODO: put back after dev
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
 });
@@ -60,12 +60,9 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <AuthProvider onLoad={() => setAuthReady(true)}>
           <APIProvider>
-            <PersistQueryClientProvider
-              client={queryClient}
-              persistOptions={{ persister: asyncStoragePersister }}
-            >
+            <QueryClientProvider client={queryClient}>
               <Content />
-            </PersistQueryClientProvider>
+            </QueryClientProvider>
           </APIProvider>
         </AuthProvider>
       </ThemeProvider>
