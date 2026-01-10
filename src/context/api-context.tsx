@@ -9,6 +9,10 @@ export function APIProvider({ children }: PropsWithChildren<unknown>) {
   const auth = useAuth();
 
   const api = useMemo(() => {
+    if (!auth.password || !auth.username || !auth.serverAddress) {
+      return undefined;
+    }
+
     const randomBytes = Crypto.getRandomBytes(16);
 
     const salt = Array.from(randomBytes)
