@@ -5,7 +5,6 @@ import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import React, { useEffect, useState } from "react";
-import { Platform } from "react-native";
 import { ArtistID3 } from "subsonic-api";
 
 export default function ArtistsScreen() {
@@ -78,11 +77,7 @@ export default function ArtistsScreen() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List
-        listStyle={
-          Platform.OS === "ios" ? (Platform.isPad ? "insetGrouped" : "grouped") : "automatic"
-        }
-      >
+      <List listStyle={"automatic"}>
         {data.map((item) => {
           return (
             <Section key={item.title} title={item.title}>

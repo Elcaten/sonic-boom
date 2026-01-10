@@ -6,11 +6,9 @@ import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import { useEffect, useState } from "react";
-import { Platform } from "react-native";
 
 export default function ArtistAlbums() {
-  const { artistId } =
-    useLocalSearchParams<"/(tabs)/artists/[artistId]/albums">();
+  const { artistId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums">();
 
   const [search, setSearch] = useState("");
 
@@ -63,22 +61,10 @@ export default function ArtistAlbums() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List
-        listStyle={
-          Platform.OS === "ios"
-            ? Platform.isPad
-              ? "insetGrouped"
-              : "grouped"
-            : "sidebar"
-        }
-      >
+      <List listStyle={"automatic"}>
         {data.map((item) => {
-          const title = [item.name, item.year ? `(${item.year})` : null]
-            .filter(Boolean)
-            .join(" ");
-          const subtitle = `${item.songCount} track(s) | ${formatDuration(
-            item.duration
-          )}`;
+          const title = [item.name, item.year ? `(${item.year})` : null].filter(Boolean).join(" ");
+          const subtitle = `${item.songCount} track(s) | ${formatDuration(item.duration)}`;
           return (
             <ListItem
               key={item.id}
