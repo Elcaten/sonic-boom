@@ -10,13 +10,13 @@ export const subsonicQuery = {
     });
   },
 
-  coverArtUrl: function (entityId: string | undefined, size: 48 | 64 | 256 | 512 | "Full") {
+  coverArtUrl: function (entityId: string | undefined, size: 48 | 256) {
     return susbsonicQueryOptions({
       queryKey: ["cover-art", entityId, size],
       callApi: ({ buildUrl }) =>
         buildUrl({
           pathName: "getCoverArt.view",
-          params: { id: entityId!, ...(size === "Full" ? {} : { size: size.toString() }) },
+          params: { id: entityId!, size: size },
         }),
       staleTime: Infinity,
       enabled: Boolean(entityId),

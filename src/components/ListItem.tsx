@@ -14,8 +14,8 @@ export function ListItem({
     <Link {...rest} asChild>
       <Button>
         <HStack spacing={16}>
-          <VStack modifiers={[frame({ width: 64, height: 64 })]}>
-            <CoverArt id={coverId} size={64} />
+          <VStack modifiers={[frame({ width: 48, height: 48 })]}>
+            <CoverArt id={coverId} size={48} />
           </VStack>
           <VStack alignment="leading" spacing={2}>
             <Text color="primary" lineLimit={1}>

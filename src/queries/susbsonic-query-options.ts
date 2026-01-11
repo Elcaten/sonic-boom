@@ -6,9 +6,23 @@ import {
 } from "@tanstack/react-query";
 import { SubsonicAPI } from "subsonic-api";
 
-type CallApiParams = {
+export type CallApiParams = {
   api: SubsonicAPI;
-  buildUrl: (_: { pathName: string; params?: Record<string, string> }) => string;
+  buildUrl: {
+    (_: {
+      pathName: "stream.view";
+      params: {
+        id: string;
+      };
+    }): string;
+    (_: {
+      pathName: "getCoverArt.view";
+      params: {
+        id: string;
+        size?: number;
+      };
+    }): string;
+  };
 };
 
 export type UseSubsonicQueryOptions<

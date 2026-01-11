@@ -20,9 +20,7 @@ export function CoverArt({
 
   const borderRadius = {
     48: 6,
-    64: 6,
     256: 12,
-    Full: 12,
   }[size];
 
   const themedShadowContainer =
@@ -31,12 +29,10 @@ export function CoverArt({
       : [styles.shadowContainer, styles.shadowContainerDark];
   const shadow = {
     48: themedShadowContainer,
-    64: themedShadowContainer,
     256: themedShadowContainer,
-    Full: themedShadowContainer,
   }[size];
 
-  const imgSize = size === "Full" ? "100%" : size;
+  const imgSize = size;
 
   return (
     <View style={[{ width: imgSize, height: imgSize }, elevated && shadow]}>
