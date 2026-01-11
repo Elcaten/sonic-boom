@@ -3,6 +3,18 @@ import { Track } from "react-native-track-player";
 import { susbsonicQueryOptions } from "./susbsonic-query-options";
 
 export const subsonicQuery = {
+  albumList: function (params: { size: number; offset: number }) {
+    return susbsonicQueryOptions({
+      queryKey: ["albumList", params.size, params.offset],
+      callApi: ({ api }) =>
+        api.getAlbumList({
+          type: "alphabeticalByArtist",
+          size: params.size,
+          offset: params.offset,
+        }),
+    });
+  },
+
   streamUrl: function (trackId: string) {
     return susbsonicQueryOptions({
       queryKey: ["stream-url", trackId],

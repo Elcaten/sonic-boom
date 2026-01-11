@@ -11,7 +11,7 @@ import {
 import { SubsonicAPI } from "subsonic-api";
 import { CallApiParams, UseSubsonicQueryOptions } from "./susbsonic-query-options";
 
-function sessionQueryOptions(params: { username: string; api: SubsonicAPI }) {
+export function sessionQueryOptions(params: { username: string; api: SubsonicAPI }) {
   return queryOptions({
     queryKey: ["navidrome-session", params.username],
     queryFn: async () => {
