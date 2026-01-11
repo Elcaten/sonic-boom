@@ -19,7 +19,7 @@ export type CallApiParams = {
       pathName: "getCoverArt.view";
       params: {
         id: string;
-        size?: number;
+        size: number;
       };
     }): string;
   };

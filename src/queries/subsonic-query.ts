@@ -16,7 +16,7 @@ export const subsonicQuery = {
       callApi: ({ buildUrl }) =>
         buildUrl({
           pathName: "getCoverArt.view",
-          params: { id: entityId!, size: size },
+          params: { id: entityId!, size: size * 2 },
         }),
       staleTime: Infinity,
       enabled: Boolean(entityId),
@@ -70,7 +70,10 @@ export const subsonicQuery = {
               artistId: song.artistId,
               album: song.album,
               albumId: song.albumId,
-              artwork: buildUrl({ pathName: "getCoverArt.view", params: { id: song.id } }),
+              artwork: buildUrl({
+                pathName: "getCoverArt.view",
+                params: { id: song.id, size: 256 * 2 },
+              }),
             })),
           };
         }),
