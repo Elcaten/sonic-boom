@@ -10,7 +10,7 @@ export const subsonicQuery = {
     });
   },
 
-  coverArtUrl: function (entityId: string | undefined, size: 48 | 64 | 256 | 320 | 512 | "Full") {
+  coverArtUrl: function (entityId: string | undefined, size: 48 | 64 | 256 | 512 | "Full") {
     return susbsonicQueryOptions({
       queryKey: ["cover-art", entityId, size],
       callApi: ({ buildUrl }) =>

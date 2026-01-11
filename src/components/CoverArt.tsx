@@ -22,7 +22,6 @@ export function CoverArt({
     48: 6,
     64: 6,
     256: 12,
-    320: 12,
     512: 12,
     Full: 12,
   }[size];
@@ -35,7 +34,6 @@ export function CoverArt({
     48: themedShadowContainer,
     64: themedShadowContainer,
     256: themedShadowContainer,
-    320: themedShadowContainer,
     512: themedShadowContainer,
     Full: themedShadowContainer,
   }[size];
