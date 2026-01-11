@@ -41,7 +41,11 @@ export function CoverArt({
           blurhash: getRandomBlurhash(),
         }}
         placeholderContentFit="fill"
-        source={coverArtQuery.isLoading ? undefined : coverArtQuery?.data}
+        source={
+          coverArtQuery.isLoading
+            ? undefined
+            : { uri: coverArtQuery?.data, cacheKey: `cover-${id}-${size}` }
+        }
         style={[{ width: imgSize, height: imgSize, borderRadius }, style]}
       />
     </View>

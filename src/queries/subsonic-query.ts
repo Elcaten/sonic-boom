@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { Track } from "react-native-track-player";
 import { susbsonicQueryOptions } from "./susbsonic-query-options";
 
@@ -58,25 +59,28 @@ export const subsonicQuery = {
   album: function (albumId: string) {
     return susbsonicQueryOptions({
       queryKey: ["album", albumId],
-      callApi: ({ api, buildUrl }) =>
-        api.getAlbum({ id: albumId }).then((album) => {
-          return {
-            ...album,
-            tracks: album.album.song?.map<Track>((song) => ({
-              id: song.id,
-              url: buildUrl({ pathName: "stream.view", params: { id: song.id } }),
-              title: song.title,
-              artist: song.artist,
-              artistId: song.artistId,
-              album: song.album,
-              albumId: song.albumId,
-              artwork: buildUrl({
-                pathName: "getCoverArt.view",
-                params: { id: song.id, size: 256 * 2 },
-              }),
-            })),
-          };
-        }),
+      callApi: async ({ api, buildUrl }) => {
+        const album = await api.getAlbum({ id: albumId });
+        const cachedArtwork = await Image.getCachePathAsync(`cover-${albumId}-${256}`);
+        const artworkToFetch = buildUrl({
+          pathName: "getCoverArt.view",
+          params: { id: albumId, size: 256 * 2 },
+        });
+        console.log(cachedArtwork ?? artworkToFetch);
+        return {
+          ...album,
+          tracks: album.album.song?.map<Track>((song) => ({
+            id: song.id,
+            url: buildUrl({ pathName: "stream.view", params: { id: song.id } }),
+            title: song.title,
+            artist: song.artist,
+            artistId: song.artistId,
+            album: song.album,
+            albumId: song.albumId,
+            artwork: cachedArtwork ?? artworkToFetch,
+          })),
+        };
+      },
       staleTime: Infinity,
     });
   },
