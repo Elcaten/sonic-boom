@@ -59,74 +59,52 @@ export default function AlbumTracks() {
     await TrackPlayer.play();
   };
 
-  const { width, height } = useWindowDimensions();
-  const isWideLayout = width > height;
+  const { width } = useWindowDimensions();
+  const isWideLayout = width > 600;
 
   const topSectionSpacing = 16;
 
-  const coverArt = (
-    <VStack modifiers={[frame({ width: 256, height: 256 })]}>
-      <CoverArt id={albumId} size={256} elevated />
-    </VStack>
-  );
-
-  const albumArtistActions = (
-    <VStack spacing={topSectionSpacing}>
-      <VStack modifiers={[frame({ maxHeight: Infinity })]} spacing={4}>
-        <Text weight="semibold" size={20}>
-          {albumQuery.data?.album.name || " "}
-        </Text>
-        <Text size={20} color="secondary" weight="medium">
-          {albumQuery.data?.album.artist || " "}
-        </Text>
-      </VStack>
-      <HStack spacing={12}>
-        <Button variant="bordered" onPress={handlePlayAlbumPress} controlSize="large">
-          <HStack
-            modifiers={[
-              frame({
-                maxWidth: Infinity,
-              }),
-            ]}
-            spacing={8}
-          >
-            <Image systemName="play.fill" size={18} />
-            <Text>Play</Text>
-          </HStack>
-        </Button>
-        <Button variant="bordered" onPress={handleShuffleAlbumPress} controlSize="large" disabled>
-          <HStack
-            modifiers={[
-              frame({
-                maxWidth: Infinity,
-              }),
-            ]}
-            spacing={8}
-          >
-            <Image systemName="shuffle" size={18} />
-            <Text>Shuffle</Text>
-          </HStack>
-        </Button>
-      </HStack>
-    </VStack>
-  );
+  const Stack = isWideLayout ? HStack : VStack;
 
   return (
     <Host style={{ flex: 1 }}>
+      {/* // TODO: add listRowSeparator modifier when available */}
       <List listStyle="inset">
-        {/* // TODO: add listRowSeparator modifier when available */}
-        {isWideLayout ? (
-          <HStack spacing={topSectionSpacing}>
-            {coverArt}
-            {albumArtistActions}
-          </HStack>
-        ) : (
-          <VStack spacing={topSectionSpacing}>
-            {coverArt}
-            {albumArtistActions}
+        {/* List header */}
+        <Stack spacing={topSectionSpacing}>
+          {/* Cover Art */}
+          <VStack modifiers={[frame({ width: 256, height: 256 })]}>
+            <CoverArt id={albumId} size={256} elevated />
           </VStack>
-        )}
+          <VStack spacing={topSectionSpacing}>
+            {/* Album & Artist */}
+            <VStack modifiers={[frame({ maxHeight: Infinity })]} spacing={4}>
+              <Text weight="semibold" size={20}>
+                {albumQuery.data?.album.name || " "}
+              </Text>
+              <Text size={20} color="secondary" weight="medium">
+                {albumQuery.data?.album.artist || " "}
+              </Text>
+            </VStack>
+            {/* Buttons; padding to fix buttons not aligned with cover art in wide layout */}
+            <HStack spacing={12} modifiers={[padding({ bottom: 6 })]}>
+              <Button variant="bordered" onPress={handlePlayAlbumPress} controlSize="large">
+                <HStack modifiers={[frame({ maxWidth: Infinity })]} spacing={8}>
+                  <Image systemName="play.fill" size={18} />
+                  <Text>Play</Text>
+                </HStack>
+              </Button>
+              <Button variant="bordered" onPress={handleShuffleAlbumPress} controlSize="large">
+                <HStack modifiers={[frame({ maxWidth: Infinity })]} spacing={8}>
+                  <Image systemName="shuffle" size={18} />
+                  <Text>Shuffle</Text>
+                </HStack>
+              </Button>
+            </HStack>
+          </VStack>
+        </Stack>
 
+        {/* Tracks */}
         <Section>
           {albumQuery.data?.album.song?.map((item) => {
             const isActive = item.id === activeTrack?.id;
@@ -158,6 +136,7 @@ export default function AlbumTracks() {
           })}
         </Section>
 
+        {/* Padding to account for FloatingPlayer */}
         <Section modifiers={[frame({ height: 64 })]}>{null}</Section>
       </List>
     </Host>
