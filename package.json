@@ -51,7 +51,7 @@
     "react-native-track-player": "^4.1.2",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.5.1",
-    "subsonic-api": "^3.2.0"
+    "subsonic-api": "file:/Users/nameless/src/subsonic-api"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.91.2",
