@@ -1,5 +1,5 @@
-import { subsonicQuery } from "@/queries/subsonic-query";
-import { useSubsonicQuery } from "@/queries/use-subsonic-query";
+import { useRequiredQueries } from "@/context/app-context";
+import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { ImageStyle, StyleProp, StyleSheet, useColorScheme, View } from "react-native";
 
@@ -12,11 +12,12 @@ export function CoverArt({
   /** The ID of a song, album or artist. */
   id: string | undefined;
   style?: StyleProp<ImageStyle>;
-  size: Parameters<(typeof subsonicQuery)["coverArtUrl"]>[1];
+  size: Parameters<ReturnType<typeof useRequiredQueries>["coverArtUrl"]>[1];
   elevated?: boolean;
 }) {
   const theme = useColorScheme() ?? "light";
-  const coverArtQuery = useSubsonicQuery(subsonicQuery.coverArtUrl(id, size));
+  const queries = useRequiredQueries();
+  const coverArtQuery = useQuery(queries.coverArtUrl(id, size));
 
   const borderRadius = {
     48: 6,

@@ -1,6 +1,5 @@
 import { CoverArt } from "@/components/CoverArt";
-import { subsonicQuery } from "@/queries/subsonic-query";
-import { useSubsonicQuery } from "@/queries/use-subsonic-query";
+import { useRequiredQueries } from "@/context/app-context";
 import { formatDuration } from "@/utils/formatDuration";
 import {
   Button,
@@ -14,6 +13,7 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { useWindowDimensions } from "react-native";
@@ -21,7 +21,8 @@ import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-pl
 
 export default function AlbumTracks() {
   const { albumId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums/[albumId]/tracks">();
-  const albumQuery = useSubsonicQuery(subsonicQuery.album(albumId));
+  const queries = useRequiredQueries();
+  const albumQuery = useQuery(queries.album(albumId));
 
   const { playing } = useIsPlaying();
   const activeTrack = useActiveTrack();

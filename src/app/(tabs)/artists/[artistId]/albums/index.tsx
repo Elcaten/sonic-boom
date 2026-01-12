@@ -1,8 +1,8 @@
 import { ListItem } from "@/components/ListItem";
-import { subsonicQuery } from "@/queries/subsonic-query";
-import { useSubsonicQuery } from "@/queries/use-subsonic-query";
+import { useRequiredQueries } from "@/context/app-context";
 import { formatDuration } from "@/utils/formatDuration";
 import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import { useEffect, useState } from "react";
@@ -28,7 +28,8 @@ export default function ArtistAlbums() {
     } satisfies ExtendedStackNavigationOptions);
   }, [navigation]);
 
-  const artistQuery = useSubsonicQuery(subsonicQuery.artist(artistId));
+  const queries = useRequiredQueries();
+  const artistQuery = useQuery(queries.artist(artistId));
 
   const data = (artistQuery.data?.artist.album ?? []).filter((album) => {
     const sanitizedSearch = search.toLocaleLowerCase();

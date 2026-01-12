@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/context/app-context";
 import {
   Button,
   Form,
@@ -50,11 +50,7 @@ export default function LoginForm() {
           </VStack>
 
           {/** Form Fields*/}
-          <VStack
-            alignment="leading"
-            spacing={16}
-            modifiers={[padding({ horizontal: 20 })]}
-          >
+          <VStack alignment="leading" spacing={16} modifiers={[padding({ horizontal: 20 })]}>
             <VStack alignment="leading" spacing={8}>
               <Text weight="medium" color="secondary">
                 Server Address
@@ -82,10 +78,7 @@ export default function LoginForm() {
               <Text weight="medium" color="secondary">
                 Password
               </Text>
-              <SecureField
-                placeholder="admin"
-                onChangeText={setPassword}
-              ></SecureField>
+              <SecureField placeholder="admin" onChangeText={setPassword}></SecureField>
             </VStack>
           </VStack>
 

@@ -1,38 +1,13 @@
 import * as SecureStore from "expo-secure-store";
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 
-type ContextType = {
-  serverAddress: string;
-  username: string;
-  password: string;
-  setServerAddress: (value: string) => Promise<void>;
-  setUsername: (value: string) => Promise<void>;
-  setPassword: (value: string) => Promise<void>;
-  clearAll: () => Promise<void>;
-  isLoading: boolean;
-};
-
-// Create the context
-const AuthContext = createContext<ContextType | null>(null);
-
-// SecureStore keys
-const KEYS = {
+export const KEYS = {
   SERVER_ADDRESS: "server_address",
   USERNAME: "username",
   PASSWORD: "password",
 };
 
-// Provider component
-export const AuthProvider = ({
-  children,
-  onLoad,
-}: PropsWithChildren<{ onLoad: () => void }>) => {
+export function useAuthLogic(onLoad: () => void) {
   const [serverAddress, setServerAddressState] = useState("");
   const [username, setUsernameState] = useState("");
   const [password, setPasswordState] = useState("");
@@ -60,7 +35,7 @@ export const AuthProvider = ({
     }
   };
 
-  const setServerAddress = async (value: string) => {
+  const setServerAddress = useCallback(async (value: string) => {
     try {
       setServerAddressState(value);
       if (value) {
@@ -71,9 +46,9 @@ export const AuthProvider = ({
     } catch (error) {
       console.error("Error saving server address:", error);
     }
-  };
+  }, []);
 
-  const setUsername = async (value: string) => {
+  const setUsername = useCallback(async (value: string) => {
     try {
       setUsernameState(value);
       if (value) {
@@ -84,9 +59,9 @@ export const AuthProvider = ({
     } catch (error) {
       console.error("Error saving username:", error);
     }
-  };
+  }, []);
 
-  const setPassword = async (value: string) => {
+  const setPassword = useCallback(async (value: string) => {
     try {
       setPasswordState(value);
       if (value) {
@@ -97,9 +72,9 @@ export const AuthProvider = ({
     } catch (error) {
       console.error("Error saving password:", error);
     }
-  };
+  }, []);
 
-  const clearAll = async () => {
+  const clearAll = useCallback(async () => {
     try {
       await SecureStore.deleteItemAsync(KEYS.SERVER_ADDRESS);
       await SecureStore.deleteItemAsync(KEYS.USERNAME);
@@ -110,34 +85,20 @@ export const AuthProvider = ({
     } catch (error) {
       console.error("Error clearing stored values:", error);
     }
+  }, []);
+
+  return {
+    state: {
+      serverAddress,
+      username,
+      password,
+      isLoading,
+    },
+    actions: {
+      setServerAddress,
+      setUsername,
+      setPassword,
+      clearAll,
+    },
   };
-
-  const value = {
-    serverAddress,
-    username,
-    password,
-    setServerAddress,
-    setUsername,
-    setPassword,
-    clearAll,
-    isLoading,
-  };
-
-  if (isLoading) {
-    return null;
-  }
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-// Custom hook to use the auth context
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
-
-// Export the context for advanced use cases
-export default AuthContext;
+}

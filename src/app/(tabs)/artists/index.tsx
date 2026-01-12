@@ -1,7 +1,7 @@
 import { ListItem } from "@/components/ListItem";
-import { subsonicQuery } from "@/queries/subsonic-query";
-import { useSubsonicQuery } from "@/queries/use-subsonic-query";
+import { useRequiredQueries } from "@/context/app-context";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import React, { useEffect, useState } from "react";
@@ -26,7 +26,8 @@ export default function ArtistsScreen() {
     } satisfies ExtendedStackNavigationOptions);
   }, [navigation]);
 
-  const artistsQuery = useSubsonicQuery(subsonicQuery.artists());
+  const queries = useRequiredQueries();
+  const artistsQuery = useQuery(queries.artists());
 
   const sanitizedSearch = search.toLocaleLowerCase();
   const _data = (

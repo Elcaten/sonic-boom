@@ -1,5 +1,4 @@
-import { APIProvider } from "@/context/api-context";
-import { AuthProvider, useAuth } from "@/context/auth-context";
+import { AppProvider, useIsAuthenticated } from "@/context/app-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { registerPlaybackService } from "@/track-player/register-playback-service";
 import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
@@ -58,21 +57,18 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <AuthProvider onLoad={() => setAuthReady(true)}>
-          <APIProvider>
-            <QueryClientProvider client={queryClient}>
-              <Content />
-            </QueryClientProvider>
-          </APIProvider>
-        </AuthProvider>
+        <AppProvider onLoad={() => setAuthReady(true)}>
+          <QueryClientProvider client={queryClient}>
+            <Content />
+          </QueryClientProvider>
+        </AppProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );
 }
 
 function Content() {
-  const auth = useAuth();
-  const isLoggedIn = Boolean(auth.serverAddress && auth.username && auth.password);
+  const isLoggedIn = useIsAuthenticated();
 
   return (
     <>

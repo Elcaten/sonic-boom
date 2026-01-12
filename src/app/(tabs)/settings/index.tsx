@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/auth-context";
+import { useAuth } from "@/context/app-context";
 import { Button, Form, Host, Section } from "@expo/ui/swift-ui";
 import { padding } from "@expo/ui/swift-ui/modifiers";
 import { Link } from "expo-router";
@@ -15,14 +15,11 @@ export default function SettingsView() {
   return (
     <Host style={{ flex: 1 }}>
       <Form>
-         <Section>
+        <Section>
           <Link href="/settings/animations" asChild>
-          <Button
-            systemImage="play.circle"
-            modifiers={[padding({ horizontal: 8 })]}
-          >
-            Animations
-          </Button>
+            <Button systemImage="play.circle" modifiers={[padding({ horizontal: 8 })]}>
+              Animations
+            </Button>
           </Link>
         </Section>
         <Section>
@@ -35,10 +32,7 @@ export default function SettingsView() {
           </Button>
         </Section>
         <Section>
-          <Button
-            onPress={onSignOutPress}
-            modifiers={[padding({ horizontal: 8 })]}
-          >
+          <Button onPress={onSignOutPress} modifiers={[padding({ horizontal: 8 })]}>
             Sign out
           </Button>
         </Section>
