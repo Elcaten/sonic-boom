@@ -1,6 +1,6 @@
 import { getCoverCacheKey } from "@/utils/get-cover-cache-key";
 import { queryOptions } from "@tanstack/react-query";
-import { Image } from "expo-image";
+import { Image, ImageSource } from "expo-image";
 import { useMemo } from "react";
 import { SubsonicAPI } from "subsonic-api";
 
@@ -31,21 +31,25 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
         });
       },
 
-      coverArtUrl: function (entityId: string | undefined, size: 48 | 256) {
+      coverArtImage: function (entityId: string | undefined, size: 48 | 256) {
         return queryOptions({
           queryKey: ["cover-art", entityId, size],
-          queryFn: async () => {
-            const cachedArtwork = await Image.getCachePathAsync(
-              getCoverCacheKey({ id: entityId!, size })
-            );
+          queryFn: async (): Promise<ImageSource> => {
+            const cacheKey = getCoverCacheKey({ id: entityId!, size });
+
+            const cachedArtwork = await Image.getCachePathAsync(cacheKey);
 
             if (cachedArtwork) {
-              return cachedArtwork;
+              console.log("QRY | CACHED ", cacheKey);
+              return { uri: cachedArtwork, cacheKey: cacheKey };
             }
 
-            return api
+            const artworkUrl = await api
               .buildUrl("getCoverArt", { id: entityId!, size: size * 2 })
               .then((u) => u.toString());
+
+            console.log("QRY | FETCHD ", cacheKey);
+            return { uri: artworkUrl, cacheKey: cacheKey };
           },
           staleTime: Infinity,
           enabled: Boolean(entityId),

@@ -23,7 +23,7 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
   const queries = useRequiredQueries();
 
   const albumQuery = useQuery(queries.album(albumId));
-  const albumArtworkUrlQuery = useQuery(queries.coverArtUrl(albumId, 256));
+  const albumArtworkUrlQuery = useQuery(queries.coverArtImage(albumId, 256));
   const streamUrlQueries = useQueries({
     queries:
       albumQuery.data?.album.song?.map((item) => ({
@@ -32,7 +32,7 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
         enabled: Boolean(albumQuery.data?.album.song),
       })) ?? [],
     combine: (queries) => ({
-      data: new Map(queries.map((query) => [query.data?.id!, query.data?.url!])),
+      data: new Map(queries.map((query) => [query.data?.id!, query.data?.url!])), //TODO: avoid !
       isFetching: queries.some((q) => q.isFetching),
     }),
   });
@@ -47,7 +47,7 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
       artistId: song.artistId,
       album: song.album,
       albumId: song.albumId,
-      artwork: albumArtworkUrlQuery.data,
+      artwork: albumArtworkUrlQuery.data?.uri,
     });
   }
 

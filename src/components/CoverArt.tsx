@@ -1,5 +1,4 @@
 import { useRequiredQueries } from "@/context/app-context";
-import { getCoverCacheKey } from "@/utils/get-cover-cache-key";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { ImageStyle, StyleProp, StyleSheet, useColorScheme, View } from "react-native";
@@ -13,12 +12,12 @@ export function CoverArt({
   /** The ID of a song, album or artist. */
   id: string | undefined;
   style?: StyleProp<ImageStyle>;
-  size: Parameters<ReturnType<typeof useRequiredQueries>["coverArtUrl"]>[1];
+  size: Parameters<ReturnType<typeof useRequiredQueries>["coverArtImage"]>[1];
   elevated?: boolean;
 }) {
   const theme = useColorScheme() ?? "light";
   const queries = useRequiredQueries();
-  const coverArtQuery = useQuery(queries.coverArtUrl(id, size));
+  const coverArtQuery = useQuery(queries.coverArtImage(id, size));
 
   const borderRadius = {
     48: 6,
@@ -43,11 +42,7 @@ export function CoverArt({
           blurhash: getRandomBlurhash(),
         }}
         placeholderContentFit="fill"
-        source={
-          coverArtQuery.isLoading || !id
-            ? undefined
-            : { uri: coverArtQuery?.data, cacheKey: getCoverCacheKey({ id: id, size: size }) }
-        }
+        source={coverArtQuery?.data}
         style={[{ width: imgSize, height: imgSize, borderRadius }, style]}
       />
     </View>
