@@ -1,4 +1,5 @@
 import { useRequiredQueries } from "@/context/app-context";
+import { getCoverCacheKey } from "@/utils/get-cover-cache-key";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { ImageStyle, StyleProp, StyleSheet, useColorScheme, View } from "react-native";
@@ -43,9 +44,9 @@ export function CoverArt({
         }}
         placeholderContentFit="fill"
         source={
-          coverArtQuery.isLoading
+          coverArtQuery.isLoading || !id
             ? undefined
-            : { uri: coverArtQuery?.data, cacheKey: `cover-${id}-${size}` }
+            : { uri: coverArtQuery?.data, cacheKey: getCoverCacheKey({ id: id, size: size }) }
         }
         style={[{ width: imgSize, height: imgSize, borderRadius }, style]}
       />

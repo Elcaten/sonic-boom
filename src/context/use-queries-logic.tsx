@@ -1,7 +1,7 @@
+import { getCoverCacheKey } from "@/utils/get-cover-cache-key";
 import { queryOptions } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { useMemo } from "react";
-import { Track } from "react-native-track-player";
 import { SubsonicAPI } from "subsonic-api";
 
 export function useQueriesLogic(api: SubsonicAPI | null) {
@@ -34,10 +34,19 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
       coverArtUrl: function (entityId: string | undefined, size: 48 | 256) {
         return queryOptions({
           queryKey: ["cover-art", entityId, size],
-          queryFn: () =>
-            api
+          queryFn: async () => {
+            const cachedArtwork = await Image.getCachePathAsync(
+              getCoverCacheKey({ id: entityId!, size })
+            );
+
+            if (cachedArtwork) {
+              return cachedArtwork;
+            }
+
+            return api
               .buildUrl("getCoverArt", { id: entityId!, size: size * 2 })
-              .then((u) => u.toString()),
+              .then((u) => u.toString());
+          },
           staleTime: Infinity,
           enabled: Boolean(entityId),
         });
@@ -79,38 +88,7 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
       album: function (albumId: string) {
         return queryOptions({
           queryKey: ["album", albumId],
-          queryFn: async () => {
-            const album = await api.getAlbum({ id: albumId });
-            const cachedArtwork = await Image.getCachePathAsync(`cover-${albumId}-${256}`);
-            const artworkToFetch = await api
-              .buildUrl("getCoverArt", { id: albumId, size: 256 * 2 })
-              .then((u) => u.toString());
-            console.log(cachedArtwork ?? artworkToFetch);
-
-            const tracks: Track[] = [];
-            for (const song of album.album.song ?? []) {
-              const streamUrl = await api
-                .buildUrl("stream", { id: song.id })
-                .then((u) => u.toString());
-              console.log(streamUrl);
-
-              tracks.push({
-                id: song.id,
-                url: streamUrl.toString(),
-                title: song.title,
-                artist: song.artist,
-                artistId: song.artistId,
-                album: song.album,
-                albumId: song.albumId,
-                artwork: cachedArtwork ?? artworkToFetch,
-              });
-            }
-
-            return {
-              ...album,
-              tracks: tracks,
-            };
-          },
+          queryFn: () => api.getAlbum({ id: albumId }),
           staleTime: Infinity,
         });
       },

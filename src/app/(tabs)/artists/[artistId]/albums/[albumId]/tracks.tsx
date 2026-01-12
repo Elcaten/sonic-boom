@@ -13,26 +13,66 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
+import TrackPlayer, { Track, useActiveTrack, useIsPlaying } from "react-native-track-player";
+
+const useAlbumTracks = ({ albumId }: { albumId: string }) => {
+  const queries = useRequiredQueries();
+
+  const albumQuery = useQuery(queries.album(albumId));
+  const albumArtworkUrlQuery = useQuery(queries.coverArtUrl(albumId, 256));
+  const streamUrlQueries = useQueries({
+    queries:
+      albumQuery.data?.album.song?.map((item) => ({
+        ...queries.streamUrl(item.id),
+        select: (url: string) => ({ id: item.id, url: url }),
+        enabled: Boolean(albumQuery.data?.album.song),
+      })) ?? [],
+    combine: (queries) => ({
+      data: new Map(queries.map((query) => [query.data?.id!, query.data?.url!])),
+      isFetching: queries.some((q) => q.isFetching),
+    }),
+  });
+
+  const tracks: Track[] = [];
+  for (const song of albumQuery.data?.album.song ?? []) {
+    tracks.push({
+      id: song.id,
+      url: streamUrlQueries.data.get(song.id)!,
+      title: song.title,
+      artist: song.artist,
+      artistId: song.artistId,
+      album: song.album,
+      albumId: song.albumId,
+      artwork: albumArtworkUrlQuery.data,
+    });
+  }
+
+  return {
+    isFetching:
+      albumQuery.isFetching || albumArtworkUrlQuery.isFetching || streamUrlQueries.isFetching,
+    data: tracks,
+  };
+};
 
 export default function AlbumTracks() {
   const { albumId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums/[albumId]/tracks">();
   const queries = useRequiredQueries();
   const albumQuery = useQuery(queries.album(albumId));
+  const albumTracks = useAlbumTracks({ albumId });
 
   const { playing } = useIsPlaying();
   const activeTrack = useActiveTrack();
 
   const handlePlayAlbumPress = async () => {
-    if (!albumQuery.data?.tracks) {
+    if (!albumTracks.data) {
       return;
     }
 
-    await TrackPlayer.setQueue(albumQuery.data?.tracks);
+    await TrackPlayer.setQueue(albumTracks.data);
     await TrackPlayer.play();
   };
 
@@ -41,7 +81,7 @@ export default function AlbumTracks() {
   };
 
   const handleTrackItemPress = async (trackId: string) => {
-    if (!albumQuery.data?.tracks) {
+    if (!albumTracks.data) {
       return;
     }
 
@@ -54,8 +94,8 @@ export default function AlbumTracks() {
       return;
     }
 
-    await TrackPlayer.setQueue(albumQuery.data.tracks);
-    const startIndex = albumQuery.data.tracks.findIndex((song) => song.id === trackId);
+    await TrackPlayer.setQueue(albumTracks.data);
+    const startIndex = albumTracks.data.findIndex((track) => track.id === trackId);
     await TrackPlayer.skip(startIndex);
     await TrackPlayer.play();
   };
