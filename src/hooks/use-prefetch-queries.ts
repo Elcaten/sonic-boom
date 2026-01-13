@@ -13,14 +13,16 @@ export function usePrefetchQueries() {
   const trigger = async () => {
     setProgress({ title: "", progressPercentage: 0 });
 
-    await queryClient.prefetchQuery(queries.artists());
+    queryClient.getQueryCache().clear();
+
+    // await queryClient.prefetchQuery(queries.artists());
     const artistListQuery = await queryClient.ensureQueryData(queries.artists());
 
     const artistList =
       artistListQuery.artists.index?.flatMap((section) => section.artist ?? []) ?? [];
 
     const artistsDetailsQueries = artistList.map(async (artist) => {
-      await queryClient.prefetchQuery(queries.artist(artist.id));
+      // await queryClient.prefetchQuery(queries.artist(artist.id));
       return queryClient.ensureQueryData(queries.artist(artist.id));
     });
 
@@ -39,7 +41,7 @@ export function usePrefetchQueries() {
     const albumsQueries = artistsDetails.successful
       .flatMap((artist) => artist.artist.album ?? [])
       .map(async (album) => {
-        await queryClient.prefetchQuery(queries.album(album.id));
+        // await queryClient.prefetchQuery(queries.album(album.id));
         return queryClient.ensureQueryData(queries.album(album.id));
       });
 
@@ -51,6 +53,13 @@ export function usePrefetchQueries() {
         setProgress({ title: "Albums", progressPercentage: Math.round((completed / total) * 100) });
       },
     });
+
+    if (artistsDetails.failureCount) {
+      console.log(`Failed ${artistsDetails.failureCount} artistsDetails`);
+    }
+    if (_albums.failureCount) {
+      console.log(`Failed ${_albums.failureCount} albums`);
+    }
   };
 
   return { trigger, progress };

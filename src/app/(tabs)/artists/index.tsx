@@ -56,7 +56,7 @@ export default function ArtistsScreen() {
   if (artistsQuery.isPending) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" /> {/* iOS blue */}
+        <ActivityIndicator size="large" />
       </View>
     );
   }
