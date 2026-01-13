@@ -33,7 +33,7 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
       })) ?? [],
     combine: (queries) => ({
       data: new Map(queries.map((query) => [query.data?.id!, query.data?.url!])), //TODO: avoid !
-      isFetching: queries.some((q) => q.isFetching),
+      isPending: queries.some((q) => q.isPending),
     }),
   });
 
@@ -52,8 +52,7 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
   }
 
   return {
-    isFetching:
-      albumQuery.isFetching || albumArtworkUrlQuery.isFetching || streamUrlQueries.isFetching,
+    isPending: albumQuery.isPending || albumArtworkUrlQuery.isPending || streamUrlQueries.isPending,
     data: tracks,
   };
 };

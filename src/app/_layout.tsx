@@ -5,11 +5,12 @@ import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, useIsRestoring } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import TrackPlayer from "react-native-track-player";
@@ -25,7 +26,7 @@ registerPlaybackService();
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: Infinity,
     },
   },
 });
@@ -39,14 +40,16 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [playerReady, setPlayerReady] = useState(false);
   const [authReady, setAuthReady] = useState(false);
+  const [persistorReady, setPersistorReady] = useState(false);
+  const isRestoring = useIsRestoring();
 
   useSetupTrackPlayer({ onLoad: () => setPlayerReady(true) });
 
   useEffect(() => {
-    if (playerReady && authReady) {
+    if (playerReady && authReady && persistorReady && !isRestoring) {
       SplashScreen.hide();
     }
-  }, [playerReady, authReady]);
+  }, [playerReady, authReady, persistorReady, isRestoring]);
 
   useEffect(() => {
     return () => {
@@ -58,9 +61,14 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <AppProvider onLoad={() => setAuthReady(true)}>
-          <QueryClientProvider client={queryClient}>
+          <PersistQueryClientProvider
+            client={queryClient}
+            persistOptions={{ persister: asyncStoragePersister }}
+            onSuccess={() => setPersistorReady(true)}
+            onError={() => setPersistorReady(true)}
+          >
             <Content />
-          </QueryClientProvider>
+          </PersistQueryClientProvider>
         </AppProvider>
       </ThemeProvider>
     </SafeAreaProvider>

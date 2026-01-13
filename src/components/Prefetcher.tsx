@@ -20,10 +20,10 @@ export function PrefetchAllAlbumImages({
 
   useEffect(() => {
     const hasMoreData = Boolean(albumListQuery.data?.albumList.album);
-    if (!albumListQuery.isFetching && !hasMoreData) {
+    if (!albumListQuery.isPending && !hasMoreData) {
       onLoadEnd();
     }
-  }, [albumListQuery.data?.albumList, albumListQuery.isFetching, onLoadEnd]);
+  }, [albumListQuery.data?.albumList, albumListQuery.isPending, onLoadEnd]);
 
   const coverArtQueries = useQueries({
     queries:
@@ -31,11 +31,11 @@ export function PrefetchAllAlbumImages({
       [],
     combine: (resuts) => ({
       data: resuts.map((resut) => resut.data!), //TODO: avoid !
-      isFetching: resuts.some((result) => result.isFetching),
+      isPending: resuts.some((result) => result.isPending),
     }),
   });
 
-  if (albumListQuery.isFetching || coverArtQueries.isFetching) {
+  if (albumListQuery.isPending || coverArtQueries.isPending) {
     return null;
   }
 
@@ -53,6 +53,7 @@ function PrefetchBatch({ sources, onLoadEnd }: { sources: ImageSource[]; onLoadE
 
   useEffect(() => {
     if (loadedCacheKeys.length === sources.length) {
+      // console.log("BATCH FETCHED!!! " + sources.length + " size.");
       onLoadEnd();
     }
   }, [loadedCacheKeys.length, onLoadEnd, sources.length]);
@@ -64,8 +65,13 @@ function PrefetchBatch({ sources, onLoadEnd }: { sources: ImageSource[]; onLoadE
           <Image
             style={{ width: 72, height: 72 }}
             source={source}
-            onLoadEnd={() => {
-              console.log("PRE " + source.cacheKey);
+            cachePolicy={"memory-disk"}
+            onLoad={() => {
+              // console.log("PRE SUC" + source.cacheKey);
+              setLoadedCacheKeys((v) => [...v, source.cacheKey!]);
+            }}
+            onError={() => {
+              // console.log("PRE FAL" + source.cacheKey);
               setLoadedCacheKeys((v) => [...v, source.cacheKey!]);
             }}
           />

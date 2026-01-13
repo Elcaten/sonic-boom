@@ -12,11 +12,7 @@ export default function TabLayout() {
           headerShown: false,
           tabBarLabel: "Artists",
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "people" : "people-outline"}
-              size={size}
-              color={color}
-            />
+            <Ionicons name={focused ? "people" : "people-outline"} size={size} color={color} />
           ),
         }}
       />
@@ -26,11 +22,7 @@ export default function TabLayout() {
           headerShown: false,
           tabBarLabel: "Settings",
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "settings" : "settings-outline"}
-              size={size}
-              color={color}
-            />
+            <Ionicons name={focused ? "settings" : "settings-outline"} size={size} color={color} />
           ),
         }}
       />
@@ -40,11 +32,7 @@ export default function TabLayout() {
           headerShown: false,
           tabBarLabel: "Search",
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "search" : "search-outline"}
-              size={size}
-              color={color}
-            />
+            <Ionicons name={focused ? "search" : "search-outline"} size={size} color={color} />
           ),
         }}
       />

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 
 export default function ArtistAlbums() {
   const { artistId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums">();
@@ -36,15 +37,11 @@ export default function ArtistAlbums() {
     return album.name.toLocaleLowerCase().includes(sanitizedSearch);
   });
 
-  if (artistQuery.isLoading) {
+  if (artistQuery.isPending) {
     return (
-      <Host style={{ flex: 1 }}>
-        <ContentUnavailableView
-          title={`Loading`}
-          description="Wait"
-          systemImage="hourglass.tophalf.fill"
-        ></ContentUnavailableView>
-      </Host>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
     );
   }
 

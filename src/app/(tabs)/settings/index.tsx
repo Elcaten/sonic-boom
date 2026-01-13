@@ -1,5 +1,6 @@
 import { PrefetchAllAlbumImages } from "@/components/Prefetcher";
 import { useAuth } from "@/context/app-context";
+import { usePrefetchQueries } from "@/hooks/use-prefetch-queries";
 import {
   Button,
   CircularProgress,
@@ -11,13 +12,16 @@ import {
   Text,
 } from "@expo/ui/swift-ui";
 import { disabled, padding } from "@expo/ui/swift-ui/modifiers";
+import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Alert, View } from "react-native";
 
 export default function SettingsView() {
-  const [showFetcher, setShowFetcher] = useState<48 | 256 | undefined>(undefined);
+  const queryClient = useQueryClient();
+  const [showFetcher, setShowFetcher] = useState<48 | 256 | "QUERIES" | undefined>(undefined);
+  const prefetchQueries = usePrefetchQueries();
   const isDisabled = Boolean(showFetcher);
 
   const showAlert = () =>
@@ -28,6 +32,8 @@ export default function SettingsView() {
         {
           text: "Refresh",
           onPress: async () => {
+            setShowFetcher("QUERIES");
+            await prefetchQueries.trigger();
             await Image.clearMemoryCache();
             await Image.clearDiskCache();
             setShowFetcher(48);
@@ -48,8 +54,11 @@ export default function SettingsView() {
   const onRefreshPress = () => {
     showAlert();
   };
-  const onSignOutPress = () => {
-    auth.clearAll();
+  const onSignOutPress = async () => {
+    queryClient.clear();
+    await Image.clearMemoryCache();
+    await Image.clearDiskCache();
+    await auth.clearAll();
   };
 
   return (
@@ -71,7 +80,17 @@ export default function SettingsView() {
           <Section title="Server">
             <Button onPress={onRefreshPress} modifiers={[padding({ horizontal: 8 })]}>
               <HStack spacing={16}>
-                <Text>Refresh Cache</Text>
+                {!isDisabled && <Text>Refresh Cache</Text>}
+                {isDisabled && showFetcher === "QUERIES" && (
+                  <Text>
+                    {`${prefetchQueries.progress?.title!}... ${
+                      prefetchQueries.progress?.progressPercentage
+                    }%`}
+                  </Text>
+                )}
+                {isDisabled && (showFetcher === 48 || showFetcher === 256) && (
+                  <Text>{`Images...`}</Text>
+                )}
                 <Spacer />
                 {isDisabled && <CircularProgress />}
               </HStack>
@@ -90,24 +109,13 @@ export default function SettingsView() {
             flexDirection: "row",
             position: "absolute",
             inset: 0,
-            // opacity: 0,
           }}
         >
           {showFetcher === 48 && (
-            <PrefetchAllAlbumImages
-              size={showFetcher}
-              onLoadEnd={() => {
-                setShowFetcher(256);
-              }}
-            />
+            <PrefetchAllAlbumImages size={48} onLoadEnd={() => setShowFetcher(256)} />
           )}
           {showFetcher === 256 && (
-            <PrefetchAllAlbumImages
-              size={showFetcher}
-              onLoadEnd={() => {
-                setShowFetcher(undefined);
-              }}
-            />
+            <PrefetchAllAlbumImages size={256} onLoadEnd={() => setShowFetcher(undefined)} />
           )}
         </View>
       )}

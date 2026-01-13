@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import React, { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 import { ArtistID3 } from "subsonic-api";
 
 export default function ArtistsScreen() {
@@ -52,15 +53,11 @@ export default function ArtistsScreen() {
     data: _data[section as keyof typeof _data],
   }));
 
-  if (artistsQuery.isLoading) {
+  if (artistsQuery.isPending) {
     return (
-      <Host style={{ flex: 1 }}>
-        <ContentUnavailableView
-          title={`Loading`}
-          description="Wait"
-          systemImage="progress.indicator"
-        ></ContentUnavailableView>
-      </Host>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" /> {/* iOS blue */}
+      </View>
     );
   }
 

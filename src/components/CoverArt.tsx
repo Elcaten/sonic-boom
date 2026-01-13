@@ -43,6 +43,7 @@ export function CoverArt({
         }}
         placeholderContentFit="fill"
         source={coverArtQuery?.data}
+        cachePolicy={"memory-disk"}
         style={[{ width: imgSize, height: imgSize, borderRadius }, style]}
       />
     </View>

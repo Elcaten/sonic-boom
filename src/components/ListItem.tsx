@@ -17,6 +17,7 @@ export function ListItem({
           <VStack modifiers={[frame({ width: 48, height: 48 })]}>
             <CoverArt id={coverId} size={48} />
           </VStack>
+
           <VStack alignment="leading" spacing={2}>
             <Text color="primary" lineLimit={1}>
               {title}

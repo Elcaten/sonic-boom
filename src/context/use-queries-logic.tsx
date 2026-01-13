@@ -27,7 +27,6 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
         return queryOptions({
           queryKey: ["stream-url", trackId],
           queryFn: () => api.buildUrl("stream", { id: trackId }).then((u) => u.toString()),
-          staleTime: Infinity,
         });
       },
 
@@ -40,7 +39,7 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
             const cachedArtwork = await Image.getCachePathAsync(cacheKey);
 
             if (cachedArtwork) {
-              console.log("QRY | CACHED ", cacheKey);
+              // console.log("QRY | CACHED ", cacheKey);
               return { uri: cachedArtwork, cacheKey: cacheKey };
             }
 
@@ -48,11 +47,11 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
               .buildUrl("getCoverArt", { id: entityId!, size: size * 2 })
               .then((u) => u.toString());
 
-            console.log("QRY | FETCHD ", cacheKey);
+            // console.log("QRY | FETCHD ", cacheKey);
             return { uri: artworkUrl, cacheKey: cacheKey };
           },
-          staleTime: Infinity,
           enabled: Boolean(entityId),
+          staleTime: undefined,
         });
       },
 
@@ -93,7 +92,6 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
         return queryOptions({
           queryKey: ["album", albumId],
           queryFn: () => api.getAlbum({ id: albumId }),
-          staleTime: Infinity,
         });
       },
 
