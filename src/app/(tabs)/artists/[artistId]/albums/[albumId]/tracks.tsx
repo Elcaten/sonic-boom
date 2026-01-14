@@ -1,6 +1,7 @@
 import { CoverArt } from "@/components/CoverArt";
 import { useRequiredQueries } from "@/context/app-context";
 import { formatDuration } from "@/utils/formatDuration";
+import { shuffleArray } from "@/utils/shuffle-array";
 import {
   Button,
   Host,
@@ -76,7 +77,12 @@ export default function AlbumTracks() {
   };
 
   const handleShuffleAlbumPress = async () => {
-    alert("handleShuffleAlbumPress");
+    if (!albumTracks.data) {
+      return;
+    }
+
+    const shuffledTracks = shuffleArray(albumTracks.data);
+    await TrackPlayer.setQueue(shuffledTracks);
   };
 
   const handleTrackItemPress = async (trackId: string) => {
