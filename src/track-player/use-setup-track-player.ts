@@ -1,3 +1,4 @@
+import { trackPlayerPersistor } from "@/utils/track-player-persistor";
 import { useEffect, useRef } from "react";
 import TrackPlayer, {
   AppKilledPlaybackBehavior,
@@ -29,6 +30,9 @@ const setupTrackPlayer = async () => {
 
   await TrackPlayer.setVolume(1);
   await TrackPlayer.setRepeatMode(RepeatMode.Queue);
+
+  await trackPlayerPersistor.hydrateQueue();
+  await trackPlayerPersistor.hydrateActiveTrackIndex();
 };
 
 export const useSetupTrackPlayer = ({ onLoad }: { onLoad?: () => void }) => {

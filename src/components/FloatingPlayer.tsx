@@ -2,14 +2,25 @@ import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swif
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import TrackPlayer, { Track, useActiveTrack, useIsPlaying } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
 import { ThemedView } from "./themed-view";
 
 export function FloatingPlayer() {
   const activeTrack = useActiveTrack();
+
+  const queue = useQuery({
+    queryKey: ["queue"],
+    queryFn: async () => TrackPlayer.getQueue(),
+    enabled: !!activeTrack?.id,
+  });
+
+  useEffect(() => {
+    queue.refetch();
+  }, [activeTrack?.id]);
 
   const router = useRouter();
   const onPress = ({ track }: { track: Track }) => {
@@ -24,7 +35,11 @@ export function FloatingPlayer() {
   };
 
   if (!activeTrack) {
-    return <Stub />;
+    if (Boolean(queue.data)) {
+      return <Stub />;
+    }
+
+    return null;
   }
 
   return <Content track={activeTrack} onPress={onPress} />;

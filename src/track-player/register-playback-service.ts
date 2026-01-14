@@ -1,3 +1,4 @@
+import { trackPlayerPersistor } from "@/utils/track-player-persistor";
 import TrackPlayer, { Event } from "react-native-track-player";
 
 const playbackService = async () => {
@@ -23,6 +24,11 @@ const playbackService = async () => {
 
   TrackPlayer.addEventListener(Event.RemoteSeek, (e) => {
     TrackPlayer.seekTo(e.position);
+  });
+
+  TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async (e) => {
+    await trackPlayerPersistor.peristQueue();
+    await trackPlayerPersistor.persistActiveTrackIndex();
   });
 };
 
