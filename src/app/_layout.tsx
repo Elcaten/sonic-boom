@@ -83,6 +83,10 @@ function Content() {
       <Stack>
         <Stack.Protected guard={isLoggedIn}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="active-track"
+            options={{ presentation: "modal", headerShown: false }}
+          ></Stack.Screen>
         </Stack.Protected>
         <Stack.Protected guard={!isLoggedIn}>
           <Stack.Screen name="sign-in" options={{ headerShown: false }} />

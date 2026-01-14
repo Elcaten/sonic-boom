@@ -29,7 +29,8 @@ export function FloatingPlayer() {
     }
 
     router.navigate({
-      pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
+      // pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
+      pathname: "/active-track",
       params: { albumId: track.albumId, artistId: track.artistId },
     });
   };
