@@ -83,6 +83,7 @@ export default function AlbumTracks() {
 
     const shuffledTracks = shuffleArray(albumTracks.data);
     await TrackPlayer.setQueue(shuffledTracks);
+    await TrackPlayer.play();
   };
 
   const handleTrackItemPress = async (trackId: string) => {
