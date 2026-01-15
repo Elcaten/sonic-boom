@@ -8,6 +8,14 @@ export default function StackLayout() {
         name="index"
         options={{ headerTitle: "Settings", headerTransparent: isIOSVersion(26) }}
       />
+      <Stack.Screen
+        name="animations"
+        options={{ headerTitle: "Animations", headerTransparent: isIOSVersion(26) }}
+      />
+      <Stack.Screen
+        name="colors"
+        options={{ headerTitle: "Colors", headerTransparent: isIOSVersion(26) }}
+      />
     </Stack>
   );
 }

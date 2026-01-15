@@ -2,6 +2,7 @@ import React, { createContext, PropsWithChildren, useContext, useMemo } from "re
 import { AppContextType } from "./types";
 import { useAPILogic } from "./use-api-logic";
 import { useAuthLogic } from "./use-auth-logic";
+import { useNativeColorsLogic } from "./use-native-colors-logic";
 import { useQueriesLogic } from "./use-queries-logic";
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -15,9 +16,10 @@ export const AppProvider = ({ children, onLoad }: PropsWithChildren<{ onLoad: ()
   const { state: authState, actions: authActions } = useAuthLogic(onLoad);
   const api = useAPILogic(authState);
   const queries = useQueriesLogic(api);
+  const colors = useNativeColorsLogic();
 
   // Bundle everything into context value
-  const value = useMemo(
+  const value = useMemo<AppContextType>(
     () => ({
       auth: {
         ...authState,
@@ -25,8 +27,9 @@ export const AppProvider = ({ children, onLoad }: PropsWithChildren<{ onLoad: ()
       },
       api,
       queries,
+      colors: colors,
     }),
-    [authState, authActions, api, queries]
+    [authState, authActions, api, queries, colors]
   );
 
   // Show nothing while loading initial auth state
@@ -109,4 +112,17 @@ export const useRequiredQueries = () => {
 export const useIsAuthenticated = () => {
   const auth = useAuth();
   return !!(auth.serverAddress && auth.username && auth.password);
+};
+
+/**
+ * Hook to access native colors
+ * @throws Error if used outside AppProvider
+ * @returns Native colors
+ */
+export const useColors = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useColors must be used within AppProvider");
+  }
+  return context.colors;
 };

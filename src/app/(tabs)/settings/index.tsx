@@ -69,6 +69,9 @@ export default function SettingsView() {
             <Link href="/settings/animations" asChild>
               <Button modifiers={[padding({ horizontal: 8 })]}>Animations</Button>
             </Link>
+            <Link href="/settings/colors" asChild>
+              <Button modifiers={[padding({ horizontal: 8 })]}>Colors</Button>
+            </Link>
           </Section>
 
           <Section>

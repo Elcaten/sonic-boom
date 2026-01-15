@@ -1,4 +1,5 @@
 import { SubsonicAPI } from "subsonic-api";
+import { useNativeColorsLogic } from "./use-native-colors-logic";
 import { useQueriesLogic } from "./use-queries-logic";
 
 export type AuthState = {
@@ -19,4 +20,5 @@ export type AppContextType = {
   auth: AuthState & AuthActions;
   api: SubsonicAPI | null;
   queries: ReturnType<typeof useQueriesLogic>;
+  colors: ReturnType<typeof useNativeColorsLogic>;
 };
