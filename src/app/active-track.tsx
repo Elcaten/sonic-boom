@@ -1,4 +1,4 @@
-import { usePlayerQueue } from "@/hooks/use-player-queue";
+import { usePlayerQueue } from "@/track-player/use-player-queue";
 import { BlurView } from "expo-blur";
 import { FlatList, Text } from "react-native";
 import { useActiveTrack } from "react-native-track-player";

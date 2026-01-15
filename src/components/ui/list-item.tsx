@@ -2,7 +2,7 @@ import { Button, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { frame } from "@expo/ui/swift-ui/modifiers";
 import { Link, LinkProps } from "expo-router";
 import React from "react";
-import { CoverArt } from "./CoverArt";
+import { CoverArt } from "../CoverArt";
 
 export function ListItem({
   title,

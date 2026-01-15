@@ -1,4 +1,4 @@
-import { ListItem } from "@/components/ListItem";
+import { ListItem } from "@/components/ui/list-item";
 import { useRequiredQueries } from "@/context/app-context";
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";

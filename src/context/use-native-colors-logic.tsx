@@ -12,15 +12,41 @@ export function useNativeColorsLogic() {
       label: PlatformColor("label"),
       secondaryLabel: PlatformColor("secondaryLabel"),
 
+      /**
+       * Primary fill color for UI elements\
+       * **Use for:** Thin bordered UI elements, subtle backgrounds\
+       * **Example:** Text field backgrounds, button backgrounds
+       */
       systemFill: PlatformColor("systemFill"),
+      /**
+       * Secondary fill color for UI elements\
+       * **Use for:** Slightly more subtle fills\
+       * **Example:** Inactive states, disabled buttons
+       */
       secondarySystemFill: PlatformColor("secondarySystemFill"),
 
       placeholderText: PlatformColor("placeholderText"),
 
+      /**
+       * **Use for:** Main app background, full-screen views, root views\
+       * **Example:** Main screen background, modal sheets
+       */
       systemBackground: PlatformColor("systemBackground"),
+      /**
+       * **Use for:** Content that sits on top of `systemBackground`, cards, containers\
+       * **Example:** Card backgrounds, container backgrounds
+       */
       secondarySystemBackground: PlatformColor("secondarySystemBackground"),
 
+      /**
+       * **Use for:** Settings screens, grouped table views\
+       * **Example:** Example: iOS Settings app background
+       */
       systemGroupedBackground: PlatformColor("systemGroupedBackground"),
+      /**
+       * **Use for:** Table cells in grouped lists
+       * **Example:** Settings cells, preference sections
+       */
       secondarySystemGroupedBackground: PlatformColor("secondarySystemGroupedBackground"),
 
       separator: PlatformColor("separator"),

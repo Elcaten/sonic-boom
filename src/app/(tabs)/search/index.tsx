@@ -1,14 +1,8 @@
-import { ListItem } from "@/components/ListItem";
-import { ThemedSafeAreaView } from "@/components/themed-safe-area-view";
+import { ThemedSafeAreaView } from "@/components/themed/themed-safe-area-view";
+import { ListItem } from "@/components/ui/list-item";
 import { useSearch } from "@/hooks/use-recently-searched";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import {
-  ContentUnavailableView,
-  Host,
-  HStack,
-  List,
-  Section,
-} from "@expo/ui/swift-ui";
+import { ContentUnavailableView, Host, HStack, List, Section } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import { useEffect } from "react";
@@ -81,11 +75,11 @@ export default function SearchIndex() {
   if (search.isLoading) {
     return (
       <ThemedSafeAreaView
+        backgroundColor="systemGroupedBackground"
         style={{
-          height: "100%",
+          flex: 1,
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: bgSecondary,
         }}
       >
         <ActivityIndicator size="large" />
@@ -111,19 +105,17 @@ export default function SearchIndex() {
     );
   }
 
-  if (
-    !search.results?.album &&
-    !search.results?.artist &&
-    !search.results?.song
-  ) {
+  if (!search.results?.album && !search.results?.artist && !search.results?.song) {
     return (
-      <Host style={{ flex: 1 }}>
-        <ContentUnavailableView
-          title={`No results for ${search.debouncedQuery}`}
-          description="Try a new search"
-          systemImage="magnifyingglass"
-        ></ContentUnavailableView>
-      </Host>
+      <ThemedSafeAreaView backgroundColor="systemGroupedBackground" style={{ flex: 1 }}>
+        <Host style={{ flex: 1 }}>
+          <ContentUnavailableView
+            title={`No results for ${search.debouncedQuery}`}
+            description="Try a new search"
+            systemImage="magnifyingglass"
+          ></ContentUnavailableView>
+        </Host>
+      </ThemedSafeAreaView>
     );
   }
 
@@ -134,14 +126,10 @@ export default function SearchIndex() {
           <Section title="Songs">{search.results.song.map(renderSong)}</Section>
         )}
         {search.results?.album && search.results?.album.length > 0 && (
-          <Section title="Albums">
-            {search.results.album.map(renderAlbum)}
-          </Section>
+          <Section title="Albums">{search.results.album.map(renderAlbum)}</Section>
         )}
         {search.results?.artist && search.results?.artist.length > 0 && (
-          <Section title="Artists">
-            {search.results?.artist.map(renderArtist)}
-          </Section>
+          <Section title="Artists">{search.results?.artist.map(renderArtist)}</Section>
         )}
       </List>
     </Host>
