@@ -1,4 +1,5 @@
 import { FloatingPlayer } from "@/components/FloatingPlayer";
+import { isIOSVersion } from "@/utils/is-ios-version";
 import { Stack } from "expo-router";
 import { View } from "react-native";
 
@@ -10,6 +11,7 @@ export default function StackLayout() {
           name="index"
           options={{
             headerTitle: "Artists",
+            headerTransparent: isIOSVersion(26),
           }}
         />
         <Stack.Screen
@@ -17,6 +19,7 @@ export default function StackLayout() {
           options={{
             headerBackButtonDisplayMode: "minimal",
             headerTitle: "Albums",
+            headerTransparent: isIOSVersion(26),
           }}
         />
         <Stack.Screen
@@ -24,6 +27,7 @@ export default function StackLayout() {
           options={{
             headerBackButtonDisplayMode: "minimal",
             headerTitle: "",
+            headerTransparent: isIOSVersion(26),
           }}
         />
       </Stack>

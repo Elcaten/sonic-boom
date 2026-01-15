@@ -1,3 +1,4 @@
+import { isIOSVersion } from "@/utils/is-ios-version";
 import { Stack } from "expo-router";
 
 export default function SearchLayout() {
@@ -7,8 +8,7 @@ export default function SearchLayout() {
         name="index"
         options={{
           title: "Search",
-
-          headerBackVisible: true,
+          headerTransparent: isIOSVersion(26),
         }}
       />
     </Stack>

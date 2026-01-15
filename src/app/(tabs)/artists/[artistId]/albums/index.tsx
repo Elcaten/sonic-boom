@@ -1,6 +1,7 @@
 import { ListItem } from "@/components/ListItem";
 import { useRequiredQueries } from "@/context/app-context";
 import { formatDuration } from "@/utils/formatDuration";
+import { isIOSVersion } from "@/utils/is-ios-version";
 import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
@@ -19,6 +20,8 @@ export default function ArtistAlbums() {
       headerSearchBarOptions: {
         autoCapitalize: "none",
         placeholder: "Search",
+        placement: isIOSVersion(26) ? "integratedButton" : "automatic",
+        hideWhenScrolling: false,
         onChangeText(e) {
           setSearch(e.nativeEvent.text);
         },

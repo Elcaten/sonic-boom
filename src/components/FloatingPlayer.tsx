@@ -1,121 +1,77 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
+import { isIOSVersion } from "@/utils/is-ios-version";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
-import { frame, padding } from "@expo/ui/swift-ui/modifiers";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
-
-import { useQuery } from "@tanstack/react-query";
+import { frame } from "@expo/ui/swift-ui/modifiers";
+import { GlassView } from "expo-glass-effect";
 import { useRouter } from "expo-router";
-import { PropsWithChildren, useEffect } from "react";
-import TrackPlayer, { Track, useActiveTrack, useIsPlaying } from "react-native-track-player";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
+import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
-import { ThemedView } from "./themed-view";
+
+const style = StyleSheet.create({
+  wrapper: {
+    position: "absolute",
+    width: "100%",
+    ...(isIOSVersion(26)
+      ? {
+          bottom: 80,
+          paddingHorizontal: 20,
+          paddingBlockEnd: 12,
+        }
+      : {
+          bottom: 0,
+          padding: 12,
+        }),
+  },
+  card: isIOSVersion(26)
+    ? {
+        borderRadius: 100,
+        paddingLeft: 10,
+        paddingRight: 20,
+        paddingVertical: 8,
+
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.15,
+        shadowRadius: 5,
+      }
+    : {
+        borderRadius: 12,
+        paddingLeft: 8,
+        paddingRight: 16,
+        paddingVertical: 8,
+
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.15,
+        shadowRadius: 15,
+      },
+  wideCard: {
+    marginHorizontal: "auto",
+  },
+});
 
 export function FloatingPlayer() {
-  const activeTrack = useActiveTrack();
-
-  const queue = useQuery({
-    queryKey: ["queue"],
-    queryFn: async () => TrackPlayer.getQueue(),
-    enabled: !!activeTrack?.id,
-  });
-
-  useEffect(() => {
-    queue.refetch();
-  }, [activeTrack?.id]);
-
   const router = useRouter();
-  const onPress = ({ track }: { track: Track }) => {
-    if (!track.albumId || !track.artistId) {
+
+  const activeTrack = useActiveTrack();
+  const { playing, bufferingDuringPlay } = useIsPlaying();
+
+  const backgroundColor = useThemeColor({}, "background");
+  const { width, height } = useWindowDimensions();
+  const isWideLayout = width > height;
+
+  const handlePress = () => {
+    if (!activeTrack?.albumId || !activeTrack?.artistId) {
       return;
     }
 
     router.navigate({
       // pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
       pathname: "/active-track",
-      params: { albumId: track.albumId, artistId: track.artistId },
+      params: { albumId: activeTrack.albumId, artistId: activeTrack.artistId },
     });
   };
-
-  if (!activeTrack) {
-    if (Boolean(queue.data)) {
-      return <Stub />;
-    }
-
-    return null;
-  }
-
-  return <Content track={activeTrack} onPress={onPress} />;
-}
-
-function Stub() {
-  return (
-    <Card>
-      <Host style={{ flex: 1 }}>
-        <HStack spacing={12}>
-          <VStack modifiers={[frame({ width: 48, height: 48 })]}>
-            <CoverArt id={undefined} size={48} />
-          </VStack>
-          <VStack alignment="leading">
-            <Text size={15} weight="medium">
-              Song
-            </Text>
-            <Text color="secondary" size={15}>
-              Artist
-            </Text>
-          </VStack>
-          <Spacer />
-        </HStack>
-      </Host>
-    </Card>
-  );
-}
-
-function Card({ children }: PropsWithChildren<unknown>) {
-  const { width, height } = useWindowDimensions();
-  const isWideLayout = width > height;
-
-  return (
-    <View style={style.wrapper}>
-      <ThemedView
-        style={[
-          style.card,
-          isWideLayout && {
-            ...style.wideCard,
-            minWidth: height,
-          },
-        ]}
-      >
-        {children}
-      </ThemedView>
-    </View>
-  );
-}
-const style = StyleSheet.create({
-  wrapper: {
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-    padding: 12,
-  },
-  card: {
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 15,
-  },
-  wideCard: {
-    marginHorizontal: "auto",
-  },
-});
-
-function Content({ track, onPress }: { track: Track; onPress: (_: { track: Track }) => void }) {
-  const { playing, bufferingDuringPlay } = useIsPlaying();
 
   const handlePlayPausePress = () => {
     if (bufferingDuringPlay) {
@@ -137,45 +93,62 @@ function Content({ track, onPress }: { track: Track; onPress: (_: { track: Track
     TrackPlayer.skipToNext();
   };
 
+  if (!activeTrack) {
+    return null;
+  }
+
   return (
-    <Card>
-      <Host style={{ flex: 1 }}>
-        <HStack spacing={12} onPress={() => onPress({ track })}>
-          <VStack modifiers={[frame({ width: 48, height: 48 })]}>
-            <CoverArt id={track.albumId} size={48} />
-          </VStack>
-          <VStack alignment="leading">
-            {track.title && (
+    <View style={style.wrapper}>
+      <GlassView
+        isInteractive
+        style={[
+          style.card,
+          isWideLayout && {
+            ...style.wideCard,
+            minWidth: height,
+          },
+          !isIOSVersion(26) && { backgroundColor },
+        ]}
+      >
+        <Host>
+          <HStack spacing={12} onPress={handlePress}>
+            {isIOSVersion(26) && (
+              <VStack modifiers={[frame({ height: 32, width: 0 })]}>
+                <View style={{ height: 32, width: 0 }} />
+              </VStack>
+            )}
+            {!isIOSVersion(26) && (
+              <VStack modifiers={[frame({ width: 48, height: 48 })]}>
+                <CoverArt id={activeTrack.albumId} size={48} />
+              </VStack>
+            )}
+            <VStack alignment="leading">
               <Text size={15} weight="medium">
-                {track.title}
+                {activeTrack.title ?? ""}
               </Text>
-            )}
-            {track.artist && (
               <Text color="secondary" size={15}>
-                {track.artist}
+                {activeTrack.artist ?? ""}
               </Text>
-            )}
-          </VStack>
-          <Spacer />
-          <Button onPress={handlePrevPress} modifiers={[padding({ trailing: 8 })]}>
-            <Image systemName={"backward.fill"} size={16} color="primary" />
-          </Button>
-          <Button
-            onPress={handlePlayPausePress}
-            disabled={bufferingDuringPlay}
-            modifiers={[padding({ trailing: 8 })]}
-          >
-            <Image
-              systemName={bufferingDuringPlay ? "pause.fill" : playing ? "pause.fill" : "play.fill"}
-              size={24}
-              color="primary"
-            />
-          </Button>
-          <Button onPress={handleNextPress} modifiers={[padding({ trailing: 8 })]}>
-            <Image systemName={"forward.fill"} size={16} color="primary" />
-          </Button>
-        </HStack>
-      </Host>
-    </Card>
+            </VStack>
+            <Spacer />
+            <Button onPress={handlePrevPress}>
+              <Image systemName={"backward.fill"} size={16} color="primary" />
+            </Button>
+            <Button onPress={handlePlayPausePress} disabled={bufferingDuringPlay}>
+              <Image
+                systemName={
+                  bufferingDuringPlay ? "pause.fill" : playing ? "pause.fill" : "play.fill"
+                }
+                size={24}
+                color="primary"
+              />
+            </Button>
+            <Button onPress={handleNextPress}>
+              <Image systemName={"forward.fill"} size={16} color="primary" />
+            </Button>
+          </HStack>
+        </Host>
+      </GlassView>
+    </View>
   );
 }
