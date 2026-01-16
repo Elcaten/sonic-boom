@@ -18,7 +18,7 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import TrackPlayer, { Track, useActiveTrack, useIsPlaying } from "react-native-track-player";
+import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 
 const useAlbumTracks = ({ albumId }: { albumId: string }) => {
   const queries = useRequiredQueries();
@@ -29,7 +29,9 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
     queries:
       albumQuery.data?.album.song?.map((item) => ({
         ...queries.streamUrl(item.id),
-        select: (url: string) => ({ id: item.id, url: url }),
+        select: (url: string) => {
+          return { id: item.id, url: url };
+        },
         enabled: Boolean(albumQuery.data?.album.song),
       })) ?? [],
     combine: (queries) => ({
@@ -38,23 +40,32 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
     }),
   });
 
-  const tracks: Track[] = [];
-  for (const song of albumQuery.data?.album.song ?? []) {
-    tracks.push({
-      id: song.id,
-      url: streamUrlQueries.data.get(song.id)!,
-      title: song.title,
-      artist: song.artist,
-      artistId: song.artistId,
-      album: song.album,
-      albumId: song.albumId,
-      artwork: albumArtworkUrlQuery.data?.uri,
-    });
-  }
+  const tracks = useQuery({
+    queryKey: ["album-tracks", albumId],
+    queryFn: () => {
+      console.log("query tracks");
+
+      return albumQuery.data?.album.song?.map((song) => ({
+        id: song.id,
+        url: streamUrlQueries.data.get(song.id)!,
+        title: song.title,
+        artist: song.artist,
+        artistId: song.artistId,
+        album: song.album,
+        albumId: song.albumId,
+        artwork: albumArtworkUrlQuery.data?.uri,
+      }));
+    },
+    enabled:
+      !!albumQuery.data?.album.song?.length &&
+      !!albumArtworkUrlQuery.data &&
+      !!streamUrlQueries.data.size,
+    staleTime: 0,
+  });
 
   return {
     isPending: albumQuery.isPending || albumArtworkUrlQuery.isPending || streamUrlQueries.isPending,
-    data: tracks,
+    data: tracks.data,
   };
 };
 
@@ -100,6 +111,7 @@ export default function AlbumTracks() {
       return;
     }
 
+    await TrackPlayer.stop();
     await TrackPlayer.setQueue(albumTracks.data);
     const startIndex = albumTracks.data.findIndex((track) => track.id === trackId);
     await TrackPlayer.skip(startIndex);
