@@ -48,4 +48,13 @@ export const trackPlayerPersistor = {
       console.error(e);
     }
   },
+  clearAll: async () => {
+    try {
+      await AsyncStorage.removeItem("queue");
+      await AsyncStorage.removeItem("active-track-index");
+    } catch (e) {
+      //TODO: log error
+      console.error(e);
+    }
+  },
 };

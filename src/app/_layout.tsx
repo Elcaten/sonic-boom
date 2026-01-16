@@ -89,7 +89,10 @@ function Content() {
           ></Stack.Screen>
         </Stack.Protected>
         <Stack.Protected guard={!isLoggedIn}>
-          <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="sign-in"
+            options={{ headerTitle: "Sign In", headerLargeTitleEnabled: true }}
+          />
         </Stack.Protected>
       </Stack>
       <StatusBar style="auto" />

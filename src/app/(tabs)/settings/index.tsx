@@ -1,6 +1,7 @@
 import { PrefetchAllAlbumImages } from "@/components/Prefetcher";
 import { useAuth } from "@/context/app-context";
 import { usePrefetchQueries } from "@/hooks/use-prefetch-queries";
+import { trackPlayerPersistor } from "@/utils/track-player-persistor";
 import {
   Button,
   CircularProgress,
@@ -17,6 +18,7 @@ import { Image } from "expo-image";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Alert, View } from "react-native";
+import TrackPlayer from "react-native-track-player";
 
 export default function SettingsView() {
   const auth = useAuth();
@@ -51,9 +53,14 @@ export default function SettingsView() {
   };
 
   const onSignOutPress = async () => {
+    await TrackPlayer.reset();
+    await trackPlayerPersistor.clearAll();
+
     await Image.clearMemoryCache();
     await Image.clearDiskCache();
+
     await auth.clearAll();
+
     queryClient.clear();
   };
 

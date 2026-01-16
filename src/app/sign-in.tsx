@@ -1,17 +1,11 @@
 import { useAuth } from "@/context/app-context";
-import {
-  Button,
-  Form,
-  Host,
-  Image,
-  SecureField,
-  Spacer,
-  Text,
-  TextField,
-  VStack,
-} from "@expo/ui/swift-ui";
+import { Button, Form, Host, Section, SecureField, TextField } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
+import { useMutation } from "@tanstack/react-query";
+import * as Crypto from "expo-crypto";
 import React, { useState } from "react";
+import { Alert } from "react-native";
+import { SubsonicAPI } from "subsonic-api";
 
 export default function LoginForm() {
   const [serverAddress, setServerAddress] = useState("");
@@ -20,77 +14,69 @@ export default function LoginForm() {
 
   const auth = useAuth();
 
-  const handleSubmit = () => {
-    //TODO: validate
-    auth.setServerAddress(serverAddress);
-    auth.setUsername(username);
-    auth.setPassword(password);
-  };
+  const submit = useMutation({
+    mutationFn: async () => {
+      if (!serverAddress || !username || !password) {
+        throw new Error("invalidCredentials");
+      }
+
+      const randomBytes = Crypto.getRandomBytes(16);
+      const salt = Array.from(randomBytes)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      const api = new SubsonicAPI({
+        url: serverAddress,
+        auth: {
+          username: username,
+          password: password,
+        },
+        salt: salt,
+        reuseSalt: true,
+      });
+
+      try {
+        await api.navidromeSession();
+      } catch (e) {
+        throw new Error("invalidCredentials");
+      }
+    },
+    onError: (error) => {
+      Alert.alert("Could not sign in", "Please check you credentials and try again.");
+    },
+    onSuccess: () => {
+      auth.setServerAddress(serverAddress);
+      auth.setUsername(username);
+      auth.setPassword(password);
+    },
+  });
 
   return (
     <Host style={{ flex: 1 }}>
-      <Form>
-        <VStack spacing={20}>
-          <Spacer />
+      <Form modifiers={[padding({ top: 20 })]}>
+        <Section title="Server Address">
+          <TextField
+            placeholder="https://example.com"
+            onChangeText={setServerAddress}
+            keyboardType="url"
+            autocorrection={false}
+          ></TextField>
+        </Section>
 
-          {/** Heaeder*/}
-          <VStack spacing={8} modifiers={[padding({ bottom: 40 })]}>
-            <Image
-              systemName="person.circle.fill"
-              size={80}
-              color="primary"
-              modifiers={[frame({ width: 80, height: 80 })]}
-            />
-            <Text size={32} weight="bold">
-              Welcome Back
-            </Text>
-            <Text size={20} color="secondary">
-              Sign in to continue
-            </Text>
-          </VStack>
+        <Section title="Credentials">
+          <TextField
+            placeholder="admin"
+            onChangeText={setUsername}
+            autocorrection={false}
+          ></TextField>
 
-          {/** Form Fields*/}
-          <VStack alignment="leading" spacing={16} modifiers={[padding({ horizontal: 20 })]}>
-            <VStack alignment="leading" spacing={8}>
-              <Text weight="medium" color="secondary">
-                Server Address
-              </Text>
-              <TextField
-                placeholder="https://example.com"
-                onChangeText={setServerAddress}
-                keyboardType="url"
-                autocorrection={false}
-              ></TextField>
-            </VStack>
+          <SecureField placeholder="password" onChangeText={setPassword}></SecureField>
+        </Section>
 
-            <VStack alignment="leading" spacing={8}>
-              <Text weight="medium" color="secondary">
-                Username
-              </Text>
-              <TextField
-                placeholder="admin"
-                onChangeText={setUsername}
-                autocorrection={false}
-              ></TextField>
-            </VStack>
-
-            <VStack alignment="leading" spacing={8}>
-              <Text weight="medium" color="secondary">
-                Password
-              </Text>
-              <SecureField placeholder="admin" onChangeText={setPassword}></SecureField>
-            </VStack>
-          </VStack>
-
-          {/** Sign In Button*/}
-          <Button
-            // controlSize="extraLarge"
-            onPress={handleSubmit}
-            modifiers={[padding({ bottom: 20 })]}
-          >
+        <Section>
+          <Button onPress={submit.mutate} modifiers={[frame({ maxWidth: Infinity })]}>
             Sign In
           </Button>
-        </VStack>
+        </Section>
       </Form>
     </Host>
   );
