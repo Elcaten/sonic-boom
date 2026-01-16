@@ -1,5 +1,5 @@
 import { usePlayerQueue } from "@/track-player/use-player-queue";
-import { Host, List, Text, VStack } from "@expo/ui/swift-ui";
+import { Button, Host, List, Text } from "@expo/ui/swift-ui";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 
 export default function ActiveTrackModal() {
@@ -58,9 +58,9 @@ export default function ActiveTrackModal() {
         onDeleteItem={handleDeleteItem}
       >
         {queue.map((item, index) => (
-          <VStack key={item.id} onPress={() => handlePress(index)} alignment="leading">
+          <Button key={item.id} onPress={() => handlePress(index)}>
             <Text weight={item.id === activeTrack?.id ? "semibold" : "regular"}>{item.title!}</Text>
-          </VStack>
+          </Button>
         ))}
       </List>
     </Host>
