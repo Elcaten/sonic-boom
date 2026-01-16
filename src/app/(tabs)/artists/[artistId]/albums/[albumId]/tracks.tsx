@@ -16,7 +16,7 @@ import {
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { useWindowDimensions } from "react-native";
 import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 
@@ -77,6 +77,7 @@ export default function AlbumTracks() {
 
   const { playing } = useIsPlaying();
   const activeTrack = useActiveTrack();
+  const [isSettingUpQueue, setIsSettingUpQueue] = useState(false);
 
   const handlePlayAlbumPress = async () => {
     if (!albumTracks.data) {
@@ -97,25 +98,28 @@ export default function AlbumTracks() {
     await TrackPlayer.play();
   };
 
-  const handleTrackItemPress = async (trackId: string) => {
-    if (!albumTracks.data) {
-      return;
-    }
-
+  const handleActiveItemPress = async (trackId: string) => {
     if (trackId === activeTrack?.id) {
       if (playing) {
         await TrackPlayer.pause();
       } else {
         await TrackPlayer.play();
       }
+    }
+  };
+
+  const handleInactiveItemPress = async (trackId: string) => {
+    if (!albumTracks.data) {
       return;
     }
 
+    setIsSettingUpQueue(true);
     await TrackPlayer.stop();
     await TrackPlayer.setQueue(albumTracks.data);
     const startIndex = albumTracks.data.findIndex((track) => track.id === trackId);
     await TrackPlayer.skip(startIndex);
     await TrackPlayer.play();
+    setIsSettingUpQueue(false);
   };
 
   const { width } = useWindowDimensions();
@@ -166,13 +170,14 @@ export default function AlbumTracks() {
         {/* Tracks */}
         <Section>
           {albumQuery.data?.album.song?.map((item) => {
-            const isActive = item.id === activeTrack?.id;
+            const isActive = item.id === activeTrack?.id && !isSettingUpQueue;
 
             return (
               <Button
                 key={item.id}
-                // disabled={bufferingDuringPlay}
-                onPress={() => handleTrackItemPress(item.id)}
+                onPress={() =>
+                  isActive ? handleActiveItemPress(item.id) : handleInactiveItemPress(item.id)
+                }
               >
                 <HStack spacing={12}>
                   <Text
