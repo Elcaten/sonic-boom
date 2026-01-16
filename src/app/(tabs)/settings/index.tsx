@@ -19,12 +19,14 @@ import React, { useState } from "react";
 import { Alert, View } from "react-native";
 
 export default function SettingsView() {
+  const auth = useAuth();
   const queryClient = useQueryClient();
-  const [showFetcher, setShowFetcher] = useState<48 | 256 | "QUERIES" | undefined>(undefined);
   const prefetchQueries = usePrefetchQueries();
+
+  const [showFetcher, setShowFetcher] = useState<48 | 256 | "QUERIES" | undefined>(undefined);
   const isDisabled = Boolean(showFetcher);
 
-  const showAlert = () =>
+  const onRefreshPress = () => {
     Alert.alert(
       "Refresh Cache?",
       "This will delete all downloaded album data and artwork from this device. They will be downloaded again.",
@@ -46,19 +48,13 @@ export default function SettingsView() {
         },
       ]
     );
+  };
 
-  const auth = useAuth();
-  const onSupportPress = () => {
-    alert("Thank you ♥️");
-  };
-  const onRefreshPress = () => {
-    showAlert();
-  };
   const onSignOutPress = async () => {
-    queryClient.clear();
     await Image.clearMemoryCache();
     await Image.clearDiskCache();
     await auth.clearAll();
+    queryClient.clear();
   };
 
   return (
@@ -72,12 +68,6 @@ export default function SettingsView() {
             <Link href="/settings/colors" asChild>
               <Button modifiers={[padding({ horizontal: 8 })]}>Colors</Button>
             </Link>
-          </Section>
-
-          <Section>
-            <Button onPress={onSupportPress} modifiers={[padding({ horizontal: 8 })]}>
-              Support
-            </Button>
           </Section>
 
           <Section title="Server">
