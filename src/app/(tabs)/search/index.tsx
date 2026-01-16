@@ -1,7 +1,6 @@
 import { ThemedSafeAreaView } from "@/components/themed/themed-safe-area-view";
 import { ListItem } from "@/components/ui/list-item";
 import { useSearch } from "@/hooks/use-recently-searched";
-import { useThemeColor } from "@/hooks/use-theme-color";
 import { ContentUnavailableView, Host, HStack, List, Section } from "@expo/ui/swift-ui";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
@@ -10,7 +9,6 @@ import { ActivityIndicator } from "react-native";
 import { Artist, Child } from "subsonic-api";
 
 export default function SearchIndex() {
-  const bgSecondary = useThemeColor({}, "bgSecondary");
   const navigation = useNavigation();
 
   const search = useSearch();

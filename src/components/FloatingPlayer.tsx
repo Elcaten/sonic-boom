@@ -1,10 +1,10 @@
-import { useThemeColor } from "@/hooks/use-theme-color";
+import { useColors } from "@/context/app-context";
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { frame } from "@expo/ui/swift-ui/modifiers";
 import { GlassView } from "expo-glass-effect";
 import { useRouter } from "expo-router";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { StyleSheet, useColorScheme, useWindowDimensions, View } from "react-native";
 import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
 
@@ -29,23 +29,25 @@ const style = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 20,
         paddingVertical: 8,
-
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.15,
-        shadowRadius: 5,
       }
     : {
         borderRadius: 12,
         paddingLeft: 8,
         paddingRight: 16,
         paddingVertical: 8,
-
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.15,
-        shadowRadius: 15,
       },
+  cardShadowLight: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+  },
+  cardShadowDark: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.45,
+    shadowRadius: 15,
+  },
   wideCard: {
     marginHorizontal: "auto",
   },
@@ -53,11 +55,12 @@ const style = StyleSheet.create({
 
 export function FloatingPlayer() {
   const router = useRouter();
+  const colors = useColors();
+  const theme = useColorScheme() ?? "light";
 
   const activeTrack = useActiveTrack();
   const { playing, bufferingDuringPlay } = useIsPlaying();
 
-  const backgroundColor = useThemeColor({}, "background");
   const { width, height } = useWindowDimensions();
   const isWideLayout = width > height;
 
@@ -103,11 +106,12 @@ export function FloatingPlayer() {
         isInteractive
         style={[
           style.card,
+          theme === "light" ? style.cardShadowLight : style.cardShadowDark,
           isWideLayout && {
             ...style.wideCard,
             minWidth: height,
           },
-          !isIOSVersion(26) && { backgroundColor },
+          !isIOSVersion(26) && { backgroundColor: colors.secondarySystemGroupedBackground },
         ]}
       >
         <Host>
