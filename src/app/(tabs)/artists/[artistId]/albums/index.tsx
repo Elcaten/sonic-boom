@@ -2,7 +2,8 @@ import { ListItem } from "@/components/ui/list-item";
 import { useRequiredQueries } from "@/context/app-context";
 import { formatDuration } from "@/utils/formatDuration";
 import { isIOSVersion } from "@/utils/is-ios-version";
-import { ContentUnavailableView, Host, List } from "@expo/ui/swift-ui";
+import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
+import { frame } from "@expo/ui/swift-ui/modifiers";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
@@ -79,6 +80,8 @@ export default function ArtistAlbums() {
             />
           );
         })}
+        {/* Padding to account for FloatingPlayer */}
+        <Section modifiers={[frame({ height: 40 })]}>{null}</Section>
       </List>
     </Host>
   );
