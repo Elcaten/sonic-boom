@@ -1,5 +1,6 @@
+import { ThemedInput } from "@/components/themed/themed-input";
 import { useAuth } from "@/context/app-context";
-import { Button, Form, Host, Section, SecureField, TextField } from "@expo/ui/swift-ui";
+import { Button, Form, Host, Section } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { useMutation } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
@@ -54,22 +55,25 @@ export default function LoginForm() {
     <Host style={{ flex: 1 }}>
       <Form modifiers={[padding({ top: 20 })]}>
         <Section title="Server Address">
-          <TextField
+          {/** Native TextField crashes on form submit - https://github.com/expo/expo/issues/40354 */}
+          <ThemedInput
             placeholder="https://example.com"
             onChangeText={setServerAddress}
             keyboardType="url"
-            autocorrection={false}
-          ></TextField>
+            autoCorrect={false}
+          ></ThemedInput>
         </Section>
 
         <Section title="Credentials">
-          <TextField
+          {/** Native TextField crashes on form submit - https://github.com/expo/expo/issues/40354 */}
+          <ThemedInput
             placeholder="admin"
             onChangeText={setUsername}
-            autocorrection={false}
-          ></TextField>
+            autoCorrect={false}
+          ></ThemedInput>
 
-          <SecureField placeholder="password" onChangeText={setPassword}></SecureField>
+          {/** Native TextField crashes on form submit - https://github.com/expo/expo/issues/40354 */}
+          <ThemedInput placeholder="password" onChangeText={setPassword} secureTextEntry />
         </Section>
 
         <Section>
