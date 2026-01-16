@@ -16,7 +16,7 @@ import {
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useWindowDimensions } from "react-native";
 import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 
@@ -40,32 +40,22 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
     }),
   });
 
-  const tracks = useQuery({
-    queryKey: ["album-tracks", albumId],
-    queryFn: () => {
-      console.log("query tracks");
-
-      return albumQuery.data?.album.song?.map((song) => ({
-        id: song.id,
-        url: streamUrlQueries.data.get(song.id)!,
-        title: song.title,
-        artist: song.artist,
-        artistId: song.artistId,
-        album: song.album,
-        albumId: song.albumId,
-        artwork: albumArtworkUrlQuery.data?.uri,
-      }));
-    },
-    enabled:
-      !!albumQuery.data?.album.song?.length &&
-      !!albumArtworkUrlQuery.data &&
-      !!streamUrlQueries.data.size,
-    staleTime: 0,
-  });
+  const tracks = useMemo(() => {
+    return albumQuery.data?.album.song?.map((song) => ({
+      id: song.id,
+      url: streamUrlQueries.data.get(song.id)!,
+      title: song.title,
+      artist: song.artist,
+      artistId: song.artistId,
+      album: song.album,
+      albumId: song.albumId,
+      artwork: albumArtworkUrlQuery.data?.uri,
+    }));
+  }, [albumArtworkUrlQuery.data?.uri, albumQuery.data?.album.song, streamUrlQueries.data]);
 
   return {
     isPending: albumQuery.isPending || albumArtworkUrlQuery.isPending || streamUrlQueries.isPending,
-    data: tracks.data,
+    data: tracks,
   };
 };
 
