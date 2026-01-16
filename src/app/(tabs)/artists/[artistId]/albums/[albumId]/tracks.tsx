@@ -191,7 +191,7 @@ export default function AlbumTracks() {
         </Section>
 
         {/* Padding to account for FloatingPlayer */}
-        <Section modifiers={[frame({ height: 40 })]}>{null}</Section>
+        <Section modifiers={[frame({ height: 64 })]}>{null}</Section>
       </List>
     </Host>
   );
