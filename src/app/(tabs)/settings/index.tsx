@@ -68,7 +68,7 @@ export default function SettingsView() {
     <View style={{ flex: 1, position: "relative" }}>
       <Host style={{ flex: 1 }}>
         <Form modifiers={isDisabled ? [disabled()] : undefined}>
-          <Section>
+          <Section title="Developer">
             <Link href="/settings/animations" asChild>
               <Button modifiers={[padding({ horizontal: 8 })]}>Animations</Button>
             </Link>
