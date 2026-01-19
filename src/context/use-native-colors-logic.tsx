@@ -53,6 +53,18 @@ export function useNativeColorsLogic() {
       opaqueSeparator: PlatformColor("opaqueSeparator"),
 
       link: PlatformColor("link"),
+
+      systemGray: PlatformColor("systemGray"),
+      systemGray2: PlatformColor("systemGray2"),
+      systemGray3: PlatformColor("systemGray3"),
+      systemGray4: PlatformColor("systemGray4"),
+      systemGray5: PlatformColor("systemGray5"),
+      systemGray6: PlatformColor("systemGray6"),
+
+      black: "#000000",
+      white: "#FFFFFF",
+      darkText: PlatformColor("darkText"),
+      lightText: PlatformColor("lightText"),
     };
   }, [theme]);
 }

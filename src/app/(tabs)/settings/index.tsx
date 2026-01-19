@@ -1,6 +1,10 @@
 import { PrefetchAllAlbumImages } from "@/components/Prefetcher";
-import { useAuth } from "@/context/app-context";
+import { ThemedSafeAreaView } from "@/components/themed/themed-safe-area-view";
+import { ThemedText } from "@/components/themed/themed-text";
+import { Slider } from "@/components/ui/slider/slider";
+import { useAuth, useColors } from "@/context/app-context";
 import { usePrefetchQueries } from "@/hooks/use-prefetch-queries";
+import { formatDuration } from "@/utils/formatDuration";
 import { trackPlayerPersistor } from "@/utils/track-player-persistor";
 import {
   Button,
@@ -16,10 +20,9 @@ import { disabled, padding } from "@expo/ui/swift-ui/modifiers";
 import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
-import TrackPlayer from "react-native-track-player";
-
+import TrackPlayer, { useProgress } from "react-native-track-player";
 export default function SettingsView() {
   const auth = useAuth();
   const queryClient = useQueryClient();
@@ -64,8 +67,58 @@ export default function SettingsView() {
     queryClient.clear();
   };
 
+  const progress = useProgress();
+
+  const onProgressChange = (value: number) => {
+    setProgressOptimistic(value * progress.duration);
+    TrackPlayer.seekTo(value * progress.duration);
+  };
+
+  const [progressOptimistic, setProgressOptimistic] = useState<number>(progress.position);
+
+  useEffect(() => {
+    setProgressOptimistic(progress.position);
+  }, [progress.position]);
+
+  const colors = useColors();
+
   return (
     <View style={{ flex: 1, position: "relative" }}>
+      <ThemedSafeAreaView
+        style={{
+          height: 400,
+          paddingTop: 100,
+          paddingHorizontal: 48,
+          backgroundColor: colors.systemBackground,
+        }}
+      >
+        <Slider
+          progress={Boolean(progress.duration) ? progressOptimistic / progress.duration : 0}
+          onProgressChange={onProgressChange}
+          addonBottomLeft={({ isDragging }) => (
+            <ThemedText
+              style={{
+                fontSize: 13,
+                color: isDragging ? colors.label : colors.lightText,
+                // fontWeight: isDragging ? "bold" : "normal",
+              }}
+            >
+              {formatDuration(progress.position)}
+            </ThemedText>
+          )}
+          addonBottomRight={({ isDragging }) => (
+            <ThemedText
+              style={{
+                fontSize: 13,
+                color: isDragging ? colors.label : colors.lightText,
+                // fontWeight: isDragging ? "bold" : "normal",
+              }}
+            >
+              -{formatDuration(progress.duration - progress.position)}
+            </ThemedText>
+          )}
+        />
+      </ThemedSafeAreaView>
       <Host style={{ flex: 1 }}>
         <Form modifiers={isDisabled ? [disabled()] : undefined}>
           <Section title="Developer">
