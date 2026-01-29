@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { PlatformColor, useColorScheme } from "react-native";
 
+//NEW BRANCH 2 COMMENT
+
 /**
  * https://github.com/facebook/react-native/blob/main/packages/rn-tester/js/examples/PlatformColor/PlatformColorExample.js
  */
