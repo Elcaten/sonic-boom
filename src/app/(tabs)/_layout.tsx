@@ -1,24 +1,40 @@
+import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
 import React from "react";
+
+function MiniPlayer() {
+  const placement = NativeTabs.BottomAccessory.usePlacement();
+
+  if (placement === "inline") {
+    // Compact UI for inline placement
+    return <FloatingPlayer />;
+  }
+
+  // Full UI for regular placement
+  return <FloatingPlayer />;
+}
 
 export default function TabLayout() {
   if (isIOSVersion(26)) {
     return (
-      <NativeTabs>
+      <NativeTabs minimizeBehavior="onScrollDown">
+        <NativeTabs.BottomAccessory>
+          <MiniPlayer />
+        </NativeTabs.BottomAccessory>
         <NativeTabs.Trigger name="artists">
-          <Label>Home</Label>
-          <Icon sf="person.2" />
+          <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Icon sf="person.2" />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="settings">
-          <Icon sf="gear" />
-          <Label>Settings</Label>
+          <NativeTabs.Trigger.Icon sf="gear" />
+          <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="search" role="search">
-          <Icon sf="magnifyingglass" />
-          <Label>Settings</Label>
+          <NativeTabs.Trigger.Icon sf="magnifyingglass" />
+          <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
       </NativeTabs>
     );
