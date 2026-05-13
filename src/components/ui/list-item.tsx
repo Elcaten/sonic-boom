@@ -1,5 +1,5 @@
 import { Button, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
-import { frame } from "@expo/ui/swift-ui/modifiers";
+import { foregroundStyle, frame } from "@expo/ui/swift-ui/modifiers";
 import { Link, LinkProps } from "expo-router";
 import React from "react";
 import { CoverArt } from "../CoverArt";
@@ -19,10 +19,10 @@ export function ListItem({
           </VStack>
 
           <VStack alignment="leading" spacing={2}>
-            <Text color="primary" lineLimit={1}>
+            <Text modifiers={[foregroundStyle({ type: "hierarchical", style: "primary" })]}>
               {title}
             </Text>
-            <Text color="secondary" lineLimit={1}>
+            <Text modifiers={[foregroundStyle({ type: "hierarchical", style: "secondary" })]}>
               {subtitle}
             </Text>
           </VStack>

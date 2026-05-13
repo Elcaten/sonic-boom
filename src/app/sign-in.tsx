@@ -77,9 +77,11 @@ export default function LoginForm() {
         </Section>
 
         <Section>
-          <Button onPress={submit.mutate} modifiers={[frame({ maxWidth: Infinity })]}>
-            Sign In
-          </Button>
+          <Button
+            onPress={submit.mutate}
+            modifiers={[frame({ maxWidth: Infinity })]}
+            label="Sign In"
+          />
         </Section>
       </Form>
     </Host>

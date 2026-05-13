@@ -1,7 +1,7 @@
 import { useColors } from "@/context/app-context";
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
-import { frame } from "@expo/ui/swift-ui/modifiers";
+import { font, foregroundStyle, frame, onTapGesture } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { GlassView } from "expo-glass-effect";
 import { useRouter } from "expo-router";
@@ -111,7 +111,7 @@ export function FloatingPlayer() {
         ]}
       >
         <Host>
-          <HStack spacing={12} onPress={handlePress}>
+          <HStack spacing={12} modifiers={[onTapGesture(handlePress)]}>
             {isIOSVersion(26) && (
               <VStack modifiers={[frame({ height: 32, width: 0 })]}>
                 <View style={{ height: 32, width: 0 }} />
@@ -123,10 +123,15 @@ export function FloatingPlayer() {
               </VStack>
             )}
             <VStack alignment="leading">
-              <Text size={15} weight="medium">
+              <Text modifiers={[font({ size: 15, weight: "medium" })]}>
                 {activeTrack.title ?? ""}
               </Text>
-              <Text color="secondary" size={15}>
+              <Text
+                modifiers={[
+                  font({ size: 15 }),
+                  foregroundStyle({ type: "hierarchical", style: "secondary" }),
+                ]}
+              >
                 {activeTrack.artist ?? ""}
               </Text>
             </VStack>

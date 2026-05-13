@@ -6,17 +6,8 @@ import { useAuth, useColors } from "@/context/app-context";
 import { usePrefetchQueries } from "@/hooks/use-prefetch-queries";
 import { formatDuration } from "@/utils/formatDuration";
 import { trackPlayerPersistor } from "@/utils/track-player-persistor";
-import {
-  Button,
-  CircularProgress,
-  Form,
-  Host,
-  HStack,
-  Section,
-  Spacer,
-  Text,
-} from "@expo/ui/swift-ui";
-import { disabled, padding } from "@expo/ui/swift-ui/modifiers";
+import { Button, Form, Host, HStack, ProgressView, Section, Spacer, Text } from "@expo/ui/swift-ui";
+import { disabled, padding, progressViewStyle } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useProgress } from "@rntp/player";
 import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
@@ -124,10 +115,10 @@ export default function SettingsView() {
         <Form modifiers={isDisabled ? [disabled()] : undefined}>
           <Section title="Developer">
             <Link href="/settings/animations" asChild>
-              <Button modifiers={[padding({ horizontal: 8 })]}>Animations</Button>
+              <Button modifiers={[padding({ horizontal: 8 })]} label="Animations" />
             </Link>
             <Link href="/settings/colors" asChild>
-              <Button modifiers={[padding({ horizontal: 8 })]}>Colors</Button>
+              <Button modifiers={[padding({ horizontal: 8 })]} label="Colors" />
             </Link>
           </Section>
 
@@ -146,12 +137,14 @@ export default function SettingsView() {
                   <Text>{`Images...`}</Text>
                 )}
                 <Spacer />
-                {isDisabled && <CircularProgress />}
+                {isDisabled && <ProgressView modifiers={[progressViewStyle("circular")]} />}
               </HStack>
             </Button>
-            <Button onPress={onSignOutPress} modifiers={[padding({ horizontal: 8 })]}>
-              Sign out
-            </Button>
+            <Button
+              onPress={onSignOutPress}
+              modifiers={[padding({ horizontal: 8 })]}
+              label="Sign out"
+            />
           </Section>
         </Form>
       </Host>

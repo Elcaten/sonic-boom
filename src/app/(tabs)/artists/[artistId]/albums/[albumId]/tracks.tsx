@@ -13,7 +13,15 @@ import {
   Text,
   VStack,
 } from "@expo/ui/swift-ui";
-import { frame, padding } from "@expo/ui/swift-ui/modifiers";
+import {
+  buttonStyle,
+  controlSize,
+  font,
+  foregroundStyle,
+  frame,
+  listStyle,
+  padding,
+} from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
@@ -122,7 +130,7 @@ export default function AlbumTracks() {
   return (
     <Host style={{ flex: 1 }}>
       {/* // TODO: add listRowSeparator modifier when available */}
-      <List listStyle="inset">
+      <List modifiers={[listStyle("inset")]}>
         {/* List header */}
         <Stack spacing={topSectionSpacing}>
           {/* Cover Art */}
@@ -132,22 +140,34 @@ export default function AlbumTracks() {
           <VStack spacing={topSectionSpacing}>
             {/* Album & Artist */}
             <VStack modifiers={[frame({ maxHeight: Infinity })]} spacing={4}>
-              <Text weight="semibold" size={20}>
+              <Text modifiers={[font({ weight: "semibold", size: 20 })]}>
                 {albumQuery.data?.album.name || " "}
               </Text>
-              <Text size={20} color="secondary" weight="medium">
+              <Text
+                modifiers={[
+                  font({ size: 20 }),
+                  foregroundStyle({ type: "hierarchical", style: "secondary" }),
+                  font({ weight: "medium" }),
+                ]}
+              >
                 {albumQuery.data?.album.artist || " "}
               </Text>
             </VStack>
             {/* Buttons; padding to fix buttons not aligned with cover art in wide layout */}
             <HStack spacing={12} modifiers={[padding({ bottom: 6 })]}>
-              <Button variant="bordered" onPress={handlePlayAlbumPress} controlSize="large">
+              <Button
+                modifiers={[buttonStyle("bordered"), controlSize("large")]}
+                onPress={handlePlayAlbumPress}
+              >
                 <HStack modifiers={[frame({ maxWidth: Infinity })]} spacing={8}>
                   <Image systemName="play.fill" size={18} />
                   <Text>Play</Text>
                 </HStack>
               </Button>
-              <Button variant="bordered" onPress={handleShuffleAlbumPress} controlSize="large">
+              <Button
+                modifiers={[buttonStyle("bordered"), controlSize("large")]}
+                onPress={handleShuffleAlbumPress}
+              >
                 <HStack modifiers={[frame({ maxWidth: Infinity })]} spacing={8}>
                   <Image systemName="shuffle" size={18} />
                   <Text>Shuffle</Text>
@@ -171,16 +191,28 @@ export default function AlbumTracks() {
               >
                 <HStack spacing={12}>
                   <Text
-                    color={isActive ? "primary" : "secondary"}
-                    weight={isActive ? "semibold" : "regular"}
-                    modifiers={[frame({ width: 32 })]}
+                    modifiers={[
+                      frame({ width: 32 }),
+                      font({ weight: isActive ? "semibold" : "regular" }),
+                      foregroundStyle({
+                        type: "hierarchical",
+                        style: isActive ? "primary" : "secondary",
+                      }),
+                    ]}
                   >
                     {String(item.track)}
                   </Text>
-                  <Text weight={isActive ? "semibold" : "regular"}>{item.title}</Text>
+                  <Text modifiers={[font({ weight: isActive ? "semibold" : "regular" })]}>
+                    {item.title}
+                  </Text>
                   <Spacer />
                   {item.duration && (
-                    <Text color="secondary" modifiers={[padding({ trailing: 16 })]}>
+                    <Text
+                      modifiers={[
+                        padding({ trailing: 16 }),
+                        foregroundStyle({ type: "hierarchical", style: "secondary" }),
+                      ]}
+                    >
                       {formatDuration(item.duration)}
                     </Text>
                   )}

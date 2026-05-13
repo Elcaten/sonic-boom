@@ -1,5 +1,6 @@
 import { usePlayerQueue } from "@/track-player/use-player-queue";
 import { Button, Host, List, Text } from "@expo/ui/swift-ui";
+import { font, listStyle } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useActiveMediaItem } from "@rntp/player";
 
 export default function ActiveTrackModal() {
@@ -53,15 +54,20 @@ export default function ActiveTrackModal() {
   return (
     <Host style={{ flex: 1 }}>
       <List
-        listStyle="inset"
-        moveEnabled
-        onMoveItem={handleMoveItem}
-        deleteEnabled
-        onDeleteItem={handleDeleteItem}
+        modifiers={[listStyle("inset")]}
+        // TODO: add move and delete functionality
+        // moveEnabled
+        // onMoveItem={handleMoveItem}
+        // deleteEnabled
+        // onDeleteItem={handleDeleteItem}
       >
         {queue.map((item, index) => (
           <Button key={item.id} onPress={() => handlePress(index)}>
-            <Text weight={item.id === activeTrack?.id ? "semibold" : "regular"}>{item.title!}</Text>
+            <Text
+              modifiers={[font({ weight: item.id === activeTrack?.id ? "semibold" : "regular" })]}
+            >
+              {item.title!}
+            </Text>
           </Button>
         ))}
       </List>

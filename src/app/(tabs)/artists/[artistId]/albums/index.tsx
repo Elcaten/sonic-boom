@@ -3,7 +3,7 @@ import { useRequiredQueries } from "@/context/app-context";
 import { formatDuration } from "@/utils/formatDuration";
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
-import { frame } from "@expo/ui/swift-ui/modifiers";
+import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
@@ -63,7 +63,7 @@ export default function ArtistAlbums() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List listStyle={"automatic"}>
+      <List modifiers={[listStyle("automatic")]}>
         {data.map((item) => {
           const title = [item.name, item.year ? `(${item.year})` : null].filter(Boolean).join(" ");
           const subtitle = `${item.songCount} track(s) | ${formatDuration(item.duration)}`;
