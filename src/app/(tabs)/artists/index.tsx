@@ -2,7 +2,7 @@ import { ListItem } from "@/components/ui/list-item";
 import { useRequiredQueries } from "@/context/app-context";
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
-import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
+import { listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
@@ -102,8 +102,6 @@ export default function ArtistsScreen() {
             </Section>
           );
         })}
-        {/* Padding to account for FloatingPlayer */}
-        <Section modifiers={[frame({ height: 40 })]}>{null}</Section>
       </List>
     </Host>
   );

@@ -1,9 +1,8 @@
-import "@rntp/player";
+// import "@rntp/player";
 
-declare module "@rntp/player" {
-  export interface MediaItem {
-    id: string;
-    artistId?: string;
-    albumId?: string;
-  }
-}
+// declare module "@rntp/player" {
+//   export interface MediaItem {
+//     artistId?: string;
+//     albumId?: string;
+//   }
+// }

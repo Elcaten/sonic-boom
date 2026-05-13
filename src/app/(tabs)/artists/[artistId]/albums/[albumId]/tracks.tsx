@@ -14,21 +14,28 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import {
+  Animation,
+  animation,
   buttonStyle,
   controlSize,
   font,
   foregroundStyle,
   frame,
+  listRowSeparator,
   listStyle,
   padding,
 } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
+import TrackPlayer, { MediaItem, useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 
-const useAlbumTracks = ({ albumId }: { albumId: string }) => {
+const useAlbumTracks = ({
+  albumId,
+}: {
+  albumId: string;
+}): { isPending: boolean; data: MediaItem[] } => {
   const queries = useRequiredQueries();
 
   const albumQuery = useQuery(queries.album(albumId));
@@ -49,21 +56,21 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
   });
 
   const tracks = useMemo(() => {
-    return albumQuery.data?.album.song?.map((song) => ({
-      id: song.id,
+    return albumQuery.data?.album.song?.map<MediaItem>((song) => ({
+      mediaId: song.id,
       url: streamUrlQueries.data.get(song.id)!,
       title: song.title,
       artist: song.artist,
-      artistId: song.artistId,
+      // artistId: song.artistId,
       album: song.album,
-      albumId: song.albumId,
+      // albumId: song.albumId,
       artworkUrl: albumArtworkUrlQuery.data?.uri,
     }));
   }, [albumArtworkUrlQuery.data?.uri, albumQuery.data?.album.song, streamUrlQueries.data]);
 
   return {
     isPending: albumQuery.isPending || albumArtworkUrlQuery.isPending || streamUrlQueries.isPending,
-    data: tracks,
+    data: tracks ?? [],
   };
 };
 
@@ -75,9 +82,6 @@ export default function AlbumTracks() {
 
   const playing = useIsPlaying();
   const activeTrack = useActiveMediaItem();
-  console.log(activeTrack);
-
-  const [isSettingUpQueue, setIsSettingUpQueue] = useState(false);
 
   const handlePlayAlbumPress = async () => {
     if (!albumTracks.data) {
@@ -94,12 +98,12 @@ export default function AlbumTracks() {
     }
 
     const shuffledTracks = shuffleArray(albumTracks.data);
-    await TrackPlayer.setMediaItems(shuffledTracks);
+    TrackPlayer.setMediaItems(shuffledTracks);
     TrackPlayer.play();
   };
 
   const handleActiveItemPress = async (trackId: string) => {
-    if (trackId === activeTrack?.id) {
+    if (trackId === activeTrack?.mediaId) {
       if (playing) {
         TrackPlayer.pause();
       } else {
@@ -113,13 +117,8 @@ export default function AlbumTracks() {
       return;
     }
 
-    setIsSettingUpQueue(true);
-    await TrackPlayer.stop();
-    await TrackPlayer.setMediaItems(albumTracks.data);
-    const startIndex = albumTracks.data.findIndex((track) => track.id === trackId);
-    await TrackPlayer.skipToIndex(startIndex);
-    await TrackPlayer.play();
-    setIsSettingUpQueue(false);
+    const startIndex = albumTracks.data.findIndex((track) => track.mediaId === trackId);
+    TrackPlayer.setMediaItems(albumTracks.data, startIndex);
   };
 
   const { width } = useWindowDimensions();
@@ -131,10 +130,9 @@ export default function AlbumTracks() {
 
   return (
     <Host style={{ flex: 1 }}>
-      {/* // TODO: add listRowSeparator modifier when available */}
       <List modifiers={[listStyle("inset")]}>
         {/* List header */}
-        <Stack spacing={topSectionSpacing}>
+        <Stack spacing={topSectionSpacing} modifiers={[listRowSeparator("hidden", "all")]}>
           {/* Cover Art */}
           <VStack modifiers={[frame({ width: 256, height: 256 })]}>
             <CoverArt id={albumId} size={256} elevated />
@@ -182,7 +180,7 @@ export default function AlbumTracks() {
         {/* Tracks */}
         <Section>
           {albumQuery.data?.album.song?.map((item) => {
-            const isActive = item.id === activeTrack?.id && !isSettingUpQueue;
+            const isActive = item.id === activeTrack?.mediaId;
 
             return (
               <Button
@@ -191,19 +189,31 @@ export default function AlbumTracks() {
                   isActive ? handleActiveItemPress(item.id) : handleInactiveItemPress(item.id)
                 }
               >
-                <HStack spacing={12}>
-                  <Text
-                    modifiers={[
-                      frame({ width: 32 }),
-                      font({ weight: isActive ? "semibold" : "regular" }),
-                      foregroundStyle({
-                        type: "hierarchical",
-                        style: isActive ? "primary" : "secondary",
-                      }),
-                    ]}
-                  >
-                    {String(item.track)}
-                  </Text>
+                <HStack
+                  spacing={12}
+                  modifiers={[animation(Animation.spring({ duration: 0.2 }), isActive)]}
+                >
+                  <VStack modifiers={[frame({ width: 1 })]}>
+                    {/* avoid inset list layout fucking up row separator alignment */}
+                    <Text>&nbsp;</Text>
+                  </VStack>
+                  {isActive && (
+                    <Image systemName={"waveform"} size={18} modifiers={[frame({ width: 32 })]} />
+                  )}
+                  {!isActive && (
+                    <Text
+                      modifiers={[
+                        frame({ width: 32 }),
+                        font({ weight: "regular" }),
+                        foregroundStyle({
+                          type: "hierarchical",
+                          style: "secondary",
+                        }),
+                      ]}
+                    >
+                      {String(item.track)}
+                    </Text>
+                  )}
                   <Text modifiers={[font({ weight: isActive ? "semibold" : "regular" })]}>
                     {item.title}
                   </Text>
@@ -223,9 +233,6 @@ export default function AlbumTracks() {
             );
           })}
         </Section>
-
-        {/* Padding to account for FloatingPlayer */}
-        <Section modifiers={[frame({ height: 64 })]}>{null}</Section>
       </List>
     </Host>
   );

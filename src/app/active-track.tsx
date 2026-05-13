@@ -9,7 +9,7 @@ export default function ActiveTrackModal() {
 
   const handlePress = (index: number) => {
     const item = queue[index];
-    if (item.id === activeTrack?.id) {
+    if (item.mediaId === activeTrack?.mediaId) {
       TrackPlayer.play();
     } else {
       TrackPlayer.skipToIndex(index);
@@ -26,7 +26,7 @@ export default function ActiveTrackModal() {
     newQueue.splice(toIndex, 0, movedItem);
     TrackPlayer.setMediaItems(newQueue);
 
-    const indexToSkipTo = newQueue.findIndex((item) => item.id === savedActiveTrack?.id);
+    const indexToSkipTo = newQueue.findIndex((item) => item.mediaId === savedActiveTrack?.mediaId);
     if (indexToSkipTo !== -1) {
       TrackPlayer.skipToIndex(indexToSkipTo);
       TrackPlayer.seekTo(savedProgress.position);
@@ -43,7 +43,7 @@ export default function ActiveTrackModal() {
     newQueue.splice(index, 1);
     TrackPlayer.setMediaItems(newQueue);
 
-    const indexToSkipTo = newQueue.findIndex((item) => item.id === savedActiveTrack?.id);
+    const indexToSkipTo = newQueue.findIndex((item) => item.mediaId === savedActiveTrack?.mediaId);
     if (indexToSkipTo !== -1) {
       TrackPlayer.skipToIndex(indexToSkipTo);
       TrackPlayer.seekTo(savedProgress.position);
@@ -62,9 +62,11 @@ export default function ActiveTrackModal() {
         // onDeleteItem={handleDeleteItem}
       >
         {queue.map((item, index) => (
-          <Button key={item.id} onPress={() => handlePress(index)}>
+          <Button key={item.mediaId} onPress={() => handlePress(index)}>
             <Text
-              modifiers={[font({ weight: item.id === activeTrack?.id ? "semibold" : "regular" })]}
+              modifiers={[
+                font({ weight: item.mediaId === activeTrack?.mediaId ? "semibold" : "regular" }),
+              ]}
             >
               {item.title!}
             </Text>
