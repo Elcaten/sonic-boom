@@ -1,7 +1,7 @@
 {
   "expo": {
     "developmentClient": {
-      "silentLaunch": true 
+      "silentLaunch": true
     },
     "name": "sonic-boom",
     "slug": "sonic-boom",
@@ -18,7 +18,8 @@
           "audio"
         ]
       },
-      "bundleIdentifier": "com.heavy.hope.sonicboom"
+      "bundleIdentifier": "com.heavy.hope.sonicboom",
+      "appleTeamId": "42FT242JP9"
     },
     "android": {
       "adaptiveIcon": {
