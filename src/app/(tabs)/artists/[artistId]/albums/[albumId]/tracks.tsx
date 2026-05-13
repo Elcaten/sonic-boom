@@ -57,7 +57,7 @@ const useAlbumTracks = ({ albumId }: { albumId: string }) => {
       artistId: song.artistId,
       album: song.album,
       albumId: song.albumId,
-      artwork: albumArtworkUrlQuery.data?.uri,
+      artworkUrl: albumArtworkUrlQuery.data?.uri,
     }));
   }, [albumArtworkUrlQuery.data?.uri, albumQuery.data?.album.song, streamUrlQueries.data]);
 
@@ -75,6 +75,8 @@ export default function AlbumTracks() {
 
   const playing = useIsPlaying();
   const activeTrack = useActiveMediaItem();
+  console.log(activeTrack);
+
   const [isSettingUpQueue, setIsSettingUpQueue] = useState(false);
 
   const handlePlayAlbumPress = async () => {
