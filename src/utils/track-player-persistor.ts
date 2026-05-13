@@ -1,10 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import TrackPlayer from "react-native-track-player";
+import TrackPlayer from "@rntp/player";
 
 export const trackPlayerPersistor = {
   peristQueue: async () => {
     try {
-      const queue = await TrackPlayer.getQueue();
+      const queue = TrackPlayer.getQueue();
       if (queue) {
         AsyncStorage.setItem("queue", JSON.stringify(queue));
       }
@@ -15,7 +15,7 @@ export const trackPlayerPersistor = {
   },
   persistActiveTrackIndex: async () => {
     try {
-      const activeTrackIndex = await TrackPlayer.getActiveTrackIndex();
+      const activeTrackIndex = TrackPlayer.getActiveMediaItemIndex();
       if (activeTrackIndex) {
         AsyncStorage.setItem("active-track-index", activeTrackIndex.toString());
       }
@@ -29,7 +29,7 @@ export const trackPlayerPersistor = {
       const queue = await AsyncStorage.getItem("queue");
       if (queue) {
         //TODO: check for object shape
-        TrackPlayer.setQueue(JSON.parse(queue));
+        TrackPlayer.setMediaItems(JSON.parse(queue));
       }
     } catch (e) {
       //TODO: log error
@@ -41,7 +41,7 @@ export const trackPlayerPersistor = {
       const activeTrackIndex = await AsyncStorage.getItem("active-track-index");
       if (activeTrackIndex) {
         //TODO: check for object shape
-        TrackPlayer.skip(Number.parseInt(activeTrackIndex));
+        TrackPlayer.skipToIndex(Number.parseInt(activeTrackIndex));
       }
     } catch (e) {
       //TODO: log error

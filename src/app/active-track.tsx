@@ -1,9 +1,9 @@
 import { usePlayerQueue } from "@/track-player/use-player-queue";
 import { Button, Host, List, Text } from "@expo/ui/swift-ui";
-import TrackPlayer, { useActiveTrack } from "react-native-track-player";
+import TrackPlayer, { useActiveMediaItem } from "@rntp/player";
 
 export default function ActiveTrackModal() {
-  const activeTrack = useActiveTrack();
+  const activeTrack = useActiveMediaItem();
   const { queue } = usePlayerQueue();
 
   const handlePress = (index: number) => {
@@ -11,39 +11,41 @@ export default function ActiveTrackModal() {
     if (item.id === activeTrack?.id) {
       TrackPlayer.play();
     } else {
-      TrackPlayer.skip(index);
+      TrackPlayer.skipToIndex(index);
     }
   };
 
   const handleMoveItem = async (fromIndex: number, toIndex: number) => {
-    const savedActiveTrack = await TrackPlayer.getActiveTrack();
-    const savedProgress = await TrackPlayer.getProgress();
+    const savedActiveTrack = TrackPlayer.getActiveMediaItem();
+    const savedProgress = TrackPlayer.getProgress();
 
-    const queue = await TrackPlayer.getQueue();
+    const queue = TrackPlayer.getQueue();
     const newQueue = [...queue];
     const [movedItem] = newQueue.splice(fromIndex, 1);
     newQueue.splice(toIndex, 0, movedItem);
-    TrackPlayer.setQueue(newQueue);
+    TrackPlayer.setMediaItems(newQueue);
 
     const indexToSkipTo = newQueue.findIndex((item) => item.id === savedActiveTrack?.id);
     if (indexToSkipTo !== -1) {
-      TrackPlayer.skip(indexToSkipTo, savedProgress.position);
+      TrackPlayer.skipToIndex(indexToSkipTo);
+      TrackPlayer.seekTo(savedProgress.position);
     }
     TrackPlayer.play();
   };
 
   const handleDeleteItem = async (index: number) => {
-    const savedActiveTrack = await TrackPlayer.getActiveTrack();
-    const savedProgress = await TrackPlayer.getProgress();
+    const savedActiveTrack = TrackPlayer.getActiveMediaItem();
+    const savedProgress = TrackPlayer.getProgress();
 
-    const queue = await TrackPlayer.getQueue();
+    const queue = TrackPlayer.getQueue();
     const newQueue = [...queue];
     newQueue.splice(index, 1);
-    TrackPlayer.setQueue(newQueue);
+    TrackPlayer.setMediaItems(newQueue);
 
     const indexToSkipTo = newQueue.findIndex((item) => item.id === savedActiveTrack?.id);
     if (indexToSkipTo !== -1) {
-      TrackPlayer.skip(indexToSkipTo, savedProgress.position);
+      TrackPlayer.skipToIndex(indexToSkipTo);
+      TrackPlayer.seekTo(savedProgress.position);
     }
     TrackPlayer.play();
   };

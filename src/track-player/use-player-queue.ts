@@ -1,13 +1,13 @@
+import TrackPlayer, { MediaItem, useActiveMediaItem } from "@rntp/player";
 import { useEffect, useState } from "react";
-import TrackPlayer, { Track, useActiveTrack } from "react-native-track-player";
 
 export function usePlayerQueue() {
-  const activeTrack = useActiveTrack();
-  const [queue, setQueue] = useState<Track[]>([]);
+  const activeTrack = useActiveMediaItem();
+  const [queue, setQueue] = useState<MediaItem[]>([]);
 
   useEffect(() => {
     const effect = async () => {
-      const result = await TrackPlayer.getQueue();
+      const result = TrackPlayer.getQueue();
       setQueue(result);
     };
 

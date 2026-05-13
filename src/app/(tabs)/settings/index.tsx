@@ -17,12 +17,12 @@ import {
   Text,
 } from "@expo/ui/swift-ui";
 import { disabled, padding } from "@expo/ui/swift-ui/modifiers";
+import TrackPlayer, { useProgress } from "@rntp/player";
 import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
-import TrackPlayer, { useProgress } from "react-native-track-player";
 export default function SettingsView() {
   const auth = useAuth();
   const queryClient = useQueryClient();
@@ -51,12 +51,13 @@ export default function SettingsView() {
           text: "Cancel",
           style: "cancel",
         },
-      ]
+      ],
     );
   };
 
   const onSignOutPress = async () => {
-    await TrackPlayer.reset();
+    TrackPlayer.stop();
+    TrackPlayer.clear();
     await trackPlayerPersistor.clearAll();
 
     await Image.clearMemoryCache();

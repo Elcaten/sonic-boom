@@ -1,9 +1,9 @@
 import { AppProvider, useIsAuthenticated } from "@/context/app-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { registerPlaybackService } from "@/track-player/register-playback-service";
 import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import TrackPlayer from "@rntp/player";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient, useIsRestoring } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
@@ -13,15 +13,12 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import TrackPlayer from "react-native-track-player";
 
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
   anchor: "(tabs)",
 };
-
-registerPlaybackService();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,7 +53,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     return () => {
-      TrackPlayer.reset();
+      TrackPlayer.stop();
+      TrackPlayer.clear();
     };
   }, []);
 

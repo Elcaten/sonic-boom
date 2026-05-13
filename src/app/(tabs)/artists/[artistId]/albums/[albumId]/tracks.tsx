@@ -14,11 +14,11 @@ import {
   VStack,
 } from "@expo/ui/swift-ui";
 import { frame, padding } from "@expo/ui/swift-ui/modifiers";
+import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React, { useMemo, useState } from "react";
 import { useWindowDimensions } from "react-native";
-import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 
 const useAlbumTracks = ({ albumId }: { albumId: string }) => {
   const queries = useRequiredQueries();
@@ -65,8 +65,8 @@ export default function AlbumTracks() {
   const albumQuery = useQuery(queries.album(albumId));
   const albumTracks = useAlbumTracks({ albumId });
 
-  const { playing } = useIsPlaying();
-  const activeTrack = useActiveTrack();
+  const playing = useIsPlaying();
+  const activeTrack = useActiveMediaItem();
   const [isSettingUpQueue, setIsSettingUpQueue] = useState(false);
 
   const handlePlayAlbumPress = async () => {
@@ -74,8 +74,8 @@ export default function AlbumTracks() {
       return;
     }
 
-    await TrackPlayer.setQueue(albumTracks.data);
-    await TrackPlayer.play();
+    TrackPlayer.setMediaItems(albumTracks.data);
+    TrackPlayer.play();
   };
 
   const handleShuffleAlbumPress = async () => {
@@ -84,16 +84,16 @@ export default function AlbumTracks() {
     }
 
     const shuffledTracks = shuffleArray(albumTracks.data);
-    await TrackPlayer.setQueue(shuffledTracks);
-    await TrackPlayer.play();
+    await TrackPlayer.setMediaItems(shuffledTracks);
+    TrackPlayer.play();
   };
 
   const handleActiveItemPress = async (trackId: string) => {
     if (trackId === activeTrack?.id) {
       if (playing) {
-        await TrackPlayer.pause();
+        TrackPlayer.pause();
       } else {
-        await TrackPlayer.play();
+        TrackPlayer.play();
       }
     }
   };
@@ -105,9 +105,9 @@ export default function AlbumTracks() {
 
     setIsSettingUpQueue(true);
     await TrackPlayer.stop();
-    await TrackPlayer.setQueue(albumTracks.data);
+    await TrackPlayer.setMediaItems(albumTracks.data);
     const startIndex = albumTracks.data.findIndex((track) => track.id === trackId);
-    await TrackPlayer.skip(startIndex);
+    await TrackPlayer.skipToIndex(startIndex);
     await TrackPlayer.play();
     setIsSettingUpQueue(false);
   };

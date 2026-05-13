@@ -1,35 +1,14 @@
 import { trackPlayerPersistor } from "@/utils/track-player-persistor";
+import TrackPlayer, { RepeatMode } from "@rntp/player";
 import { useEffect, useRef } from "react";
-import TrackPlayer, {
-  AppKilledPlaybackBehavior,
-  Capability,
-  RatingType,
-  RepeatMode,
-} from "react-native-track-player";
 
 const setupTrackPlayer = async () => {
-  await TrackPlayer.setupPlayer({
-    maxCacheSize: 1024 * 10,
+  TrackPlayer.setupPlayer({
+    contentType: "music",
   });
 
-  await TrackPlayer.updateOptions({
-    android: {
-      // This is the default behavior
-      appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback,
-    },
-    ratingType: RatingType.Heart,
-    capabilities: [
-      Capability.Play,
-      Capability.Pause,
-      Capability.SkipToNext,
-      Capability.SkipToPrevious,
-      Capability.Stop,
-      Capability.SeekTo,
-    ],
-  });
-
-  await TrackPlayer.setVolume(1);
-  await TrackPlayer.setRepeatMode(RepeatMode.Queue);
+  TrackPlayer.setVolume(1);
+  TrackPlayer.setRepeatMode(RepeatMode.All);
 
   await trackPlayerPersistor.hydrateQueue();
   await trackPlayerPersistor.hydrateActiveTrackIndex();

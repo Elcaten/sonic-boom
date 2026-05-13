@@ -2,10 +2,10 @@ import { useColors } from "@/context/app-context";
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { frame } from "@expo/ui/swift-ui/modifiers";
+import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { GlassView } from "expo-glass-effect";
 import { useRouter } from "expo-router";
 import { StyleSheet, useColorScheme, useWindowDimensions, View } from "react-native";
-import TrackPlayer, { useActiveTrack, useIsPlaying } from "react-native-track-player";
 import { CoverArt } from "./CoverArt";
 
 const style = StyleSheet.create({
@@ -58,8 +58,8 @@ export function FloatingPlayer() {
   const colors = useColors();
   const theme = useColorScheme() ?? "light";
 
-  const activeTrack = useActiveTrack();
-  const { playing, bufferingDuringPlay } = useIsPlaying();
+  const activeTrack = useActiveMediaItem();
+  const isPlaying = useIsPlaying();
 
   const { width, height } = useWindowDimensions();
   const isWideLayout = width > height;
@@ -77,11 +77,7 @@ export function FloatingPlayer() {
   };
 
   const handlePlayPausePress = () => {
-    if (bufferingDuringPlay) {
-      return;
-    }
-
-    if (playing) {
+    if (isPlaying) {
       TrackPlayer.pause();
     } else {
       TrackPlayer.play();
@@ -138,11 +134,9 @@ export function FloatingPlayer() {
             <Button onPress={handlePrevPress}>
               <Image systemName={"backward.fill"} size={16} color="primary" />
             </Button>
-            <Button onPress={handlePlayPausePress} disabled={bufferingDuringPlay}>
+            <Button onPress={handlePlayPausePress}>
               <Image
-                systemName={
-                  bufferingDuringPlay ? "pause.fill" : playing ? "pause.fill" : "play.fill"
-                }
+                systemName={isPlaying ? "pause.fill" : "play.fill"}
                 size={24}
                 color="primary"
               />
