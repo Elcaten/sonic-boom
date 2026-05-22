@@ -27,7 +27,12 @@ import {
   multilineTextAlignment,
   padding,
 } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, { MediaItem, useActiveMediaItem, useIsPlaying } from "@rntp/player";
+import TrackPlayer, {
+  MediaItem,
+  MediaItemExtras,
+  useActiveMediaItem,
+  useIsPlaying,
+} from "@rntp/player";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React, { useMemo } from "react";
@@ -58,16 +63,21 @@ const useAlbumTracks = ({
   });
 
   const tracks = useMemo(() => {
-    return albumQuery.data?.album.song?.map<MediaItem>((song) => ({
-      mediaId: song.id,
-      url: streamUrlQueries.data.get(song.id)!,
-      title: song.title,
-      artist: song.artist,
-      // artistId: song.artistId,
-      album: song.album,
-      // albumId: song.albumId,
-      artworkUrl: albumArtworkUrlQuery.data?.uri,
-    }));
+    return albumQuery.data?.album.song?.map<MediaItem>((song) => {
+      const extras: MediaItemExtras = {
+        artistId: song.artistId,
+        albumId: song.albumId,
+      };
+      return {
+        mediaId: song.id,
+        url: streamUrlQueries.data.get(song.id)!,
+        title: song.title,
+        artist: song.artist,
+        albumTitle: song.album,
+        artworkUrl: albumArtworkUrlQuery.data?.uri,
+        extras: extras as unknown as any, // fucks sake library author cant you offer extensible type properly
+      };
+    });
   }, [albumArtworkUrlQuery.data?.uri, albumQuery.data?.album.song, streamUrlQueries.data]);
 
   return {

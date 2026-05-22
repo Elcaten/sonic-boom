@@ -1,7 +1,7 @@
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { font, foregroundStyle, frame, onTapGesture } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
+import TrackPlayer, { MediaItemExtras, useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useRouter } from "expo-router";
 import { View } from "react-native";
 import { CoverArt } from "./CoverArt";
@@ -10,17 +10,18 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
   const router = useRouter();
 
   const activeTrack = useActiveMediaItem();
+  const activeTrackExtra = activeTrack?.extras as MediaItemExtras;
   const isPlaying = useIsPlaying();
 
   const handlePress = () => {
-    if (!activeTrack?.albumId || !activeTrack?.artistId) {
+    if (!activeTrackExtra?.albumId || !activeTrackExtra?.artistId) {
       return;
     }
 
     router.navigate({
       // pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
       pathname: "/active-track",
-      params: { albumId: activeTrack.albumId, artistId: activeTrack.artistId },
+      params: { albumId: activeTrackExtra.albumId, artistId: activeTrackExtra.artistId },
     });
   };
 
@@ -54,7 +55,7 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
         )}
         {!isIOSVersion(26) && (
           <VStack modifiers={[frame({ width: 48, height: 48 })]}>
-            <CoverArt id={activeTrack.albumId} size={48} />
+            <CoverArt id={activeTrackExtra.albumId} size={48} />
           </VStack>
         )}
         <VStack alignment="leading">
