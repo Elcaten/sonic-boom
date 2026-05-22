@@ -10,8 +10,18 @@ type SliderProps = {
   onProgressChange: (progress: number) => void;
   addonLeft?: React.ReactNode;
   addonRight?: React.ReactNode;
-  addonBottomLeft?: ({ isDragging }: { isDragging: boolean }) => React.ReactNode;
-  addonBottomRight?: ({ isDragging }: { isDragging: boolean }) => React.ReactNode;
+  addonBottomLeft?: ({
+    isDragging,
+  }: {
+    isDragging: boolean;
+    dragPercent: number;
+  }) => React.ReactNode;
+  addonBottomRight?: ({
+    isDragging,
+  }: {
+    isDragging: boolean;
+    dragPercent: number;
+  }) => React.ReactNode;
 };
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -137,7 +147,7 @@ export function Slider(props: SliderProps) {
             ],
           }}
         >
-          {addonBottomLeft?.({ isDragging })}
+          {addonBottomLeft?.({ isDragging, dragPercent })}
         </Animated.View>
         <Animated.View
           style={{
@@ -148,7 +158,7 @@ export function Slider(props: SliderProps) {
             ],
           }}
         >
-          {addonBottomRight?.({ isDragging })}
+          {addonBottomRight?.({ isDragging, dragPercent })}
         </Animated.View>
       </Animated.View>
     </DragTracker>

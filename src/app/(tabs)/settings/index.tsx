@@ -12,7 +12,7 @@ import TrackPlayer, { useProgress } from "@rntp/player";
 import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 export default function SettingsView() {
   const auth = useAuth();
@@ -87,26 +87,30 @@ export default function SettingsView() {
         <Slider
           progress={Boolean(progress.duration) ? progressOptimistic / progress.duration : 0}
           onProgressChange={onProgressChange}
-          addonBottomLeft={({ isDragging }) => (
+          addonBottomLeft={({ isDragging, dragPercent }) => (
             <ThemedText
               style={{
                 fontSize: 13,
-                color: isDragging ? colors.label : colors.lightText,
-                // fontWeight: isDragging ? "bold" : "normal",
+                color: colors.label,
               }}
             >
-              {formatDuration(progress.position)}
+              {isDragging
+                ? formatDuration(progress.duration * dragPercent)
+                : formatDuration(progressOptimistic)}
             </ThemedText>
           )}
-          addonBottomRight={({ isDragging }) => (
+          addonBottomRight={({ isDragging, dragPercent }) => (
             <ThemedText
               style={{
                 fontSize: 13,
-                color: isDragging ? colors.label : colors.lightText,
-                // fontWeight: isDragging ? "bold" : "normal",
+                color: colors.label,
               }}
             >
-              -{formatDuration(progress.duration - progress.position)}
+              {isDragging ? (
+                <Fragment>-{formatDuration(progress.duration * (1 - dragPercent))}</Fragment>
+              ) : (
+                <Fragment>-{formatDuration(progress.duration - progressOptimistic)}</Fragment>
+              )}
             </ThemedText>
           )}
         />
