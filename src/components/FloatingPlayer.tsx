@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import { View } from "react-native";
 import { CoverArt } from "./CoverArt";
 
-export function FloatingPlayer() {
+export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-next")[] }) {
   const router = useRouter();
 
   const activeTrack = useActiveMediaItem();
@@ -69,15 +69,21 @@ export function FloatingPlayer() {
           </Text>
         </VStack>
         <Spacer />
-        <Button onPress={handlePrevPress}>
-          <Image systemName={"backward.fill"} size={16} color="primary" />
-        </Button>
-        <Button onPress={handlePlayPausePress}>
-          <Image systemName={isPlaying ? "pause.fill" : "play.fill"} size={24} color="primary" />
-        </Button>
-        <Button onPress={handleNextPress}>
-          <Image systemName={"forward.fill"} size={16} color="primary" />
-        </Button>
+        {actions.includes("prev-next") && (
+          <Button onPress={handlePrevPress}>
+            <Image systemName={"backward.fill"} size={16} color="primary" />
+          </Button>
+        )}
+        {actions.includes("play-pause") && (
+          <Button onPress={handlePlayPausePress}>
+            <Image systemName={isPlaying ? "pause.fill" : "play.fill"} size={24} color="primary" />
+          </Button>
+        )}
+        {actions.includes("prev-next") && (
+          <Button onPress={handleNextPress}>
+            <Image systemName={"forward.fill"} size={16} color="primary" />
+          </Button>
+        )}
       </HStack>
     </Host>
   );

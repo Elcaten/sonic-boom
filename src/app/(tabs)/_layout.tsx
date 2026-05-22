@@ -10,11 +10,11 @@ function MiniPlayer() {
 
   if (placement === "inline") {
     // Compact UI for inline placement
-    return <FloatingPlayer />;
+    return <FloatingPlayer actions={["play-pause"]} />;
   }
 
   // Full UI for regular placement
-  return <FloatingPlayer />;
+  return <FloatingPlayer actions={["play-pause", "prev-next"]} />;
 }
 
 export default function TabLayout() {
