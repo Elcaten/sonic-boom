@@ -1,7 +1,7 @@
 import { ListItem } from "@/components/ui/list-item";
 import { useRequiredQueries } from "@/context/app-context";
-import { formatDuration } from "@/utils/formatDuration";
 import { isIOSVersion } from "@/utils/is-ios-version";
+import { pluralize } from "@/utils/pluralize";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useQuery } from "@tanstack/react-query";
@@ -66,7 +66,7 @@ export default function ArtistAlbums() {
       <List modifiers={[listStyle("automatic")]}>
         {data.map((item) => {
           const title = [item.name, item.year ? `(${item.year})` : null].filter(Boolean).join(" ");
-          const subtitle = `${item.songCount} track(s) | ${formatDuration(item.duration)}`;
+          const subtitle = pluralize(item.songCount, "track");
           return (
             <ListItem
               key={item.id}

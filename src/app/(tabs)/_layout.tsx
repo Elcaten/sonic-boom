@@ -26,7 +26,7 @@ export default function TabLayout() {
         </NativeTabs.BottomAccessory>
         <NativeTabs.Trigger name="artists">
           <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-          <NativeTabs.Trigger.Icon sf="person.2" />
+          <NativeTabs.Trigger.Icon sf="music.note.house.fill" />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="settings">
           <NativeTabs.Trigger.Icon sf="gear" />

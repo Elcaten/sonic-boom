@@ -1,5 +1,5 @@
-import { Button, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
-import { font, foregroundStyle, frame } from "@expo/ui/swift-ui/modifiers";
+import { Button, HStack, Image, RNHostView, Spacer, Text, VStack } from "@expo/ui/swift-ui";
+import { font, foregroundStyle, lineLimit } from "@expo/ui/swift-ui/modifiers";
 import { Link, LinkProps } from "expo-router";
 import React from "react";
 import { CoverArt } from "../CoverArt";
@@ -14,15 +14,16 @@ export function ListItem({
     <Link {...rest} asChild>
       <Button>
         <HStack spacing={16}>
-          <VStack modifiers={[frame({ width: 48, height: 48 })]}>
+          <RNHostView matchContents>
             <CoverArt id={coverId} size={48} />
-          </VStack>
+          </RNHostView>
 
           <VStack alignment="leading" spacing={2}>
             <Text
               modifiers={[
                 foregroundStyle({ type: "color", color: "primary" }),
                 font({ weight: "regular" }),
+                lineLimit(1),
               ]}
             >
               {title}

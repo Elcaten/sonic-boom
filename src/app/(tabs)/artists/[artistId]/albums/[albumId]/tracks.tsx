@@ -21,8 +21,10 @@ import {
   font,
   foregroundStyle,
   frame,
+  lineLimit,
   listRowSeparator,
   listStyle,
+  multilineTextAlignment,
   padding,
 } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { MediaItem, useActiveMediaItem, useIsPlaying } from "@rntp/player";
@@ -140,7 +142,12 @@ export default function AlbumTracks() {
           <VStack spacing={topSectionSpacing}>
             {/* Album & Artist */}
             <VStack modifiers={[frame({ maxHeight: Infinity })]} spacing={4}>
-              <Text modifiers={[font({ weight: "semibold", size: 20 })]}>
+              <Text
+                modifiers={[
+                  font({ weight: "semibold", size: 20 }),
+                  multilineTextAlignment("center"),
+                ]}
+              >
                 {albumQuery.data?.album.name || " "}
               </Text>
               <Text
@@ -214,7 +221,9 @@ export default function AlbumTracks() {
                       {String(item.track)}
                     </Text>
                   )}
-                  <Text modifiers={[font({ weight: isActive ? "semibold" : "regular" })]}>
+                  <Text
+                    modifiers={[font({ weight: isActive ? "semibold" : "regular" }), lineLimit(1)]}
+                  >
                     {item.title}
                   </Text>
                   <Spacer />

@@ -1,6 +1,6 @@
 import { ListItem } from "@/components/ui/list-item";
 import { useRequiredQueries } from "@/context/app-context";
-import { isIOSVersion } from "@/utils/is-ios-version";
+import { pluralize } from "@/utils/pluralize";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useQuery } from "@tanstack/react-query";
@@ -14,13 +14,13 @@ export default function ArtistsScreen() {
   const [search, setSearch] = useState("");
 
   const navigation = useNavigation();
+
   useEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
         autoCapitalize: "none",
         placeholder: "Search",
-        placement: isIOSVersion(26) ? "integratedButton" : "automatic",
-        hideWhenScrolling: false,
+        // hideWhenScrolling: false,
         onChangeText(e) {
           setSearch(e.nativeEvent.text);
         },
@@ -85,7 +85,7 @@ export default function ArtistsScreen() {
             <Section key={item.title} title={item.title}>
               {item.data.map((item) => {
                 const title = item.name;
-                const subtitle = `${item.albumCount} album(s)`;
+                const subtitle = pluralize(item.albumCount, "album");
                 return (
                   <ListItem
                     key={item.id}
