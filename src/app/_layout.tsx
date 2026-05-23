@@ -12,6 +12,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -62,20 +63,22 @@ export default function RootLayout() {
   useSubscribeToEvents();
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <AppProvider onLoad={() => setAuthReady(true)}>
-          <PersistQueryClientProvider
-            client={queryClient}
-            persistOptions={{ persister: asyncStoragePersister }}
-            onSuccess={() => setPersistorReady(true)}
-            onError={() => setPersistorReady(true)}
-          >
-            <Content />
-          </PersistQueryClientProvider>
-        </AppProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+          <AppProvider onLoad={() => setAuthReady(true)}>
+            <PersistQueryClientProvider
+              client={queryClient}
+              persistOptions={{ persister: asyncStoragePersister }}
+              onSuccess={() => setPersistorReady(true)}
+              onError={() => setPersistorReady(true)}
+            >
+              <Content />
+            </PersistQueryClientProvider>
+          </AppProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

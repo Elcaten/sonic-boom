@@ -5,6 +5,10 @@ import { usePlayerQueue } from "@/track-player/use-player-queue";
 import { Button, Host, List, Text } from "@expo/ui/swift-ui";
 import { font, listStyle } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useActiveMediaItem } from "@rntp/player";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+
+// Prevent the modal from being closed when the user is dragging the progress slider
+const capturePan = Gesture.Pan().minDistance(1);
 
 export default function ActiveTrackModal() {
   const colors = useColors();
@@ -58,13 +62,15 @@ export default function ActiveTrackModal() {
   return (
     <ThemedSafeAreaView
       style={{
-        height: 400,
+        height: 300,
         paddingTop: 100,
         paddingHorizontal: 48,
         backgroundColor: colors.systemBackground,
       }}
     >
-      <ProgressSlider />
+      <GestureDetector gesture={capturePan}>
+        <ProgressSlider />
+      </GestureDetector>
     </ThemedSafeAreaView>
   );
 
