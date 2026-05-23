@@ -1,9 +1,14 @@
-import { isIOSVersion } from "@/utils/is-ios-version";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
-import { font, foregroundStyle, frame, onTapGesture } from "@expo/ui/swift-ui/modifiers";
+import {
+  contentShape,
+  font,
+  foregroundStyle,
+  frame,
+  onTapGesture,
+  shapes,
+} from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { MediaItemExtras, useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useRouter } from "expo-router";
-import { View } from "react-native";
 import { CoverArt } from "./CoverArt";
 
 export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-next")[] }) {
@@ -46,18 +51,15 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
   }
 
   return (
-    <Host style={{ flex: 1, marginInlineEnd: 12 }}>
-      <HStack spacing={12} modifiers={[onTapGesture(handlePress)]}>
-        {isIOSVersion(26) && (
-          <VStack modifiers={[frame({ height: 32, width: 0 })]}>
-            <View style={{ height: 32, width: 0 }} />
-          </VStack>
-        )}
-        {!isIOSVersion(26) && (
-          <VStack modifiers={[frame({ width: 48, height: 48 })]}>
-            <CoverArt id={activeTrackExtra.albumId} size={48} />
-          </VStack>
-        )}
+    <Host style={{ flex: 1, marginInlineStart: 14, marginInlineEnd: 14 }}>
+      <HStack
+        spacing={12}
+        modifiers={[contentShape(shapes.rectangle()), onTapGesture(handlePress)]}
+      >
+        <VStack modifiers={[frame({ width: 32, height: 32 })]}>
+          <CoverArt id={activeTrackExtra.albumId} size={32} />
+        </VStack>
+
         <VStack alignment="leading">
           <Text modifiers={[font({ size: 15, weight: "medium" })]}>{activeTrack.title ?? ""}</Text>
           <Text

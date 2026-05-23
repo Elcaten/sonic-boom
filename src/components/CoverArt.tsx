@@ -20,6 +20,7 @@ export function CoverArt({
   const coverArtQuery = useQuery(queries.coverArtImage(id, size));
 
   const borderRadius = {
+    32: 4,
     48: 6,
     256: 12,
   }[size];
@@ -29,6 +30,7 @@ export function CoverArt({
       ? [styles.shadowContainer]
       : [styles.shadowContainer, styles.shadowContainerDark];
   const shadow = {
+    32: themedShadowContainer,
     48: themedShadowContainer,
     256: themedShadowContainer,
   }[size];

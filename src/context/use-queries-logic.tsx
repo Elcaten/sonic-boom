@@ -30,7 +30,7 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
         });
       },
 
-      coverArtImage: function (entityId: string | undefined, size: 48 | 256) {
+      coverArtImage: function (entityId: string | undefined, size: 32 | 48 | 256) {
         return queryOptions({
           queryKey: ["cover-art", entityId, size],
           queryFn: async (): Promise<ImageSource> => {
