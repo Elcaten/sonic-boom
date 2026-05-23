@@ -1,6 +1,7 @@
 import { AppProvider, useIsAuthenticated } from "@/context/app-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
+import { useSubscribeToEvents } from "@/track-player/use-subscribe-to-events";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import TrackPlayer from "@rntp/player";
@@ -57,6 +58,8 @@ export default function RootLayout() {
       TrackPlayer.clear();
     };
   }, []);
+
+  useSubscribeToEvents();
 
   return (
     <SafeAreaProvider>

@@ -1,10 +1,20 @@
 import { trackPlayerPersistor } from "@/utils/track-player-persistor";
-import TrackPlayer, { RepeatMode } from "@rntp/player";
+import TrackPlayer, { PlayerCommand, RepeatMode } from "@rntp/player";
 import { useEffect, useRef } from "react";
 
 const setupTrackPlayer = async () => {
   TrackPlayer.setupPlayer({
     contentType: "music",
+  });
+
+  TrackPlayer.setCommands({
+    handling: "native",
+    capabilities: [
+      PlayerCommand.PlayPause,
+      PlayerCommand.Previous,
+      PlayerCommand.Next,
+      PlayerCommand.Seek,
+    ],
   });
 
   TrackPlayer.setVolume(1);
