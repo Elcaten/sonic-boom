@@ -1,12 +1,45 @@
+import { CoverArt } from "@/components/CoverArt";
 import { ProgressSlider } from "@/components/ProgressSlider";
 import { ThemedSafeAreaView } from "@/components/themed/themed-safe-area-view";
 import { useColors } from "@/context/app-context";
 import { usePlayerQueue } from "@/track-player/use-player-queue";
-import { Button, Host, List, Text } from "@expo/ui/swift-ui";
-import { font, listStyle } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, { useActiveMediaItem } from "@rntp/player";
+import { Button, Host, HStack, Image, List, Text } from "@expo/ui/swift-ui";
+import { controlSize, font, listStyle, symbolEffect } from "@expo/ui/swift-ui/modifiers";
+import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
+function PreviousButton({ size }: { size: 32 | 48 }) {
+  return (
+    <Button modifiers={[controlSize("large")]} onPress={() => TrackPlayer.skipToPrevious()}>
+      <Image systemName="backward.fill" color="primary" size={size} />
+    </Button>
+  );
+}
+
+function PlayPauseButton({ size }: { size: 32 | 48 }) {
+  const isPlaying = useIsPlaying();
+  return (
+    <Button
+      modifiers={[controlSize("large")]}
+      onPress={() => (isPlaying ? TrackPlayer.pause() : TrackPlayer.play())}
+    >
+      <Image
+        systemName={isPlaying ? "pause.fill" : "play.fill"}
+        color="primary"
+        size={size}
+        modifiers={[symbolEffect({ effect: "scale" })]}
+      />
+    </Button>
+  );
+}
+
+function NextButton({ size }: { size: 32 | 48 }) {
+  return (
+    <Button modifiers={[controlSize("large")]} onPress={() => TrackPlayer.skipToNext()}>
+      <Image systemName="forward.fill" color="primary" size={size} />
+    </Button>
+  );
+}
 // Prevent the modal from being closed when the user is dragging the progress slider
 const capturePan = Gesture.Pan().minDistance(1);
 
@@ -66,11 +99,22 @@ export default function ActiveTrackModal() {
         paddingTop: 100,
         paddingHorizontal: 48,
         backgroundColor: colors.systemBackground,
+        gap: 32,
+        alignItems: "stretch",
+        flex: 1,
       }}
     >
+      <CoverArt id={activeTrack?.extras?.albumId} size={256} />
       <GestureDetector gesture={capturePan}>
         <ProgressSlider />
       </GestureDetector>
+      <Host style={{ flex: 1 }}>
+        <HStack spacing={48}>
+          <PreviousButton size={32} />
+          <PlayPauseButton size={48} />
+          <NextButton size={32} />
+        </HStack>
+      </Host>
     </ThemedSafeAreaView>
   );
 
