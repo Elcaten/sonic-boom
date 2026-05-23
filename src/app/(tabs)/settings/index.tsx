@@ -1,18 +1,14 @@
 import { PrefetchAllAlbumImages } from "@/components/Prefetcher";
-import { ThemedSafeAreaView } from "@/components/themed/themed-safe-area-view";
-import { ThemedText } from "@/components/themed/themed-text";
-import { Slider } from "@/components/ui/slider/slider";
-import { useAuth, useColors } from "@/context/app-context";
+import { useAuth } from "@/context/app-context";
 import { usePrefetchQueries } from "@/hooks/use-prefetch-queries";
-import { formatDuration } from "@/utils/formatDuration";
 import { trackPlayerPersistor } from "@/utils/track-player-persistor";
 import { Button, Form, Host, HStack, ProgressView, Section, Spacer, Text } from "@expo/ui/swift-ui";
 import { disabled, padding, progressViewStyle } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, { useProgress } from "@rntp/player";
+import TrackPlayer from "@rntp/player";
 import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Alert, View } from "react-native";
 export default function SettingsView() {
   const auth = useAuth();
@@ -59,62 +55,8 @@ export default function SettingsView() {
     queryClient.clear();
   };
 
-  const progress = useProgress();
-
-  const onProgressChange = (value: number) => {
-    setProgressOptimistic(value * progress.duration);
-    TrackPlayer.seekTo(value * progress.duration);
-  };
-
-  const [progressOptimistic, setProgressOptimistic] = useState<number>(progress.position);
-
-  useEffect(() => {
-    setProgressOptimistic(progress.position);
-  }, [progress.position]);
-
-  const colors = useColors();
-
   return (
     <View style={{ flex: 1, position: "relative" }}>
-      <ThemedSafeAreaView
-        style={{
-          height: 400,
-          paddingTop: 100,
-          paddingHorizontal: 48,
-          backgroundColor: colors.systemBackground,
-        }}
-      >
-        <Slider
-          progress={Boolean(progress.duration) ? progressOptimistic / progress.duration : 0}
-          onProgressChange={onProgressChange}
-          addonBottomLeft={({ isDragging, dragPercent }) => (
-            <ThemedText
-              style={{
-                fontSize: 13,
-                color: colors.label,
-              }}
-            >
-              {isDragging
-                ? formatDuration(progress.duration * dragPercent)
-                : formatDuration(progressOptimistic)}
-            </ThemedText>
-          )}
-          addonBottomRight={({ isDragging, dragPercent }) => (
-            <ThemedText
-              style={{
-                fontSize: 13,
-                color: colors.label,
-              }}
-            >
-              {isDragging ? (
-                <Fragment>-{formatDuration(progress.duration * (1 - dragPercent))}</Fragment>
-              ) : (
-                <Fragment>-{formatDuration(progress.duration - progressOptimistic)}</Fragment>
-              )}
-            </ThemedText>
-          )}
-        />
-      </ThemedSafeAreaView>
       <Host style={{ flex: 1 }}>
         <Form modifiers={isDisabled ? [disabled()] : undefined}>
           <Section title="Developer">

@@ -89,7 +89,7 @@ function Content() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="active-track"
-            options={{ presentation: "modal", headerShown: false }}
+            options={{ presentation: "formSheet", headerShown: false, sheetGrabberVisible: true }}
           ></Stack.Screen>
         </Stack.Protected>
         <Stack.Protected guard={!isLoggedIn}>

@@ -58,7 +58,7 @@ export function DragTracker(props: PropsWithChildren<PanSexualProps>) {
         const percent = clamp(evt.nativeEvent.locationX / width.current);
         onDragEnd.current?.(percent);
       },
-    })
+    }),
   ).current;
 
   return (

@@ -1,9 +1,13 @@
+import { ProgressSlider } from "@/components/ProgressSlider";
+import { ThemedSafeAreaView } from "@/components/themed/themed-safe-area-view";
+import { useColors } from "@/context/app-context";
 import { usePlayerQueue } from "@/track-player/use-player-queue";
 import { Button, Host, List, Text } from "@expo/ui/swift-ui";
 import { font, listStyle } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useActiveMediaItem } from "@rntp/player";
 
 export default function ActiveTrackModal() {
+  const colors = useColors();
   const activeTrack = useActiveMediaItem();
   const { queue } = usePlayerQueue();
 
@@ -50,6 +54,19 @@ export default function ActiveTrackModal() {
     }
     TrackPlayer.play();
   };
+
+  return (
+    <ThemedSafeAreaView
+      style={{
+        height: 400,
+        paddingTop: 100,
+        paddingHorizontal: 48,
+        backgroundColor: colors.systemBackground,
+      }}
+    >
+      <ProgressSlider />
+    </ThemedSafeAreaView>
+  );
 
   return (
     <Host style={{ flex: 1 }}>
