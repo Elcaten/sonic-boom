@@ -36,10 +36,12 @@ export default function ArtistAlbums() {
   const queries = useRequiredQueries();
   const artistQuery = useQuery(queries.artist(artistId));
 
-  const data = (artistQuery.data?.artist.album ?? []).filter((album) => {
-    const sanitizedSearch = search.toLocaleLowerCase();
-    return album.name.toLocaleLowerCase().includes(sanitizedSearch);
-  });
+  const data = (artistQuery.data?.artist.album ?? [])
+    .filter((album) => {
+      const sanitizedSearch = search.toLocaleLowerCase();
+      return album.name.toLocaleLowerCase().includes(sanitizedSearch);
+    })
+    .sort((a, b) => (b.year ?? 0) - (a.year ?? 0));
 
   if (artistQuery.isPending) {
     return (
