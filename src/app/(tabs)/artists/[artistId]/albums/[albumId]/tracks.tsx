@@ -26,6 +26,7 @@ import {
   listStyle,
   multilineTextAlignment,
   padding,
+  symbolEffect,
 } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, {
   MediaItem,
@@ -35,7 +36,7 @@ import TrackPlayer, {
 } from "@rntp/player";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 
 const useAlbumTracks = ({
@@ -215,7 +216,24 @@ export default function AlbumTracks() {
                     <Text>&nbsp;</Text>
                   </VStack>
                   {isActive && (
-                    <Image systemName={"waveform"} size={18} modifiers={[frame({ width: 32 })]} />
+                    <Image
+                      systemName={"waveform"}
+                      size={18}
+                      modifiers={[
+                        frame({ width: 32 }),
+                        ...(playing
+                          ? [
+                              symbolEffect(
+                                {
+                                  effect: "variableColor",
+                                  fillStyle: "iterative",
+                                },
+                                { options: { speed: 0.3 } },
+                              ),
+                            ]
+                          : []),
+                      ]}
+                    />
                   )}
                   {!isActive && (
                     <Text
