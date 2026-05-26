@@ -1,4 +1,5 @@
 import { useRequiredQueries } from "@/context/app-context";
+import { appLogger } from "@/utils/appLogger";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { ImageStyle, StyleProp, StyleSheet, useColorScheme, View } from "react-native";
@@ -47,6 +48,14 @@ export function CoverArt({
         source={coverArtQuery?.data}
         cachePolicy={"memory-disk"}
         style={[{ width: imgSize, height: imgSize, borderRadius }, style]}
+        onLoad={(e) => {
+          appLogger.COVER_ART.info(
+            `Loaded artwork from ${e.cacheType} ${coverArtQuery?.data?.cacheKey}`,
+          );
+        }}
+        onError={() => {
+          appLogger.COVER_ART.error(`Error loading artwork ${coverArtQuery?.data?.cacheKey}`);
+        }}
       />
     </View>
   );

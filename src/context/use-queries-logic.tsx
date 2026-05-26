@@ -1,3 +1,4 @@
+import { appLogger } from "@/utils/appLogger";
 import { getCoverCacheKey } from "@/utils/get-cover-cache-key";
 import { queryOptions } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";
@@ -39,7 +40,7 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
             const cachedArtwork = await Image.getCachePathAsync(cacheKey);
 
             if (cachedArtwork) {
-              // console.log("QRY | CACHED ", cacheKey);
+              appLogger.QUERY.info(`Cached artwork ${cacheKey}`);
               return { uri: cachedArtwork, cacheKey: cacheKey };
             }
 
@@ -47,7 +48,7 @@ export function useQueriesLogic(api: SubsonicAPI | null) {
               .buildUrl("getCoverArt", { id: entityId!, size: size * 2 })
               .then((u) => u.toString());
 
-            // console.log("QRY | FETCHD ", cacheKey);
+            appLogger.QUERY.info(`Fetched artwork ${cacheKey}`);
             return { uri: artworkUrl, cacheKey: cacheKey };
           },
           enabled: Boolean(entityId),

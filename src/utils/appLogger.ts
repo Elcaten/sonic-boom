@@ -1,8 +1,8 @@
 import { consoleTransport, logger, LoggerInstance } from "react-native-logs";
 
-const exts = ["PLAYER", "TEST"] as const;
+const loggerExtensions = ["PLAYER", "API", "QUERY", "COVER_ART"] as const;
 
-type LoggerExtention = (typeof exts)[number];
+type LoggerExtention = (typeof loggerExtensions)[number];
 
 const baseLogger = logger.createLogger({
   levels: {
@@ -26,10 +26,10 @@ const baseLogger = logger.createLogger({
   printDate: true,
   fixedExtLvlLength: false,
   enabled: true,
-  enabledExtensions: exts as unknown as string[],
+  enabledExtensions: loggerExtensions as unknown as string[],
 });
 
-export const appLogger = exts.reduce(
+export const appLogger = loggerExtensions.reduce(
   (acc, curr) => {
     acc[curr] = baseLogger.extend(curr);
     return acc;

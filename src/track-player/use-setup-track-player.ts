@@ -1,5 +1,6 @@
+import { appLogger } from "@/utils/appLogger";
 import { trackPlayerPersistor } from "@/utils/track-player-persistor";
-import TrackPlayer, { PlayerCommand, RepeatMode } from "@rntp/player";
+import TrackPlayer, { Event, PlayerCommand, RepeatMode } from "@rntp/player";
 import { useEffect, useRef } from "react";
 
 const setupTrackPlayer = async () => {
@@ -30,14 +31,26 @@ export const useSetupTrackPlayer = ({ onLoad }: { onLoad?: () => void }) => {
   useEffect(() => {
     if (isInitialized.current) return;
 
+    const eventListener = TrackPlayer.addEventListener(Event.MediaItemTransition, async () => {
+      await trackPlayerPersistor.peristQueue();
+      trackPlayerPersistor.persistActiveTrackIndex();
+    });
+
     setupTrackPlayer()
       .then(() => {
         isInitialized.current = true;
         onLoad?.();
+        appLogger.PLAYER.info("Track player initialized");
       })
       .catch((err) => {
         isInitialized.current = false;
-        console.log(err);
+        appLogger.PLAYER.error(err);
       });
+
+    return () => {
+      eventListener.remove();
+      TrackPlayer.stop();
+      TrackPlayer.clear();
+    };
   }, [onLoad]);
 };

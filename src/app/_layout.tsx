@@ -1,17 +1,15 @@
 import { AppProvider, useIsAuthenticated } from "@/context/app-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
-import { useSubscribeToEvents } from "@/track-player/use-subscribe-to-events";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router/react-navigation";
-import TrackPlayer from "@rntp/player";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient, useIsRestoring } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router/react-navigation";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -52,15 +50,6 @@ export default function RootLayout() {
       SplashScreen.hide();
     }
   }, [playerReady, authReady, persistorReady, isRestoring]);
-
-  useEffect(() => {
-    return () => {
-      TrackPlayer.stop();
-      TrackPlayer.clear();
-    };
-  }, []);
-
-  useSubscribeToEvents();
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

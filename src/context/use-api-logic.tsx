@@ -1,3 +1,4 @@
+import { appLogger } from "@/utils/appLogger";
 import * as Crypto from "expo-crypto";
 import { useMemo } from "react";
 import { SubsonicAPI } from "subsonic-api";
@@ -35,13 +36,13 @@ export function useAPILogic(authState: AuthState) {
             url.searchParams.delete("t");
             url.searchParams.delete("s");
 
-            console.log(
-              `${url.pathname} | ${Array.from(url.searchParams.entries())
+            appLogger.API.info(
+              `${url.pathname} ${Array.from(url.searchParams.entries())
                 .map(([k, v]) => `${k} = ${v}`)
-                .join(" | ")}`
+                .join(" & ")}`,
             );
           } catch (e) {
-            console.log(e);
+            appLogger.API.error(e);
           }
         }
         return fetch(params);
