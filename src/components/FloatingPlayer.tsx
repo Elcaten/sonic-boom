@@ -61,10 +61,12 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
         </VStack>
 
         <VStack alignment="leading">
-          <Text modifiers={[font({ size: 15, weight: "medium" })]}>{activeTrack.title ?? ""}</Text>
+          <Text modifiers={[font({ textStyle: "callout", weight: "medium" })]}>
+            {activeTrack.title ?? ""}
+          </Text>
           <Text
             modifiers={[
-              font({ size: 15 }),
+              font({ textStyle: "footnote" }),
               foregroundStyle({ type: "hierarchical", style: "secondary" }),
             ]}
           >

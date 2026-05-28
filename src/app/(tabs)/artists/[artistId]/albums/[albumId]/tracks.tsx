@@ -155,19 +155,13 @@ export default function AlbumTracks() {
             <VStack modifiers={[frame({ maxHeight: Infinity })]} spacing={4}>
               <Text
                 modifiers={[
-                  font({ weight: "semibold", size: 20 }),
+                  font({ textStyle: "title2", weight: "semibold" }),
                   multilineTextAlignment("center"),
                 ]}
               >
                 {albumQuery.data?.album.name || " "}
               </Text>
-              <Text
-                modifiers={[
-                  font({ size: 20 }),
-                  foregroundStyle({ type: "hierarchical", style: "secondary" }),
-                  font({ weight: "medium" }),
-                ]}
-              >
+              <Text modifiers={[foregroundStyle({ type: "hierarchical", style: "secondary" })]}>
                 {albumQuery.data?.album.artist || " "}
               </Text>
             </VStack>
@@ -239,7 +233,6 @@ export default function AlbumTracks() {
                     <Text
                       modifiers={[
                         frame({ width: 32 }),
-                        font({ weight: "regular" }),
                         foregroundStyle({
                           type: "hierarchical",
                           style: "secondary",

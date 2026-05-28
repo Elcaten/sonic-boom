@@ -1,11 +1,18 @@
-import { ThemedSafeAreaView } from "@/components/themed/themed-safe-area-view";
 import { ListItem } from "@/components/ui/list-item";
 import { useSearch } from "@/hooks/use-recently-searched";
-import { ContentUnavailableView, Host, HStack, List, Section } from "@expo/ui/swift-ui";
+import { Spacer } from "@expo/ui";
+import {
+  ContentUnavailableView,
+  Host,
+  HStack,
+  List,
+  ProgressView,
+  Section,
+} from "@expo/ui/swift-ui";
+import { scaleEffect } from "@expo/ui/swift-ui/modifiers";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import { useEffect } from "react";
-import { ActivityIndicator } from "react-native";
 import { Artist, Child } from "subsonic-api";
 
 export default function SearchIndex() {
@@ -72,16 +79,11 @@ export default function SearchIndex() {
 
   if (search.isLoading) {
     return (
-      <ThemedSafeAreaView
-        backgroundColor="systemGroupedBackground"
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ActivityIndicator size="large" />
-      </ThemedSafeAreaView>
+      <Host style={{ flex: 1 }}>
+        <Spacer />
+        <ProgressView modifiers={[scaleEffect(1.5)]}></ProgressView>
+        <Spacer />
+      </Host>
     );
   }
 
@@ -105,15 +107,13 @@ export default function SearchIndex() {
 
   if (!search.results?.album && !search.results?.artist && !search.results?.song) {
     return (
-      <ThemedSafeAreaView backgroundColor="systemGroupedBackground" style={{ flex: 1 }}>
-        <Host style={{ flex: 1 }}>
-          <ContentUnavailableView
-            title={`No results for ${search.debouncedQuery}`}
-            description="Try a new search"
-            systemImage="magnifyingglass"
-          ></ContentUnavailableView>
-        </Host>
-      </ThemedSafeAreaView>
+      <Host style={{ flex: 1 }}>
+        <ContentUnavailableView
+          title={`No results for ${search.debouncedQuery}`}
+          description="Try a new search"
+          systemImage="magnifyingglass"
+        ></ContentUnavailableView>
+      </Host>
     );
   }
 

@@ -1,10 +1,10 @@
-import { ThemedInput } from "@/components/themed/themed-input";
 import { useAuth } from "@/context/app-context";
+import { TextInput } from "@expo/ui";
 import { Button, Form, Host, Section } from "@expo/ui/swift-ui";
-import { frame, padding } from "@expo/ui/swift-ui/modifiers";
+import { frame, scrollDisabled } from "@expo/ui/swift-ui/modifiers";
 import { useMutation } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Alert } from "react-native";
 import { SubsonicAPI } from "subsonic-api";
 
@@ -53,27 +53,20 @@ export default function LoginForm() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <Form modifiers={[padding({ top: 20 })]}>
+      <Form modifiers={[scrollDisabled()]}>
         <Section title="Server Address">
-          {/** Native TextField crashes on form submit - https://github.com/expo/expo/issues/40354 */}
-          <ThemedInput
+          <TextInput
             placeholder="https://example.com"
             onChangeText={setServerAddress}
             keyboardType="url"
             autoCorrect={false}
-          ></ThemedInput>
+          />
         </Section>
 
         <Section title="Credentials">
-          {/** Native TextField crashes on form submit - https://github.com/expo/expo/issues/40354 */}
-          <ThemedInput
-            placeholder="admin"
-            onChangeText={setUsername}
-            autoCorrect={false}
-          ></ThemedInput>
+          <TextInput placeholder="admin" onChangeText={setUsername} autoCorrect={false} />
 
-          {/** Native TextField crashes on form submit - https://github.com/expo/expo/issues/40354 */}
-          <ThemedInput placeholder="password" onChangeText={setPassword} secureTextEntry />
+          <TextInput placeholder="password" onChangeText={setPassword} secureTextEntry />
         </Section>
 
         <Section>
