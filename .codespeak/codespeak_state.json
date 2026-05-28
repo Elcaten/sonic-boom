@@ -57,6 +57,16 @@
                 "src/utils/is-ios-version.ts",
                 "src/utils/pluralize.ts",
                 "src/utils/shuffle-array.ts"
+            ],
+            "specs/ui-components.cs.md": [
+                "src/components/core/drag-tracker.tsx",
+                "src/components/core/haptic-tab.tsx",
+                "src/components/core/list-item.tsx",
+                "src/components/core/slider.tsx",
+                "src/components/feature/CoverArt/CoverArt.tsx",
+                "src/components/feature/CoverArt/blur-hash.ts",
+                "src/components/feature/CoverArt/get-cover-cache-key.ts",
+                "src/components/feature/PrefetchAllAlbumImages.tsx"
             ]
         },
         "codespeak_internals_migrated": true,

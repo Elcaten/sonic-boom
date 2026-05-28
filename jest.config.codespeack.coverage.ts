@@ -11,8 +11,12 @@ const config: Config = {
   collectCoverageFrom: [
     "src/hooks/**/*.{ts,tsx}",
     "src/utils/**/*.{ts,tsx}",
+    "src/components/core/**/*.{ts,tsx}",
+    "src/components/feature/CoverArt/**/*.{ts,tsx}",
+    "src/components/feature/PrefetchAllAlbumImages.tsx",
     "!src/**/__test__/**",
     "!src/**/*.test.{ts,tsx}",
+    "!**/*.cs.md",
   ],
   coverageReporters: ["text", "lcov"],
   coverageDirectory: ".coverage-tmp",

@@ -2,19 +2,19 @@
 
 Shared UI primitives and music-related feature components for the mobile app.
 
----
-
 ## Core Components
+
+Reusable primitives used throughout the app.
 
 ### DragTracker
 
 A wrapper component that tracks horizontal drag gestures across its width and reports position as a 0–1 progress value. Fires `onDragStart`, `onDrag`, and `onDragEnd` callbacks, each receiving the clamped fractional position.
 
-- The PanResponder is created once and never recreated; event handler props are kept in refs and updated on each render to avoid stale closures.
+The PanResponder is created once and never recreated; event handler props are kept in refs and updated on each render to avoid stale closures.
 
 ### Slider
 
-A styled progress/scrubbing bar built on top of `DragTracker`.
+A styled progress/scrubbing bar built on `DragTracker`.
 
 - Accepts a `progress` (0–1) value and an `onProgressChange` callback.
 - While dragging, the displayed fill switches to the dragged position and uses an "active" foreground color; at rest it uses an "inactive" color.
@@ -30,11 +30,11 @@ A tappable row used in lists. Shows a 48 px cover art thumbnail, a primary title
 
 A bottom tab bar button that triggers a light haptic impact on press-in on iOS before forwarding the event to the underlying pressable.
 
----
-
 ## Cover Art
 
-### CoverArt Component
+Components and utilities for loading and caching artwork.
+
+### CoverArt
 
 Displays artwork for a song, album, or artist identified by an ID.
 
@@ -51,8 +51,6 @@ Maintains a hardcoded list of ~40 blurhash strings and picks one using a normal 
 ### Cover Cache Key (`get-cover-cache-key.ts`)
 
 Produces the cache key string for a cover image from its `id` and `size`: `cover-{id}-{size}`.
-
----
 
 ## PrefetchAllAlbumImages
 
