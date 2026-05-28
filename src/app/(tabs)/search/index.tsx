@@ -1,4 +1,4 @@
-import { ListItem } from "@/components/ui/list-item";
+import { ListItem } from "@/components/core/list-item";
 import { useSearch } from "@/hooks/use-recently-searched";
 import { Spacer } from "@expo/ui";
 import {
@@ -15,7 +15,7 @@ import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackC
 import { useEffect } from "react";
 import { Artist, Child } from "subsonic-api";
 
-export default function SearchIndex() {
+export default function SearchScreen() {
   const navigation = useNavigation();
 
   const search = useSearch();

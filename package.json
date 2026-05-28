@@ -5,7 +5,6 @@
   "scripts": {
     "start:lan": "REACT_NATIVE_PACKAGER_HOSTNAME=$(ipconfig getifaddr en0) npx expo start --dev-client",
     "start:tunnel": "npx expo start --dev-client --tunnel",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios --device",
     "web": "expo start --web",

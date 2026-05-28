@@ -1,5 +1,5 @@
+import { trackPlayerPersistor } from "@/track-player/track-player-persistor";
 import { appLogger } from "@/utils/app-logger";
-import { trackPlayerPersistor } from "@/utils/track-player-persistor";
 import TrackPlayer, { Event, PlayerCommand, RepeatMode } from "@rntp/player";
 import { useEffect, useRef } from "react";
 

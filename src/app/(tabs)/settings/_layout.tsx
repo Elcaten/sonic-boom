@@ -1,7 +1,7 @@
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { Stack } from "expo-router";
 
-export default function StackLayout() {
+export default function SettingsLayout() {
   return (
     <Stack>
       <Stack.Screen

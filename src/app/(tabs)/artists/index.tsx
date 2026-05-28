@@ -1,4 +1,4 @@
-import { ListItem } from "@/components/ui/list-item";
+import { ListItem } from "@/components/core/list-item";
 import { useRequiredQueries } from "@/context/app-context";
 import { pluralize } from "@/utils/pluralize";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
@@ -6,7 +6,7 @@ import { listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { ArtistID3 } from "subsonic-api";
 

@@ -8,7 +8,7 @@ import { useState } from "react";
 import { Alert } from "react-native";
 import { SubsonicAPI } from "subsonic-api";
 
-export default function LoginForm() {
+export default function SignInForm() {
   const [serverAddress, setServerAddress] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

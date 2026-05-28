@@ -1,6 +1,7 @@
-import { CoverArt } from "@/components/CoverArt";
+import { CoverArt } from "@/components/feature/CoverArt/CoverArt";
 import { useRequiredQueries } from "@/context/app-context";
-import { formatDuration } from "@/utils/formatd-duration";
+import { MediaItemExtras } from "@/track-player/types";
+import { formatDuration } from "@/utils/format-duration";
 import { shuffleArray } from "@/utils/shuffle-array";
 import {
   Button,
@@ -28,12 +29,7 @@ import {
   padding,
   symbolEffect,
 } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, {
-  MediaItem,
-  MediaItemExtras,
-  useActiveMediaItem,
-  useIsPlaying,
-} from "@rntp/player";
+import TrackPlayer, { MediaItem, useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";

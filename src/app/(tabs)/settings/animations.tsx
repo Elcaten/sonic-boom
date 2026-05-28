@@ -1,11 +1,19 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRef, useState } from "react";
-import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import {
+  Animated,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useAnimatedValue,
+  View,
+} from "react-native";
 
 // Example 1: Fade transition between icons
 function FadeIconTransition() {
   const [isActive, setIsActive] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useAnimatedValue(1);
 
   const handlePress = () => {
     Animated.sequence([
@@ -38,8 +46,8 @@ function FadeIconTransition() {
 // Example 2: Scale + Fade transition
 function ScaleFadeIconTransition() {
   const [isActive, setIsActive] = useState(false);
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useAnimatedValue(1);
+  const fadeAnim = useAnimatedValue(1);
 
   const handlePress = () => {
     Animated.parallel([
@@ -91,8 +99,8 @@ function ScaleFadeIconTransition() {
 // Example 3: Crossfade between two icons
 function CrossfadeIconTransition() {
   const [isActive, setIsActive] = useState(false);
-  const fadeAnim1 = useRef(new Animated.Value(1)).current;
-  const fadeAnim2 = useRef(new Animated.Value(0)).current;
+  const fadeAnim1 = useAnimatedValue(1);
+  const fadeAnim2 = useAnimatedValue(0);
 
   const handlePress = () => {
     if (!isActive) {
@@ -145,8 +153,8 @@ function CrossfadeIconTransition() {
 // Example 4: Rotate + Fade transition
 function RotateFadeIconTransition() {
   const [isActive, setIsActive] = useState(false);
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const rotateAnim = useAnimatedValue(0);
+  const fadeAnim = useAnimatedValue(1);
 
   const handlePress = () => {
     Animated.parallel([
@@ -207,7 +215,7 @@ function RotateFadeIconTransition() {
 // Example 5: Spring bounce transition
 function SpringIconTransition() {
   const [isActive, setIsActive] = useState(false);
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useAnimatedValue(1);
 
   const handlePress = () => {
     Animated.sequence([
@@ -242,8 +250,8 @@ function SpringIconTransition() {
 // Example 6: Slide up transition
 function SlideIconTransition() {
   const [isActive, setIsActive] = useState(false);
-  const translateY = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const translateY = useAnimatedValue(0);
+  const fadeAnim = useAnimatedValue(1);
 
   const handlePress = () => {
     Animated.parallel([
@@ -295,8 +303,8 @@ function SlideIconTransition() {
 // Example 7: Play/Pause icon transition
 function PlayPauseTransition() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useAnimatedValue(1);
+  const rotateAnim = useAnimatedValue(0);
 
   const handlePress = () => {
     Animated.parallel([
@@ -345,7 +353,7 @@ function PlayPauseTransition() {
 // Example 8: Menu toggle icon
 function MenuToggleTransition() {
   const [isOpen, setIsOpen] = useState(false);
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const rotateAnim = useAnimatedValue(0);
 
   const handlePress = () => {
     Animated.timing(rotateAnim, {
@@ -373,7 +381,7 @@ function MenuToggleTransition() {
   );
 }
 
-export default function IconTransitionExamples() {
+export default function AnimationsScreen() {
   return (
     <ScrollView style={styles.container}>
       <FadeIconTransition />

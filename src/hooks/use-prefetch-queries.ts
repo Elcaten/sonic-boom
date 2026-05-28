@@ -1,5 +1,5 @@
 import { useRequiredQueries } from "@/context/app-context";
-import { batchProcessWithDetails } from "@/utils/batch";
+import { batchProcessWithDetails } from "@/utils/batch-process";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 

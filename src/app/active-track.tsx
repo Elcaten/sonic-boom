@@ -1,50 +1,25 @@
-import { CoverArt } from "@/components/CoverArt";
-import { ProgressSlider } from "@/components/ProgressSlider";
+import { CoverArt } from "@/components/feature/CoverArt/CoverArt";
+import { PlayerButton } from "@/components/feature/PlayerButton";
+import { ProgressSlider } from "@/components/feature/ProgressSlider";
+import { MediaItemExtras } from "@/track-player/types";
 import { Column, Row } from "@expo/ui";
-import { Button, Host, Image, RNHostView, Spacer, Text, VStack } from "@expo/ui/swift-ui";
-import { controlSize, font, foregroundStyle, padding } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
+import { Button, Host, RNHostView, Spacer, Text, VStack } from "@expo/ui/swift-ui";
+import { font, foregroundStyle, padding } from "@expo/ui/swift-ui/modifiers";
+import { useActiveMediaItem } from "@rntp/player";
 import { useRouter } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
-function PreviousButton({ size }: { size: 32 | 48 }) {
-  return (
-    <Button modifiers={[controlSize("large")]} onPress={() => TrackPlayer.skipToPrevious()}>
-      <Image systemName="backward.fill" color="primary" size={size} />
-    </Button>
-  );
-}
-
-function PlayPauseButton({ size }: { size: 32 | 48 }) {
-  const isPlaying = useIsPlaying();
-
-  return (
-    <Button
-      modifiers={[controlSize("large")]}
-      onPress={() => (isPlaying ? TrackPlayer.pause() : TrackPlayer.play())}
-    >
-      <Image systemName={isPlaying ? "pause.fill" : "play.fill"} color="primary" size={size} />
-    </Button>
-  );
-}
-
-function NextButton({ size }: { size: 32 | 48 }) {
-  return (
-    <Button modifiers={[controlSize("large")]} onPress={() => TrackPlayer.skipToNext()}>
-      <Image systemName="forward.fill" color="primary" size={size} />
-    </Button>
-  );
-}
 // Prevent the modal from being closed when the user is dragging the progress slider
 const capturePan = Gesture.Pan().minDistance(1);
 
 export default function ActiveTrackModal() {
   const router = useRouter();
   const activeTrack = useActiveMediaItem();
+  const activeTrackExtra = activeTrack?.extras as MediaItemExtras;
 
   const handleAlbumPress = () => {
-    const albumId = activeTrack?.extras?.albumId;
-    const artistId = activeTrack?.extras?.artistId;
+    const albumId = activeTrackExtra?.albumId;
+    const artistId = activeTrackExtra?.artistId;
 
     if (!albumId || typeof albumId !== "string" || !artistId || typeof artistId !== "string") {
       return;
@@ -57,7 +32,7 @@ export default function ActiveTrackModal() {
   };
 
   const handleArtistPress = () => {
-    const artistId = activeTrack?.extras?.artistId;
+    const artistId = activeTrackExtra?.artistId;
     if (!artistId || typeof artistId !== "string") {
       return;
     }
@@ -72,7 +47,7 @@ export default function ActiveTrackModal() {
     <Host style={{ flex: 1 }}>
       <VStack modifiers={[padding({ vertical: 48, horizontal: 48 })]}>
         <RNHostView matchContents>
-          <CoverArt id={activeTrack?.extras?.albumId} size={256} />
+          <CoverArt id={activeTrackExtra?.albumId} size={256} />
         </RNHostView>
 
         <Spacer modifiers={[padding({ bottom: 12 })]} />
@@ -106,11 +81,11 @@ export default function ActiveTrackModal() {
         <Spacer modifiers={[padding({ bottom: 12 })]} />
 
         <Row alignment="center">
-          <PreviousButton size={32} />
+          <PlayerButton.Previous size={32} />
           <Spacer />
-          <PlayPauseButton size={48} />
+          <PlayerButton.PlayPause size={48} />
           <Spacer />
-          <NextButton size={32} />
+          <PlayerButton.Next size={32} />
         </Row>
       </VStack>
     </Host>

@@ -1,9 +1,9 @@
-import { formatDuration } from "@/utils/formatd-duration";
+import { Slider } from "@/components/core/slider";
+import { formatDuration } from "@/utils/format-duration";
 import { Host, Text } from "@expo/ui";
 import { font, padding } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useProgress } from "@rntp/player";
 import { useEffect, useState } from "react";
-import { Slider } from "./ui/slider/slider";
 
 export function ProgressSlider() {
   const progress = useProgress();

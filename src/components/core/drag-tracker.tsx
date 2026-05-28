@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { LayoutChangeEvent, PanResponder, View } from "react-native";
 
@@ -12,6 +13,12 @@ type PanSexualProps = {
 export function DragTracker(props: PropsWithChildren<PanSexualProps>) {
   const width = useRef(0);
 
+  /**
+    IMPORTANT:
+    Pan responder is created once during the first render and then reused.
+    We keep event handlers in refs and update those refs in useEffect so that the PanResponder can use the latest event handlers.
+    If we tried to use eventHandlers directly in PanResponder, they would be stale.
+  */
   const onDragStart = useRef(props.onDragStart);
   const onDrag = useRef(props.onDrag);
   const onDragEnd = useRef(props.onDragEnd);

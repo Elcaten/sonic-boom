@@ -1,15 +1,16 @@
-import { PrefetchAllAlbumImages } from "@/components/Prefetcher";
+import { PrefetchAllAlbumImages } from "@/components/feature/PrefetchAllAlbumImages";
 import { useAuth } from "@/context/app-context";
 import { usePrefetchQueries } from "@/hooks/use-prefetch-queries";
-import { trackPlayerPersistor } from "@/utils/track-player-persistor";
+import { trackPlayerPersistor } from "@/track-player/track-player-persistor";
 import { Button, Form, Host, HStack, ProgressView, Section, Spacer, Text } from "@expo/ui/swift-ui";
 import { disabled, padding, progressViewStyle } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer from "@rntp/player";
 import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Alert, View } from "react-native";
+
 export default function SettingsView() {
   const auth = useAuth();
   const queryClient = useQueryClient();

@@ -10,5 +10,6 @@
     "**/Thumbs.db": true,
     ".expo": true,
     ".vscode": true
-  }
+  },
+  "editor.foldingImportsByDefault": true
 }

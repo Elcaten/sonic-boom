@@ -1,3 +1,4 @@
+import { MediaItemExtras } from "@/track-player/types";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import {
   contentShape,
@@ -7,9 +8,9 @@ import {
   onTapGesture,
   shapes,
 } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, { MediaItemExtras, useActiveMediaItem, useIsPlaying } from "@rntp/player";
+import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useRouter } from "expo-router";
-import { CoverArt } from "./CoverArt";
+import { CoverArt } from "./CoverArt/CoverArt";
 
 export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-next")[] }) {
   const router = useRouter();

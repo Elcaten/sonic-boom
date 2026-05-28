@@ -1,4 +1,4 @@
-import { ListItem } from "@/components/ui/list-item";
+import { ListItem } from "@/components/core/list-item";
 import { useRequiredQueries } from "@/context/app-context";
 import { isIOSVersion } from "@/utils/is-ios-version";
 import { pluralize } from "@/utils/pluralize";
@@ -10,7 +10,7 @@ import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackC
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
-export default function ArtistAlbums() {
+export default function ArtistAlbumsScreen() {
   const { artistId } = useLocalSearchParams<"/(tabs)/artists/[artistId]/albums">();
 
   const [search, setSearch] = useState("");

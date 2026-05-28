@@ -2,7 +2,7 @@ import { isIOSVersion } from "@/utils/is-ios-version";
 import { Stack } from "expo-router";
 import { View } from "react-native";
 
-export default function StackLayout() {
+export default function ArtistsLayout() {
   return (
     <View style={{ flex: 1 }}>
       <Stack>

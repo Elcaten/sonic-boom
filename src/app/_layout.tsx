@@ -31,7 +31,6 @@ const queryClient = new QueryClient({
   },
 });
 
-//TODO: put back after dev
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
 });
