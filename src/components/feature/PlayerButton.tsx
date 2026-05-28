@@ -1,5 +1,4 @@
-import { Button } from "@expo/ui";
-import { Image } from "@expo/ui/swift-ui";
+import { Button, Image } from "@expo/ui/swift-ui";
 import { controlSize } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useIsPlaying } from "@rntp/player";
 
