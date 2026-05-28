@@ -1,6 +1,12 @@
 import { useColors } from "@/context/app-context";
-import React, { useRef, useState } from "react";
-import { Animated, Easing, LayoutChangeEvent, useColorScheme } from "react-native";
+import React, { useState } from "react";
+import {
+  Animated,
+  Easing,
+  LayoutChangeEvent,
+  useAnimatedValueXY,
+  useColorScheme,
+} from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { DragTracker } from "./drag-tracker";
 
@@ -8,8 +14,6 @@ type SliderProps = {
   /** 0..1 */
   progress: number;
   onProgressChange: (progress: number) => void;
-  addonLeft?: React.ReactNode;
-  addonRight?: React.ReactNode;
   addonBottomLeft?: ({
     isDragging,
   }: {
@@ -37,11 +41,10 @@ const useSliderColors = () => {
 };
 
 export function Slider(props: SliderProps) {
-  const { progress, onProgressChange, addonLeft, addonRight, addonBottomLeft, addonBottomRight } =
-    props;
+  const { progress, onProgressChange, addonBottomLeft, addonBottomRight } = props;
   const { background, foregroundActive, foregroundInactive } = useSliderColors();
 
-  const scaleAnim = useRef(new Animated.ValueXY({ x: 1, y: 1 })).current;
+  const scaleAnim = useAnimatedValueXY({ x: 1, y: 1 });
   const inverseScaleX = scaleAnim.x.interpolate({
     inputRange: [1, 1.05],
     outputRange: [1, 1 / 1.05], // ≈ 0.952

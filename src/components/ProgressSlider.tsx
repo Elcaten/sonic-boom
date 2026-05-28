@@ -1,6 +1,6 @@
 import { formatDuration } from "@/utils/formatd-duration";
 import { Host, Text } from "@expo/ui";
-import { font } from "@expo/ui/swift-ui/modifiers";
+import { font, padding } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useProgress } from "@rntp/player";
 import { useEffect, useState } from "react";
 import { Slider } from "./ui/slider/slider";
@@ -25,7 +25,7 @@ export function ProgressSlider() {
       onProgressChange={onProgressChange}
       addonBottomLeft={({ isDragging, dragPercent }) => (
         <Host matchContents>
-          <Text modifiers={[font({ textStyle: "callout" })]}>
+          <Text modifiers={[font({ textStyle: "callout" }), padding({ top: 4 })]}>
             {isDragging
               ? formatDuration(progress.duration * dragPercent)
               : formatDuration(progressOptimistic)}
@@ -34,7 +34,7 @@ export function ProgressSlider() {
       )}
       addonBottomRight={({ isDragging, dragPercent }) => (
         <Host matchContents>
-          <Text modifiers={[font({ textStyle: "callout" })]}>
+          <Text modifiers={[font({ textStyle: "callout" }), padding({ top: 4 })]}>
             {isDragging
               ? `-${formatDuration(progress.duration * (1 - dragPercent))}`
               : `-${formatDuration(progress.duration - progressOptimistic)}`}
