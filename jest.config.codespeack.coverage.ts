@@ -10,6 +10,7 @@ const config: Config = {
   coverageProvider: "v8",
   collectCoverageFrom: [
     "src/hooks/**/*.{ts,tsx}",
+    "src/context/**/*.{ts,tsx}",
     "src/utils/**/*.{ts,tsx}",
     "src/components/core/**/*.{ts,tsx}",
     "src/components/feature/CoverArt/**/*.{ts,tsx}",

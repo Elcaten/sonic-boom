@@ -67,6 +67,11 @@
                 "src/components/feature/CoverArt/blur-hash.ts",
                 "src/components/feature/CoverArt/get-cover-cache-key.ts",
                 "src/components/feature/PrefetchAllAlbumImages.tsx"
+            ],
+            "specs/api-client.cs.md": [
+                "src/context/use-api-logic.tsx",
+                "src/context/use-queries-logic.tsx",
+                "src/hooks/use-prefetch-queries.ts"
             ]
         },
         "codespeak_internals_migrated": true,
