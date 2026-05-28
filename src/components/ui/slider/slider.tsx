@@ -49,10 +49,7 @@ export function Slider(props: SliderProps) {
     inputRange: [1, 1.05],
     outputRange: [1, 1 / 1.05], // ≈ 0.952
   });
-  const inverseScaleY = scaleAnim.y.interpolate({
-    inputRange: [1, 2],
-    outputRange: [1, 0.5], // 1/2
-  });
+
   const translateYAnim = scaleAnim.y.interpolate({
     inputRange: [1, 2],
     outputRange: [0, 10],
@@ -138,27 +135,19 @@ export function Slider(props: SliderProps) {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          transform: [{ scaleX: scaleAnim.x }, { scaleY: scaleAnim.y }],
+          transform: [{ scaleX: scaleAnim.x }],
         }}
       >
         <Animated.View
           style={{
-            transform: [
-              { scaleX: inverseScaleX },
-              { scaleY: inverseScaleY },
-              { translateY: translateYAnim },
-            ],
+            transform: [{ scaleX: inverseScaleX }, { translateY: translateYAnim }],
           }}
         >
           {addonBottomLeft?.({ isDragging, dragPercent })}
         </Animated.View>
         <Animated.View
           style={{
-            transform: [
-              { scaleX: inverseScaleX },
-              { scaleY: inverseScaleY },
-              { translateY: translateYAnim },
-            ],
+            transform: [{ scaleX: inverseScaleX }, { translateY: translateYAnim }],
           }}
         >
           {addonBottomRight?.({ isDragging, dragPercent })}
