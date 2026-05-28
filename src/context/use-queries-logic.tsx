@@ -1,4 +1,4 @@
-import { appLogger } from "@/utils/appLogger";
+import { appLogger } from "@/utils/app-logger";
 import { getCoverCacheKey } from "@/utils/get-cover-cache-key";
 import { queryOptions } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";

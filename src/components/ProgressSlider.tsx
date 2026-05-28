@@ -1,5 +1,5 @@
 import { useColors } from "@/context/app-context";
-import { formatDuration } from "@/utils/formatDuration";
+import { formatDuration } from "@/utils/formatd-duration";
 import TrackPlayer, { useProgress } from "@rntp/player";
 import { Fragment, useEffect, useState } from "react";
 import { ThemedText } from "./themed/themed-text";

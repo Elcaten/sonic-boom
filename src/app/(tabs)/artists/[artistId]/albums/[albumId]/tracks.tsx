@@ -1,6 +1,6 @@
 import { CoverArt } from "@/components/CoverArt";
 import { useRequiredQueries } from "@/context/app-context";
-import { formatDuration } from "@/utils/formatDuration";
+import { formatDuration } from "@/utils/formatd-duration";
 import { shuffleArray } from "@/utils/shuffle-array";
 import {
   Button,

@@ -1,4 +1,4 @@
-import { appLogger } from "@/utils/appLogger";
+import { appLogger } from "@/utils/app-logger";
 import * as Crypto from "expo-crypto";
 import { useMemo } from "react";
 import { SubsonicAPI } from "subsonic-api";
