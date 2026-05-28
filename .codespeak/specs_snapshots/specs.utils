@@ -4,7 +4,7 @@ General-purpose utilities and hooks used across the app.
 
 ## Logger (`app-logger`)
 
-A structured logger built on `react-native-logs` with four named channels: `PLAYER`, `API`, `QUERY`, and `COVER_ART`. Each channel exposes `debug`, `info`, `warn`, and `error` levels. Output is async, includes timestamps and level labels, and uses distinct colors per level (blue for info, yellow for warn, red for error).
+A structured logger built on `react-native-logs` with the following named channels: `PLAYER`, `API`, `QUERY`, `COVER_ART`,`SIGN_IN`. Each channel exposes `debug`, `info`, `warn`, and `error` levels. Output is async, includes timestamps and level labels, and uses distinct colors per level (blue for info, yellow for warn, red for error).
 
 Exported as `appLogger`, accessed per channel: `appLogger.API.info(...)`, `appLogger.PLAYER.warn(...)`, etc.
 
