@@ -1,7 +1,6 @@
-import { ThemedText } from "@/components/themed/themed-text";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useRef, useState } from "react";
-import { Animated, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { useRef, useState } from "react";
+import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 // Example 1: Fade transition between icons
 function FadeIconTransition() {
@@ -26,7 +25,7 @@ function FadeIconTransition() {
 
   return (
     <View style={styles.example}>
-      <ThemedText style={styles.title}>1. Fade Transition</ThemedText>
+      <Text style={styles.title}>1. Fade Transition</Text>
       <Pressable onPress={handlePress}>
         <Animated.View style={{ opacity: fadeAnim }}>
           <Ionicons name={isActive ? "search" : "search-outline"} size={48} color="#007AFF" />
@@ -74,7 +73,7 @@ function ScaleFadeIconTransition() {
 
   return (
     <View style={styles.example}>
-      <ThemedText style={styles.title}>2. Scale + Fade</ThemedText>
+      <Text style={styles.title}>2. Scale + Fade</Text>
       <Pressable onPress={handlePress}>
         <Animated.View
           style={{
@@ -128,7 +127,7 @@ function CrossfadeIconTransition() {
 
   return (
     <View style={styles.example}>
-      <ThemedText style={styles.title}>3. Crossfade</ThemedText>
+      <Text style={styles.title}>3. Crossfade</Text>
       <Pressable onPress={handlePress}>
         <View style={{ width: 48, height: 48 }}>
           <Animated.View style={[styles.iconAbsolute, { opacity: fadeAnim1 }]}>
@@ -186,7 +185,7 @@ function RotateFadeIconTransition() {
 
   return (
     <View style={styles.example}>
-      <ThemedText style={styles.title}>4. Rotate + Fade</ThemedText>
+      <Text style={styles.title}>4. Rotate + Fade</Text>
       <Pressable onPress={handlePress}>
         <Animated.View
           style={{
@@ -230,7 +229,7 @@ function SpringIconTransition() {
 
   return (
     <View style={styles.example}>
-      <ThemedText style={styles.title}>5. Spring Bounce</ThemedText>
+      <Text style={styles.title}>5. Spring Bounce</Text>
       <Pressable onPress={handlePress}>
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
           <Ionicons name={isActive ? "thumbs-up" : "thumbs-up-outline"} size={48} color="#007AFF" />
@@ -278,7 +277,7 @@ function SlideIconTransition() {
 
   return (
     <View style={styles.example}>
-      <ThemedText style={styles.title}>6. Slide Up</ThemedText>
+      <Text style={styles.title}>6. Slide Up</Text>
       <Pressable onPress={handlePress}>
         <Animated.View
           style={{
@@ -329,7 +328,7 @@ function PlayPauseTransition() {
 
   return (
     <View style={styles.example}>
-      <ThemedText style={styles.title}>7. Play/Pause</ThemedText>
+      <Text style={styles.title}>7. Play/Pause</Text>
       <Pressable onPress={handlePress}>
         <Animated.View
           style={{
@@ -364,7 +363,7 @@ function MenuToggleTransition() {
 
   return (
     <View style={styles.example}>
-      <ThemedText style={styles.title}>8. Menu Toggle</ThemedText>
+      <Text style={styles.title}>8. Menu Toggle</Text>
       <Pressable onPress={handlePress}>
         <Animated.View style={{ transform: [{ rotate }] }}>
           <Ionicons name={isOpen ? "close" : "menu"} size={48} color="#000" />
