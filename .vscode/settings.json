@@ -11,5 +11,10 @@
     ".expo": true,
     ".vscode": true
   },
-  "editor.foldingImportsByDefault": true
+  "editor.foldingImportsByDefault": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "jest.config.ts": "jest.*"
+  }
 }

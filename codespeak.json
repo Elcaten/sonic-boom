@@ -4,19 +4,19 @@
   "test_runner_configurations": {
     "specs/utils.cs.md": {
       "run_all_tests_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.test.ts",
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.hooks-and-utils.test_command.ts",
         "cwd": "."
       },
       "run_specified_tests_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeak.test.ts {tests_list}",
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.hooks-and-utils.test_command.ts {tests_list}",
         "cwd": "."
       },
       "run_all_tests_with_coverage_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.coverage.ts; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.hooks-and-utils.coverage_command.ts; _EC=$?; [ -f .coverage/hooks-and-utils/lcov.info ] && cp .coverage/hooks-and-utils/lcov.info {tests_coverage_report_file}; rm -rf .coverage/hooks-and-utils; exit $_EC",
         "cwd": "."
       },
       "run_specified_tests_with_coverage_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.coverage.ts {tests_list}; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.hooks-and-utils.coverage_command.ts {tests_list}; _EC=$?; [ -f .coverage/hooks-and-utils/lcov.info ] && cp .coverage/hooks-and-utils/lcov.info {tests_coverage_report_file}; rm -rf .coverage/hooks-and-utils; exit $_EC",
         "cwd": "."
       },
       "non_test_source_regex_include": [
@@ -25,45 +25,9 @@
       ],
       "non_test_source_regex_exclude": [
         "\\.test\\.ts$",
-        "\\.spec\\.ts$",
         "\\.test\\.tsx$",
-        "\\.spec\\.tsx$",
-        "(^|/)__mocks__/",
-        "(^|/)__tests__/"
-      ],
-      "source_glob_patterns": [
-        "**/*.ts",
-        "**/*.tsx"
-      ]
-    },
-    "specs/ui-components.cs.md": {
-      "run_all_tests_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.test.ts",
-        "cwd": "."
-      },
-      "run_specified_tests_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.test.ts {tests_list}",
-        "cwd": "."
-      },
-      "run_all_tests_with_coverage_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.coverage.ts; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
-        "cwd": "."
-      },
-      "run_specified_tests_with_coverage_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.coverage.ts {tests_list}; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
-        "cwd": "."
-      },
-      "non_test_source_regex_include": [
-        "\\.ts$",
-        "\\.tsx$"
-      ],
-      "non_test_source_regex_exclude": [
-        "\\.test\\.ts$",
         "\\.spec\\.ts$",
-        "\\.test\\.tsx$",
         "\\.spec\\.tsx$",
-        "(^|/)__mocks__/",
-        "(^|/)__tests__/",
         "(^|/)__test__/"
       ],
       "source_glob_patterns": [
@@ -73,19 +37,19 @@
     },
     "specs/api-client.cs.md": {
       "run_all_tests_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.test.ts",
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.context-and-hooks.test_command.ts",
         "cwd": "."
       },
       "run_specified_tests_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.test.ts {tests_list}",
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.context-and-hooks.test_command.ts {tests_list}",
         "cwd": "."
       },
       "run_all_tests_with_coverage_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.coverage.ts; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.context-and-hooks.coverage_command.ts; _EC=$?; [ -f .coverage/context-and-hooks/lcov.info ] && cp .coverage/context-and-hooks/lcov.info {tests_coverage_report_file}; rm -rf .coverage/context-and-hooks; exit $_EC",
         "cwd": "."
       },
       "run_specified_tests_with_coverage_command": {
-        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.coverage.ts {tests_list}; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.context-and-hooks.coverage_command.ts {tests_list}; _EC=$?; [ -f .coverage/context-and-hooks/lcov.info ] && cp .coverage/context-and-hooks/lcov.info {tests_coverage_report_file}; rm -rf .coverage/context-and-hooks; exit $_EC",
         "cwd": "."
       },
       "non_test_source_regex_include": [
@@ -94,11 +58,9 @@
       ],
       "non_test_source_regex_exclude": [
         "\\.test\\.ts$",
-        "\\.spec\\.ts$",
         "\\.test\\.tsx$",
+        "\\.spec\\.ts$",
         "\\.spec\\.tsx$",
-        "(^|/)__mocks__/",
-        "(^|/)__tests__/",
         "(^|/)__test__/"
       ],
       "source_glob_patterns": [

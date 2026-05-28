@@ -43,4 +43,4 @@ app-example
 /android
 # CodeSpeak
 .codespeak/ignored/
-.coverage-tmp/
+.coverage/

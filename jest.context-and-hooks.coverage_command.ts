@@ -9,21 +9,18 @@ const config: Config = {
   collectCoverage: true,
   coverageProvider: "v8",
   collectCoverageFrom: [
-    "src/hooks/**/*.{ts,tsx}",
-    "src/context/**/*.{ts,tsx}",
-    "src/utils/**/*.{ts,tsx}",
-    "src/components/core/**/*.{ts,tsx}",
-    "src/components/feature/CoverArt/**/*.{ts,tsx}",
-    "src/components/feature/PrefetchAllAlbumImages.tsx",
+    "src/context/use-api-logic.tsx",
+    "src/context/use-queries-logic.tsx",
+    "src/hooks/use-prefetch-queries.ts",
   ],
   coveragePathIgnorePatterns: [
     "node_modules",
-    "src/**/__test__/**",
-    "src/**/*.test.{ts,tsx}",
-    "**/*.cs.md",
+    "/__test__/",
+    "\\.test\\.(ts|tsx)$",
+    "\\.cs\\.md$",
   ],
   coverageReporters: ["text", "lcov"],
-  coverageDirectory: ".coverage-tmp",
+  coverageDirectory: "<rootDir>/.coverage/context-and-hooks",
 };
 
 export default config;
