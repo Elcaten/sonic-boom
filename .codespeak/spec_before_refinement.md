@@ -1,0 +1,38 @@
+# Shared Utilities and Hooks
+
+A collection of general-purpose utilities and hooks used across the app.
+
+## Logger (`app-logger`)
+
+A structured logger built on `react-native-logs` with four named channels: `PLAYER`, `API`, `QUERY`, and `COVER_ART`. Each channel supports `debug`, `info`, `warn`, and `error` levels. Output is async, includes timestamps and level labels, and uses distinct colors per level (blue for info, yellow for warn, red for error).
+
+Exported as `appLogger`, accessed per channel: e.g. `appLogger.API.info(...)`, `appLogger.PLAYER.warn(...)`.
+
+## Batch Processing (`batch-process`)
+
+Runs an array of promises in sequential batches. Never rejects — all results are settled.
+
+- `batchProcess({ promises, pageSize?, delayMs?, onProgress? })` — processes promises in pages (default page size: 10). Optionally waits `delayMs` between batches. Calls `onProgress` after each batch with `{ completed, total, results }`.
+- `batchProcessWithDetails(...)` — same as above, but also returns separated `successful` and `failed` arrays with counts.
+
+## Format Duration (`format-duration`)
+
+Formats a duration in seconds to a display string:
+- Under 1 hour: `M:SS`
+- 1 hour or more: `H:MM:SS`
+
+## iOS Version Check (`is-ios-version`)
+
+`isIOSVersion(minVersion)` — returns `true` if running on iOS and the major OS version is at or above `minVersion`. Returns `false` on non-iOS platforms.
+
+## Pluralize (`pluralize`)
+
+`pluralize(count, noun, suffix?)` — returns `"<count> <noun>"` with the suffix appended (default `"s"`) when count is not 1.
+
+## Shuffle Array (`shuffle-array`)
+
+`shuffleArray(array)` — returns a new shuffled copy of the input array (Fisher-Yates). Does not mutate the original.
+
+## Color Scheme Hook (`use-color-scheme`)
+
+Re-exports `useColorScheme` directly from `react-native`, providing a single import point for the app.

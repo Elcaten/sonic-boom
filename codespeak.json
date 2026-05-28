@@ -1,0 +1,39 @@
+{
+  "version": "0.1.0",
+  "profile_name": "mixed_mode",
+  "test_runner_configurations": {
+    "specs/utils.cs.md": {
+      "run_all_tests_command": {
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.test.ts",
+        "cwd": "."
+      },
+      "run_specified_tests_command": {
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeak.test.ts {tests_list}",
+        "cwd": "."
+      },
+      "run_all_tests_with_coverage_command_old": {
+        "command_line": "npx vitest run --reporter=junit --outputFile={tests_report_file} --coverage --coverage.provider=v8 --coverage.reportOnFailure --coverage.include=\"src/hooks/**\" --coverage.include=\"src/utils/**\" --coverage.exclude=\"**/*.cs.md\" --coverage.reporter=lcov --coverage.reportsDirectory=.coverage-tmp; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
+        "cwd": "."
+      },
+
+      "run_all_tests_with_coverage_command": {
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.coverage.ts; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
+        "cwd": "."
+      },
+      "run_specified_tests_with_coverage_command": {
+        "command_line": "JEST_JUNIT_OUTPUT_FILE={tests_report_file} npx jest --config=jest.config.codespeack.coverage.ts {tests_list}; _EC=$?; [ -f .coverage-tmp/lcov.info ] && cp .coverage-tmp/lcov.info {tests_coverage_report_file}; rm -rf .coverage-tmp; exit $_EC",
+        "cwd": "."
+      },
+      "non_test_source_regex_include": ["\\.ts$", "\\.tsx$"],
+      "non_test_source_regex_exclude": [
+        "\\.test\\.ts$",
+        "\\.spec\\.ts$",
+        "\\.test\\.tsx$",
+        "\\.spec\\.tsx$",
+        "(^|/)__mocks__/",
+        "(^|/)__tests__/"
+      ],
+      "source_glob_patterns": ["**/*.ts", "**/*.tsx"]
+    }
+  }
+}
