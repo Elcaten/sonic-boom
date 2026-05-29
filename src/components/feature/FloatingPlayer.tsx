@@ -80,7 +80,7 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
             </Text>
           </VStack>
         ) : (
-          <Text modifiers={[font({ textStyle: "callout", weight: "medium" })]}>Not playing</Text>
+          <Text modifiers={[font({ textStyle: "footnote", weight: "medium" })]}>Not playing</Text>
         )}
 
         <Spacer />
