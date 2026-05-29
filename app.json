@@ -13,9 +13,7 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": [
-          "audio"
-        ]
+        "UIBackgroundModes": ["audio"]
       },
       "bundleIdentifier": "com.heavy.hope.sonicboom",
       "appleTeamId": "42FT242JP9"
@@ -75,6 +73,12 @@
       "expo-web-browser",
       "expo-asset",
       "expo-status-bar",
+      [
+        "expo-file-system",
+        {
+          "enableFileSharing": true
+        }
+      ],
       "@kesha-antonov/react-native-background-downloader"
     ],
     "experiments": {
