@@ -1,4 +1,3 @@
-import { isIOSVersion } from "@/utils/is-ios-version";
 import { Stack } from "expo-router";
 import { View } from "react-native";
 
@@ -10,7 +9,7 @@ export default function ArtistsLayout() {
           name="index"
           options={{
             headerTitle: "Artists",
-            headerTransparent: isIOSVersion(26),
+            headerTransparent: true,
           }}
         />
         <Stack.Screen
@@ -18,7 +17,7 @@ export default function ArtistsLayout() {
           options={{
             headerBackButtonDisplayMode: "minimal",
             headerTitle: "Albums",
-            headerTransparent: isIOSVersion(26),
+            headerTransparent: true,
           }}
         />
         <Stack.Screen
@@ -26,7 +25,7 @@ export default function ArtistsLayout() {
           options={{
             headerBackButtonDisplayMode: "minimal",
             headerTitle: "",
-            headerTransparent: isIOSVersion(26),
+            headerTransparent: true,
           }}
         />
       </Stack>

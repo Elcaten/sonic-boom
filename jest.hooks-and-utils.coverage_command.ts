@@ -13,7 +13,6 @@ const config: Config = {
     "src/utils/app-logger.ts",
     "src/utils/batch-process.ts",
     "src/utils/format-duration.ts",
-    "src/utils/is-ios-version.ts",
     "src/utils/pluralize.ts",
     "src/utils/shuffle-array.ts",
   ],

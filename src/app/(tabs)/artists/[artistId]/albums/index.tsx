@@ -1,6 +1,5 @@
 import { ListItem } from "@/components/core/list-item";
 import { useRequiredQueries } from "@/context/app-context";
-import { isIOSVersion } from "@/utils/is-ios-version";
 import { pluralize } from "@/utils/pluralize";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
@@ -21,7 +20,7 @@ export default function ArtistAlbumsScreen() {
       headerSearchBarOptions: {
         autoCapitalize: "none",
         placeholder: "Search",
-        placement: isIOSVersion(26) ? "integratedButton" : "automatic",
+        placement: "integratedButton",
         hideWhenScrolling: false,
         onChangeText(e) {
           setSearch(e.nativeEvent.text);

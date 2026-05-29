@@ -19,10 +19,6 @@ Runs an array of promises in sequential batches. Never rejects — all results a
 
 Formats a duration in seconds to a display string: `M:SS` under one hour, `H:MM:SS` for one hour or more.
 
-## iOS Version Check (`is-ios-version`)
-
-`isIOSVersion(minVersion)` — returns `true` if running on iOS and the major OS version is at or above `minVersion`. Returns `false` on non-iOS platforms.
-
 ## Pluralize (`pluralize`)
 
 `pluralize(count, noun, suffix?)` — returns `"<count> <noun>"` with the suffix appended (default `"s"`) when count is not 1.
