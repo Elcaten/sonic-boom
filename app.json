@@ -13,9 +13,12 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio"
+        ]
       },
-      "bundleIdentifier": "com.heavy.hope.sonicboom"
+      "bundleIdentifier": "com.heavy.hope.sonicboom",
+      "appleTeamId": "42FT242JP9"
     },
     "android": {
       "adaptiveIcon": {
