@@ -74,7 +74,8 @@
       "expo-image",
       "expo-web-browser",
       "expo-asset",
-      "expo-status-bar"
+      "expo-status-bar",
+      "@kesha-antonov/react-native-background-downloader"
     ],
     "experiments": {
       "typedRoutes": true,
