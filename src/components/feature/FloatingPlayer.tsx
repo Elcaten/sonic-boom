@@ -2,6 +2,7 @@ import { MediaItemExtras } from "@/track-player/types";
 import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import {
   contentShape,
+  disabled,
   font,
   foregroundStyle,
   frame,
@@ -16,7 +17,7 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
   const router = useRouter();
 
   const activeTrack = useActiveMediaItem();
-  const activeTrackExtra = activeTrack?.extras as MediaItemExtras;
+  const activeTrackExtra = activeTrack?.extras as MediaItemExtras | undefined;
   const isPlaying = useIsPlaying();
 
   const handlePress = () => {
@@ -47,47 +48,60 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
     TrackPlayer.skipToNext();
   };
 
-  if (!activeTrack) {
-    return null;
-  }
+  const isDisabled = !activeTrack;
+  const buttonColor = isDisabled ? undefined : "primary";
 
   return (
     <Host style={{ flex: 1, marginInlineStart: 14, marginInlineEnd: 14 }}>
       <HStack
         spacing={12}
-        modifiers={[contentShape(shapes.rectangle()), onTapGesture(handlePress)]}
+        modifiers={[
+          contentShape(shapes.rectangle()),
+          onTapGesture(handlePress),
+          disabled(isDisabled),
+        ]}
       >
         <VStack modifiers={[frame({ width: 32, height: 32 })]}>
-          <CoverArt id={activeTrackExtra.albumId} size={32} />
+          <CoverArt id={activeTrackExtra?.albumId} size={32} />
         </VStack>
 
-        <VStack alignment="leading">
-          <Text modifiers={[font({ textStyle: "callout", weight: "medium" })]}>
-            {activeTrack.title ?? ""}
-          </Text>
-          <Text
-            modifiers={[
-              font({ textStyle: "footnote" }),
-              foregroundStyle({ type: "hierarchical", style: "secondary" }),
-            ]}
-          >
-            {activeTrack.artist ?? ""}
-          </Text>
-        </VStack>
+        {activeTrack ? (
+          <VStack alignment="leading">
+            <Text modifiers={[font({ textStyle: "callout", weight: "medium" })]}>
+              {activeTrack.title ?? ""}
+            </Text>
+            <Text
+              modifiers={[
+                font({ textStyle: "footnote" }),
+                foregroundStyle({ type: "hierarchical", style: "secondary" }),
+              ]}
+            >
+              {activeTrack.artist ?? ""}
+            </Text>
+          </VStack>
+        ) : (
+          <Text modifiers={[font({ textStyle: "callout", weight: "medium" })]}>Not playing</Text>
+        )}
+
         <Spacer />
+
         {actions.includes("prev-next") && (
           <Button onPress={handlePrevPress}>
-            <Image systemName={"backward.fill"} size={16} color="primary" />
+            <Image systemName={"backward.fill"} size={16} color={buttonColor} />
           </Button>
         )}
         {actions.includes("play-pause") && (
           <Button onPress={handlePlayPausePress}>
-            <Image systemName={isPlaying ? "pause.fill" : "play.fill"} size={24} color="primary" />
+            <Image
+              systemName={isPlaying ? "pause.fill" : "play.fill"}
+              size={24}
+              color={buttonColor}
+            />
           </Button>
         )}
         {actions.includes("prev-next") && (
           <Button onPress={handleNextPress}>
-            <Image systemName={"forward.fill"} size={16} color="primary" />
+            <Image systemName={"forward.fill"} size={16} color={buttonColor} />
           </Button>
         )}
       </HStack>
