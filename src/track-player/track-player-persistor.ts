@@ -1,3 +1,4 @@
+import { appLogger } from "@/utils/app-logger";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrackPlayer from "@rntp/player";
 
@@ -9,8 +10,7 @@ export const trackPlayerPersistor = {
         AsyncStorage.setItem("queue", JSON.stringify(queue));
       }
     } catch (e) {
-      //TODO: log error
-      console.error(e);
+      appLogger.PLAYER.error(e);
     }
   },
   persistActiveTrackIndex: async () => {
@@ -20,8 +20,7 @@ export const trackPlayerPersistor = {
         AsyncStorage.setItem("active-track-index", activeTrackIndex.toString());
       }
     } catch (e) {
-      //TODO: log error
-      console.error(e);
+      appLogger.PLAYER.error(e);
     }
   },
   hydrateQueue: async () => {
@@ -32,8 +31,7 @@ export const trackPlayerPersistor = {
         TrackPlayer.setMediaItems(JSON.parse(queue));
       }
     } catch (e) {
-      //TODO: log error
-      console.error(e);
+      appLogger.PLAYER.error(e);
     }
   },
   hydrateActiveTrackIndex: async () => {
@@ -44,8 +42,7 @@ export const trackPlayerPersistor = {
         TrackPlayer.skipToIndex(Number.parseInt(activeTrackIndex));
       }
     } catch (e) {
-      //TODO: log error
-      console.error(e);
+      appLogger.PLAYER.error(e);
     }
   },
   clearAll: async () => {
@@ -53,8 +50,7 @@ export const trackPlayerPersistor = {
       await AsyncStorage.removeItem("queue");
       await AsyncStorage.removeItem("active-track-index");
     } catch (e) {
-      //TODO: log error
-      console.error(e);
+      appLogger.PLAYER.error(e);
     }
   },
 };
