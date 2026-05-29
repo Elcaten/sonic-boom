@@ -25,7 +25,7 @@ export function ProgressSlider() {
       onProgressChange={onProgressChange}
       addonBottomLeft={({ isDragging, dragPercent }) => (
         <Host matchContents>
-          <Text modifiers={[font({ textStyle: "callout" }), padding({ top: 4 })]}>
+          <Text modifiers={[font({ textStyle: "callout" }), padding({ top: 8 })]}>
             {isDragging
               ? formatDuration(progress.duration * dragPercent)
               : formatDuration(progressOptimistic)}
@@ -34,7 +34,7 @@ export function ProgressSlider() {
       )}
       addonBottomRight={({ isDragging, dragPercent }) => (
         <Host matchContents>
-          <Text modifiers={[font({ textStyle: "callout" }), padding({ top: 4 })]}>
+          <Text modifiers={[font({ textStyle: "callout" }), padding({ top: 8 })]}>
             {isDragging
               ? `-${formatDuration(progress.duration * (1 - dragPercent))}`
               : `-${formatDuration(progress.duration - progressOptimistic)}`}
