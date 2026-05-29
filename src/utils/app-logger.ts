@@ -3,9 +3,11 @@
 // CodeSpeak will try to preserve manual changes, but it's not guaranteed.
 import { consoleTransport, logger, LoggerInstance } from "react-native-logs";
 
-const loggerExtensions = ["PLAYER", "API", "QUERY", "COVER_ART", "SIGN_IN"] as const;
+const allLoggerExtensions = ["PLAYER", "API", "QUERY", "COVER_ART", "SIGN_IN"] as const;
 
-type LoggerExtention = (typeof loggerExtensions)[number];
+type LoggerExtention = (typeof allLoggerExtensions)[number];
+
+const enabledLoggerExtensions: LoggerExtention[] = ["API"];
 
 const baseLogger = logger.createLogger({
   levels: {
@@ -29,10 +31,10 @@ const baseLogger = logger.createLogger({
   printDate: true,
   fixedExtLvlLength: false,
   enabled: true,
-  enabledExtensions: loggerExtensions as unknown as string[],
+  enabledExtensions: enabledLoggerExtensions,
 });
 
-export const appLogger = loggerExtensions.reduce(
+export const appLogger = allLoggerExtensions.reduce(
   (acc, curr) => {
     acc[curr] = baseLogger.extend(curr);
     return acc;
