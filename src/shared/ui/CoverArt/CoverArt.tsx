@@ -1,5 +1,5 @@
-import { appLogger } from "@/shared/logger/app-logger";
-import { useRequiredQueries } from "@/shared/queries/queries-context";
+import { useRequiredQueries } from "@/core/providers/queries/queries-context";
+import { appLogger } from "@/shared/lib/logger/app-logger";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { ImageStyle, StyleProp, StyleSheet, useColorScheme, View } from "react-native";

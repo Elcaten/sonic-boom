@@ -1,7 +1,7 @@
 import { SubsonicAPI } from "subsonic-api";
 import { useInitQueries } from "../queries-context";
 
-import { appLogger } from "@/shared/logger/app-logger";
+import { appLogger } from "@/shared/lib/logger/app-logger";
 import { Image } from "expo-image";
 
 // Mock useMemo to call the factory function directly

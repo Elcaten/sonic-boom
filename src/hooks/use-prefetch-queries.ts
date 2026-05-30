@@ -1,4 +1,4 @@
-import { useRequiredQueries } from "@/shared/queries/queries-context";
+import { useRequiredQueries } from "@/core/providers/queries/queries-context";
 import { batchProcessWithDetails } from "@/utils/batch-process";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";

@@ -1,4 +1,4 @@
-import { appLogger } from "@/shared/logger/app-logger";
+import { appLogger } from "@/shared/lib/logger/app-logger";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { authService } from "../services/auth.service";

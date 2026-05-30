@@ -1,5 +1,5 @@
+import { useRequiredQueries } from "@/core/providers/queries/queries-context";
 import { formatDuration } from "@/shared/lib/format/format-duration";
-import { useRequiredQueries } from "@/shared/queries/queries-context";
 import { CoverArt } from "@/shared/ui/CoverArt/CoverArt";
 import { MediaItemExtras } from "@/track-player/types";
 import { shuffleArray } from "@/utils/shuffle-array";

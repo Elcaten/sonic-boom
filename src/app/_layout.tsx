@@ -1,13 +1,12 @@
-import { AppProvider } from "@/context/app-context";
+import { AppContextProvider } from "@/core/providers";
+import { ThemeProvider } from "@/core/providers/ThemeProvider/ui/ThemeProvider";
 import { useIsAuthenticated } from "@/features/auth/model/auth-context";
-import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient, useIsRestoring } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
-import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router/react-navigation";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
@@ -37,7 +36,6 @@ const asyncStoragePersister = createAsyncStoragePersister({
 });
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [playerReady, setPlayerReady] = useState(false);
   const [authReady, setAuthReady] = useState(false);
   const [persistorReady, setPersistorReady] = useState(false);
@@ -54,8 +52,8 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-          <AppProvider onLoad={() => setAuthReady(true)}>
+        <ThemeProvider>
+          <AppContextProvider onLoad={() => setAuthReady(true)}>
             <PersistQueryClientProvider
               client={queryClient}
               persistOptions={{ persister: asyncStoragePersister }}
@@ -64,7 +62,7 @@ export default function RootLayout() {
             >
               <Content />
             </PersistQueryClientProvider>
-          </AppProvider>
+          </AppContextProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

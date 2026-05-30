@@ -1,4 +1,4 @@
-import { appLogger } from "@/shared/logger/app-logger";
+import { appLogger } from "@/shared/lib/logger/app-logger";
 import { trackPlayerPersistor } from "@/track-player/track-player-persistor";
 import TrackPlayer, { Event, PlayerCommand, RepeatMode } from "@rntp/player";
 import { useEffect, useRef } from "react";

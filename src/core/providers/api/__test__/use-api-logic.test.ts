@@ -1,7 +1,7 @@
 import { useAPILogic } from "../api-context";
 
 import { AuthState } from "@/features/auth/auth.types";
-import { appLogger } from "@/shared/logger/app-logger";
+import { appLogger } from "@/shared/lib/logger/app-logger";
 import * as Crypto from "expo-crypto";
 import { SubsonicAPI } from "subsonic-api";
 
