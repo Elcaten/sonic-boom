@@ -1,33 +1,33 @@
-import { CoverArt } from "@/components/feature/CoverArt/CoverArt";
 import { formatDuration } from "@/shared/lib/format/format-duration";
 import { useRequiredQueries } from "@/shared/queries/queries-context";
+import { CoverArt } from "@/shared/ui/CoverArt/CoverArt";
 import { MediaItemExtras } from "@/track-player/types";
 import { shuffleArray } from "@/utils/shuffle-array";
 import {
-  Button,
-  Host,
-  HStack,
-  Image,
-  List,
-  Section,
-  Spacer,
-  Text,
-  VStack,
+    Button,
+    Host,
+    HStack,
+    Image,
+    List,
+    Section,
+    Spacer,
+    Text,
+    VStack,
 } from "@expo/ui/swift-ui";
 import {
-  Animation,
-  animation,
-  buttonStyle,
-  controlSize,
-  font,
-  foregroundStyle,
-  frame,
-  lineLimit,
-  listRowSeparator,
-  listStyle,
-  multilineTextAlignment,
-  padding,
-  symbolEffect,
+    Animation,
+    animation,
+    buttonStyle,
+    controlSize,
+    font,
+    foregroundStyle,
+    frame,
+    lineLimit,
+    listRowSeparator,
+    listStyle,
+    multilineTextAlignment,
+    padding,
+    symbolEffect,
 } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { MediaItem, useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useQueries, useQuery } from "@tanstack/react-query";

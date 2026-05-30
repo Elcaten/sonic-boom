@@ -1,5 +1,5 @@
-import { ListItem } from "@/components/core/list-item";
 import { useSearch } from "@/hooks/use-recently-searched";
+import { ListItem } from "@/shared/ui/list-item";
 import { Spacer } from "@expo/ui";
 import {
   ContentUnavailableView,

@@ -1,4 +1,4 @@
-import ActiveTrackScreen from "@/screens/player/active-track-screen";
+import ActiveTrackScreen from "@/screens/player/ui/ActiveTrackScreen/ActiveTrackScreen";
 
 export default function ActiveTrackModal() {
   return <ActiveTrackScreen />;

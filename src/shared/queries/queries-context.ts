@@ -1,5 +1,5 @@
-import { getCoverCacheKey } from "@/components/feature/CoverArt/get-cover-cache-key";
 import { appLogger } from "@/shared/logger/app-logger";
+import { getCoverCacheKey } from "@/shared/ui/CoverArt/get-cover-cache-key";
 import { queryOptions } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";
 import { createContext, useContext, useMemo } from "react";
