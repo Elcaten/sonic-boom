@@ -1,4 +1,4 @@
-import { appLogger } from "@/utils/app-logger";
+import { appLogger } from "@/shared/logger/app-logger";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrackPlayer from "@rntp/player";
 
