@@ -1,4 +1,4 @@
-import { useColors } from "@/core/providers/colors/colors-context";
+import { useColors } from "@/core/providers/AppContextProvider/colors/colors-context";
 import { SectionList, Text, View } from "react-native";
 
 export default function ColorsScreen() {

@@ -1,4 +1,4 @@
-import { useRequiredQueries } from "@/core/providers/queries/queries-context";
+import { useRequiredQueries } from "@/core/providers/AppContextProvider/queries/queries-context";
 import { pluralize } from "@/shared/lib/format/pluralize";
 import { ListItem } from "@/shared/ui/list-item";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";

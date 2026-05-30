@@ -1,4 +1,4 @@
-import { useRequiredQueries } from "@/core/providers/queries/queries-context";
+import { useRequiredQueries } from "@/core/providers/AppContextProvider/queries/queries-context";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";
 import { useEffect, useState } from "react";

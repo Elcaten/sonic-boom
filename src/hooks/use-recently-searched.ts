@@ -1,5 +1,5 @@
 // hooks/useSearch.ts
-import { useRequiredQueries } from "@/core/providers/queries/queries-context";
+import { useRequiredQueries } from "@/core/providers/AppContextProvider/queries/queries-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";

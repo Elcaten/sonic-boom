@@ -1,6 +1,12 @@
-import { APIContext, useInitAPI } from "@/core/providers/api/api-context";
-import { ColorsContext, useInitColors } from "@/core/providers/colors/colors-context";
-import { QueriesContext, useInitQueries } from "@/core/providers/queries/queries-context";
+import { APIContext, useInitAPI } from "@/core/providers/AppContextProvider/api/api-context";
+import {
+  ColorsContext,
+  useInitColors,
+} from "@/core/providers/AppContextProvider/colors/colors-context";
+import {
+  QueriesContext,
+  useInitQueries,
+} from "@/core/providers/AppContextProvider/queries/queries-context";
 import { AuthContext, useInitAuth } from "@/features/auth";
 import { PropsWithChildren } from "react";
 
@@ -13,11 +19,6 @@ export const AppContextProvider = ({
   const api = useInitAPI(auth.state);
   const queries = useInitQueries(api);
   const colors = useInitColors();
-
-  // Show nothing while loading initial auth state
-  if (auth.state.isLoading) {
-    return null;
-  }
 
   return (
     <AuthContext.Provider value={auth}>

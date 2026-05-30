@@ -1,4 +1,4 @@
-import { useRequiredQueries } from "@/core/providers/queries/queries-context";
+import { useRequiredQueries } from "@/core/providers/AppContextProvider/queries/queries-context";
 import { formatDuration } from "@/shared/lib/format/format-duration";
 import { CoverArt } from "@/shared/ui/CoverArt/CoverArt";
 import { MediaItemExtras } from "@/track-player/types";
