@@ -20,8 +20,6 @@ export default function ArtistAlbumsScreen() {
       headerSearchBarOptions: {
         autoCapitalize: "none",
         placeholder: "Search",
-        placement: "integratedButton",
-        hideWhenScrolling: false,
         onChangeText(e) {
           setSearch(e.nativeEvent.text);
         },
