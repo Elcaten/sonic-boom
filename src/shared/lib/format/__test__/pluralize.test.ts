@@ -1,5 +1,4 @@
 import { pluralize } from "../pluralize";
-
 describe("pluralize", () => {
   it("uses singular form when count is 1", () => {
     expect(pluralize(1, "item")).toBe("1 item");

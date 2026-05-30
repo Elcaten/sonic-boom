@@ -1,7 +1,7 @@
 import { CoverArt } from "@/components/feature/CoverArt/CoverArt";
+import { formatDuration } from "@/shared/lib/format/format-duration";
 import { useRequiredQueries } from "@/shared/queries/queries-context";
 import { MediaItemExtras } from "@/track-player/types";
-import { formatDuration } from "@/utils/format-duration";
 import { shuffleArray } from "@/utils/shuffle-array";
 import {
   Button,

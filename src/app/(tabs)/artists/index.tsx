@@ -1,6 +1,6 @@
 import { ListItem } from "@/components/core/list-item";
+import { pluralize } from "@/shared/lib/format/pluralize";
 import { useRequiredQueries } from "@/shared/queries/queries-context";
-import { pluralize } from "@/utils/pluralize";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useQuery } from "@tanstack/react-query";

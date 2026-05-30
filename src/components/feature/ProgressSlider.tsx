@@ -1,5 +1,5 @@
 import { Slider } from "@/components/core/slider";
-import { formatDuration } from "@/utils/format-duration";
+import { formatDuration } from "@/shared/lib/format/format-duration";
 import { Host, Text } from "@expo/ui";
 import { font, padding } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useProgress } from "@rntp/player";
