@@ -1,10 +1,44 @@
+import { AuthState } from "@/features/auth/auth.types";
 import { appLogger } from "@/utils/app-logger";
 import * as Crypto from "expo-crypto";
-import { useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { SubsonicAPI } from "subsonic-api";
-import { AuthState } from "./types";
+import { APIContextType } from "./api.types";
 
-export function useAPILogic(authState: AuthState) {
+export const APIContext = createContext<APIContextType | null>(null);
+
+/**
+ * Hook to access Subsonic API instance
+ * @throws Error if used outside AppProvider
+ * @returns SubsonicAPI instance or null if credentials are incomplete
+ */
+export const useAPI = () => {
+  const context = useContext(APIContext);
+  if (!context) {
+    throw new Error("useAPI must be used within APIContext.Provider");
+  }
+  return context;
+};
+
+/**
+ * Hook to access Subsonic API instance (throws if not available)
+ * Use this when you know the user must be authenticated
+ * @throws Error if used outside AppProvider or if API is not available
+ */
+export const useRequiredAPI = () => {
+  const context = useContext(APIContext);
+  if (!context) {
+    throw new Error("useRequiredAPI must be used within APIContext.Provider");
+  }
+  if (!context) {
+    throw new Error(
+      "API is not available. Ensure user credentials are set before using this hook.",
+    );
+  }
+  return context;
+};
+
+export function useInitAPI(authState: AuthState) {
   const api = useMemo(() => {
     // Return null if credentials are not complete
     if (!authState.password || !authState.username || !authState.serverAddress) {

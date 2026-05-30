@@ -1,7 +1,7 @@
-import { useRequiredQueries } from "@/context/app-context";
+import { useRequiredQueries } from "@/shared/queries/queries-context";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 
 const PAGE_SIZE = 10;

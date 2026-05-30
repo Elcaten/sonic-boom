@@ -1,5 +1,5 @@
 import { PrefetchAllAlbumImages } from "@/components/feature/PrefetchAllAlbumImages";
-import { useAuth } from "@/context/app-context";
+import { useAuth } from "@/features/auth/model/auth-context";
 import { usePrefetchQueries } from "@/hooks/use-prefetch-queries";
 import { trackPlayerPersistor } from "@/track-player/track-player-persistor";
 import { Button, Form, Host, HStack, ProgressView, Section, Spacer, Text } from "@expo/ui/swift-ui";
@@ -51,7 +51,7 @@ export default function SettingsView() {
     await Image.clearMemoryCache();
     await Image.clearDiskCache();
 
-    await auth.clearAll();
+    await auth.actions.clearAll();
 
     queryClient.clear();
   };

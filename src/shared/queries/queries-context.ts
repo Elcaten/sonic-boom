@@ -2,10 +2,30 @@ import { getCoverCacheKey } from "@/components/feature/CoverArt/get-cover-cache-
 import { appLogger } from "@/utils/app-logger";
 import { queryOptions } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";
-import { useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { SubsonicAPI } from "subsonic-api";
 
-export function useQueriesLogic(api: SubsonicAPI | null) {
+type QueriesContextType = ReturnType<typeof useInitQueries>;
+
+export const QueriesContext = createContext<QueriesContextType | null>(null);
+
+/**
+ * Hook to access queries (throws if not available)
+ * Use this when you know the user must be authenticated
+ * @throws Error if used outside QueriesContext.Provider or if API is not available
+ */
+export const useRequiredQueries = () => {
+  const context = useContext(QueriesContext);
+  if (!context) {
+    throw new Error("useRequiredQueries must be used within QueriesContext.Provider");
+  }
+  if (!context) {
+    throw new Error("Queries are not available. Ensure API is available before using this hook.");
+  }
+  return context;
+};
+
+export function useInitQueries(api: SubsonicAPI | null) {
   return useMemo(() => {
     if (!api) {
       return null;

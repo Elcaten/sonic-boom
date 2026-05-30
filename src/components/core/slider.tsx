@@ -1,4 +1,4 @@
-import { useColors } from "@/context/app-context";
+import { useColors } from "@/shared/colors/colors-context";
 import React, { useState } from "react";
 import {
   Animated,

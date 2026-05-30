@@ -1,4 +1,5 @@
-import { AppProvider, useIsAuthenticated } from "@/context/app-context";
+import { AppProvider } from "@/context/app-context";
+import { useIsAuthenticated } from "@/features/auth/model/auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useSetupTrackPlayer } from "@/track-player/use-setup-track-player";
 import AsyncStorage from "@react-native-async-storage/async-storage";

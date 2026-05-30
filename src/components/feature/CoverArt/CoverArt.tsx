@@ -1,4 +1,4 @@
-import { useRequiredQueries } from "@/context/app-context";
+import { useRequiredQueries } from "@/shared/queries/queries-context";
 import { appLogger } from "@/utils/app-logger";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";

@@ -1,5 +1,5 @@
 import { CoverArt } from "@/components/feature/CoverArt/CoverArt";
-import { useRequiredQueries } from "@/context/app-context";
+import { useRequiredQueries } from "@/shared/queries/queries-context";
 import { MediaItemExtras } from "@/track-player/types";
 import { formatDuration } from "@/utils/format-duration";
 import { shuffleArray } from "@/utils/shuffle-array";

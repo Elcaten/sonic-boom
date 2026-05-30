@@ -1,12 +1,14 @@
-import { useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { PlatformColor, useColorScheme } from "react-native";
 
-//NEW BRANCH 2 COMMENT
+type ColorsContextType = ReturnType<typeof useInitColors>;
+
+export const ColorsContext = createContext<ColorsContextType | null>(null);
 
 /**
  * https://github.com/facebook/react-native/blob/main/packages/rn-tester/js/examples/PlatformColor/PlatformColorExample.js
  */
-export function useNativeColorsLogic() {
+export function useInitColors() {
   const theme = useColorScheme() ?? "light";
 
   return useMemo(() => {
@@ -70,3 +72,16 @@ export function useNativeColorsLogic() {
     };
   }, [theme]);
 }
+
+/**
+ * Hook to access native colors
+ * @throws Error if used outside AppProvider
+ * @returns Native colors
+ */
+export const useColors = () => {
+  const context = useContext(ColorsContext);
+  if (!context) {
+    throw new Error("useColors must be used within ColorsContext.Provider");
+  }
+  return context;
+};
