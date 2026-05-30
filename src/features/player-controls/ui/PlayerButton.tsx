@@ -1,6 +1,7 @@
 import { Button, Image } from "@expo/ui/swift-ui";
 import { controlSize } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useIsPlaying } from "@rntp/player";
+import { ColorValue } from "react-native";
 
 export const PlayerButton = {
   Previous: PreviousButton,
@@ -8,15 +9,21 @@ export const PlayerButton = {
   Next: NextButton,
 };
 
-function PreviousButton({ size }: { size: 32 | 48 }) {
+type PlayerButtonSize = 16 | 24 | 32 | 48;
+type PlayerButtonProps = {
+  size: PlayerButtonSize;
+  color?: ColorValue;
+};
+
+function PreviousButton({ size, color }: PlayerButtonProps) {
   return (
     <Button modifiers={[controlSize("large")]} onPress={() => TrackPlayer.skipToPrevious()}>
-      <Image systemName="backward.fill" color="primary" size={size} />
+      <Image systemName="backward.fill" color={color} size={size} />
     </Button>
   );
 }
 
-function PlayPauseButton({ size }: { size: 32 | 48 }) {
+function PlayPauseButton({ size, color }: PlayerButtonProps) {
   const isPlaying = useIsPlaying();
 
   return (
@@ -24,15 +31,15 @@ function PlayPauseButton({ size }: { size: 32 | 48 }) {
       modifiers={[controlSize("large")]}
       onPress={() => (isPlaying ? TrackPlayer.pause() : TrackPlayer.play())}
     >
-      <Image systemName={isPlaying ? "pause.fill" : "play.fill"} color="primary" size={size} />
+      <Image systemName={isPlaying ? "pause.fill" : "play.fill"} color={color} size={size} />
     </Button>
   );
 }
 
-function NextButton({ size }: { size: 32 | 48 }) {
+function NextButton({ size, color }: PlayerButtonProps) {
   return (
     <Button modifiers={[controlSize("large")]} onPress={() => TrackPlayer.skipToNext()}>
-      <Image systemName="forward.fill" color="primary" size={size} />
+      <Image systemName="forward.fill" color={color} size={size} />
     </Button>
   );
 }

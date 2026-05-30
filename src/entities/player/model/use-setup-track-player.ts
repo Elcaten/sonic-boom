@@ -1,7 +1,7 @@
-import { trackPlayerPersistor } from "@/entities/player/lib/track-player-persistor";
 import { appLogger } from "@/shared/lib/logger/app-logger";
 import TrackPlayer, { Event, PlayerCommand, RepeatMode } from "@rntp/player";
 import { useEffect, useRef } from "react";
+import { trackPlayerPersistor } from "../services/track-player-persistor";
 
 const setupTrackPlayer = async () => {
   TrackPlayer.setupPlayer({

@@ -1,5 +1,5 @@
 import { PrefetchAllAlbumImages } from "@/components/feature/PrefetchAllAlbumImages";
-import { trackPlayerPersistor } from "@/entities/player/lib/track-player-persistor";
+import { trackPlayerPersistor } from "@/entities/player/services/track-player-persistor";
 import { useAuth } from "@/features/auth/model/auth-context";
 import { usePrefetchQueries } from "@/hooks/use-prefetch-queries";
 import { Button, Form, Host, HStack, ProgressView, Section, Spacer, Text } from "@expo/ui/swift-ui";

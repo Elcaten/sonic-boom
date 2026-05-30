@@ -1,5 +1,3 @@
-import SignInScreen from "@/screens/auth/sign-in-screen";
+import SignInScreen from "@/screens/auth/ui/SignInScreen/SignInScreen";
 
-export default function SignInForm() {
-  return <SignInScreen />;
-}
+export default SignInScreen;

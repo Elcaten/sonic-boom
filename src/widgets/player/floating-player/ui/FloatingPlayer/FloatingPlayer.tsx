@@ -1,24 +1,24 @@
+import { PlayerButton } from "@/features/player-controls/ui/PlayerButton";
+import { CoverArt } from "@/shared/ui/CoverArt/CoverArt";
 import { MediaItemExtras } from "@/track-player/types";
-import { Button, Host, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
+import { Host, HStack, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import {
-    contentShape,
-    disabled,
-    font,
-    foregroundStyle,
-    frame,
-    onTapGesture,
-    shapes,
+  contentShape,
+  disabled,
+  font,
+  foregroundStyle,
+  frame,
+  onTapGesture,
+  shapes,
 } from "@expo/ui/swift-ui/modifiers";
-import TrackPlayer, { useActiveMediaItem, useIsPlaying } from "@rntp/player";
+import { useActiveMediaItem } from "@rntp/player";
 import { useRouter } from "expo-router";
-import { CoverArt } from "../../shared/ui/CoverArt/CoverArt";
 
 export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-next")[] }) {
   const router = useRouter();
 
   const activeTrack = useActiveMediaItem();
   const activeTrackExtra = activeTrack?.extras as MediaItemExtras | undefined;
-  const isPlaying = useIsPlaying();
 
   const handlePress = () => {
     if (!activeTrackExtra?.albumId || !activeTrackExtra?.artistId) {
@@ -30,22 +30,6 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
       pathname: "/active-track",
       params: { albumId: activeTrackExtra.albumId, artistId: activeTrackExtra.artistId },
     });
-  };
-
-  const handlePlayPausePress = () => {
-    if (isPlaying) {
-      TrackPlayer.pause();
-    } else {
-      TrackPlayer.play();
-    }
-  };
-
-  const handlePrevPress = () => {
-    TrackPlayer.skipToPrevious();
-  };
-
-  const handleNextPress = () => {
-    TrackPlayer.skipToNext();
   };
 
   const isDisabled = !activeTrack;
@@ -85,25 +69,9 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
 
         <Spacer />
 
-        {actions.includes("prev-next") && (
-          <Button onPress={handlePrevPress}>
-            <Image systemName={"backward.fill"} size={16} color={buttonColor} />
-          </Button>
-        )}
-        {actions.includes("play-pause") && (
-          <Button onPress={handlePlayPausePress}>
-            <Image
-              systemName={isPlaying ? "pause.fill" : "play.fill"}
-              size={24}
-              color={buttonColor}
-            />
-          </Button>
-        )}
-        {actions.includes("prev-next") && (
-          <Button onPress={handleNextPress}>
-            <Image systemName={"forward.fill"} size={16} color={buttonColor} />
-          </Button>
-        )}
+        {actions.includes("prev-next") && <PlayerButton.Previous size={16} color={buttonColor} />}
+        {actions.includes("play-pause") && <PlayerButton.PlayPause size={24} color={buttonColor} />}
+        {actions.includes("prev-next") && <PlayerButton.Next size={16} color={buttonColor} />}
       </HStack>
     </Host>
   );

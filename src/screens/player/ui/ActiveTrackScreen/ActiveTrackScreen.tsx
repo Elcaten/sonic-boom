@@ -1,5 +1,5 @@
-import { PlayerButton } from "@/screens/player/ui/PlayerButton/PlayerButton";
-import { ProgressSlider } from "@/screens/player/ui/ProgressSlider/ProgressSlider";
+import { PlayerButton } from "@/features/player-controls/ui/PlayerButton";
+import { ProgressSlider } from "@/features/player-controls/ui/ProgressSlider";
 import { CoverArt } from "@/shared/ui/CoverArt/CoverArt";
 import { MediaItemExtras } from "@/track-player/types";
 import { Column, Row } from "@expo/ui";

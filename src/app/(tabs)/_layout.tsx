@@ -1,7 +1,7 @@
-import { FloatingPlayer } from "@/components/feature/FloatingPlayer";
+import { FloatingPlayer } from "@/widgets/player/floating-player/ui/FloatingPlayer/FloatingPlayer";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 
-function MiniPlayer() {
+function BottomPlayer() {
   const placement = NativeTabs.BottomAccessory.usePlacement();
 
   if (placement === "inline") {
@@ -15,7 +15,7 @@ export default function TabLayout() {
   return (
     <NativeTabs minimizeBehavior="onScrollDown">
       <NativeTabs.BottomAccessory>
-        <MiniPlayer />
+        <BottomPlayer />
       </NativeTabs.BottomAccessory>
       <NativeTabs.Trigger name="artists">
         <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>

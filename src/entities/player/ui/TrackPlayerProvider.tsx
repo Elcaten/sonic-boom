@@ -1,4 +1,4 @@
-import { useSetupTrackPlayer } from "../lib/use-setup-track-player";
+import { useSetupTrackPlayer } from "../model/use-setup-track-player";
 
 type TrackPlayerProviderProps = {
   children: React.ReactNode;

@@ -62,6 +62,7 @@ function Content() {
 
   return (
     <>
+      <StatusBar style="auto" />
       <Stack>
         <Stack.Protected guard={isLoggedIn}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -77,7 +78,6 @@ function Content() {
           />
         </Stack.Protected>
       </Stack>
-      <StatusBar style="auto" />
     </>
   );
 }
