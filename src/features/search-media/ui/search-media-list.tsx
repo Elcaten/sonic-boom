@@ -1,13 +1,13 @@
 // src/features/search-media/ui/search-media-list.tsx
-import { ListItem } from "@/shared/ui/list-item";
+import { MediaListItem } from "@/shared/ui/MediaListItem";
 import { Spacer } from "@expo/ui";
 import {
-    ContentUnavailableView,
-    Host,
-    HStack,
-    List,
-    ProgressView,
-    Section,
+  ContentUnavailableView,
+  Host,
+  HStack,
+  List,
+  ProgressView,
+  Section,
 } from "@expo/ui/swift-ui";
 import { scaleEffect } from "@expo/ui/swift-ui/modifiers";
 import { SearchItem } from "../model/types"; // Assuming this is where your type lives
@@ -42,7 +42,7 @@ export function SearchMediaList({ search, resolveHref }: SearchMediaListProps) {
     }
 
     return (
-      <ListItem
+      <MediaListItem
         key={coverId}
         href={resolveHref(item)}
         onPress={() => handleResultSelect(item)}

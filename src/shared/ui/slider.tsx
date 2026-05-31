@@ -1,14 +1,14 @@
 import { useColors } from "@/core/providers/AppContextProvider/colors/colors-context";
 import React, { useState } from "react";
 import {
-    Animated,
-    Easing,
-    LayoutChangeEvent,
-    useAnimatedValueXY,
-    useColorScheme,
+  Animated,
+  Easing,
+  LayoutChangeEvent,
+  useAnimatedValueXY,
+  useColorScheme,
 } from "react-native";
 import Svg, { Rect } from "react-native-svg";
-import { DragTracker } from "./drag-tracker";
+import { DragTracker } from "./DragTracker";
 
 type SliderProps = {
   /** 0..1 */

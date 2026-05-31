@@ -1,6 +1,6 @@
 import { useRequiredQueries } from "@/core/providers/AppContextProvider/queries/queries-context";
 import { pluralize } from "@/shared/lib/format/pluralize";
-import { ListItem } from "@/shared/ui/list-item";
+import { MediaListItem } from "@/shared/ui/MediaListItem";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useQuery } from "@tanstack/react-query";
@@ -67,7 +67,7 @@ export default function ArtistAlbumsScreen() {
           const title = [item.name, item.year ? `(${item.year})` : null].filter(Boolean).join(" ");
           const subtitle = pluralize(item.songCount, "track");
           return (
-            <ListItem
+            <MediaListItem
               key={item.id}
               href={{
                 pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",

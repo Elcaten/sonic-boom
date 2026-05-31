@@ -3,7 +3,7 @@ import { Button, HStack, Image, RNHostView, Spacer, Text, VStack } from "@expo/u
 import { font, foregroundStyle, lineLimit } from "@expo/ui/swift-ui/modifiers";
 import { Link, LinkProps } from "expo-router";
 
-export function ListItem({
+export function MediaListItem({
   title,
   subtitle,
   coverId,
