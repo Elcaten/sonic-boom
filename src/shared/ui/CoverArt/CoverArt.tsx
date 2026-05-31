@@ -27,20 +27,16 @@ export function CoverArt({
     256: 12,
   }[size];
 
-  const themedShadowContainer =
-    theme === "light"
-      ? [styles.shadowContainer]
-      : [styles.shadowContainer, styles.shadowContainerDark];
-  const shadow = {
-    32: themedShadowContainer,
-    48: themedShadowContainer,
-    256: themedShadowContainer,
+  const shadowStyle = {
+    32: undefined,
+    48: undefined,
+    256: theme === "light" ? styles.shadowContainer : styles.shadowContainerDark,
   }[size];
 
   const imgSize = size;
 
   return (
-    <View style={[{ width: imgSize, height: imgSize }, elevated && shadow]}>
+    <View style={[{ width: imgSize, height: imgSize }, elevated && shadowStyle]}>
       <Image
         placeholder={{
           blurhash: getRandomBlurhash(),
@@ -54,7 +50,7 @@ export function CoverArt({
             `Loaded artwork from ${e.cacheType} ${coverArtQuery?.data?.cacheKey}`,
           );
         }}
-        onError={() => {
+        onError={(e) => {
           appLogger.COVER_ART.error(`Error loading artwork ${coverArtQuery?.data?.cacheKey}`);
         }}
       />
@@ -67,14 +63,17 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 12,
+      height: 8,
     },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.2,
     shadowRadius: 12,
-    elevation: 12,
   },
   shadowContainerDark: {
     shadowColor: "#282828",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
     shadowOpacity: 0.6,
     shadowRadius: 20,
   },
