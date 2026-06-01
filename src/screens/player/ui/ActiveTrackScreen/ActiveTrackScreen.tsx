@@ -1,7 +1,7 @@
+import { MediaItemExtras } from "@/shared/lib/player/types";
 import { PlayerButton } from "@/features/player-controls/ui/PlayerButton";
 import { ProgressSlider } from "@/features/player-controls/ui/ProgressSlider";
 import { CoverArt } from "@/shared/ui/CoverArt/CoverArt";
-import { MediaItemExtras } from "@/track-player/types";
 import { Column, Row } from "@expo/ui";
 import { Button, Host, RNHostView, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { font, foregroundStyle, padding } from "@expo/ui/swift-ui/modifiers";

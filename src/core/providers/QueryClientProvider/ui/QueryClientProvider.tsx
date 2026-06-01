@@ -2,12 +2,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient, useIsRestoring } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity,
+      gcTime: Infinity, // Keeps data in cache indefinitely
+      staleTime: Infinity, // Disables automatic background refetches
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
@@ -24,32 +25,36 @@ type QueryClientProviderProps = {
   onHydrateFinished: () => void;
 };
 
-export const QueryClientProvider = ({ onHydrateFinished, children }: QueryClientProviderProps) => {
+// 1. Create an inner component to handle the hydration gate
+const HydrationGate = ({ children, onHydrateFinished }: QueryClientProviderProps) => {
   const isRestoring = useIsRestoring();
-  const [isHydrating, setIsHydrating] = useState(false); //not sure if this is needed, might duplicate the useIsRestoring hook
-
-  const handleSuccess = () => {
-    setIsHydrating(false);
-  };
-
-  const handleError = () => {
-    setIsHydrating(false);
-  };
 
   useEffect(() => {
-    if (!isHydrating && !isRestoring) {
+    // Once isRestoring flips from true to false, hydration is officially done
+    if (!isRestoring) {
       onHydrateFinished();
     }
-  }, [isRestoring, isHydrating, onHydrateFinished]);
+  }, [isRestoring, onHydrateFinished]);
 
+  // Optional: Prevent children from rendering/flashing stale UI while restoring
+  if (isRestoring) {
+    return null; // Or return a splash/loading screen
+  }
+
+  return <>{children}</>;
+};
+
+// 2. Keep the main provider clean
+export const QueryClientProvider = ({ onHydrateFinished, children }: QueryClientProviderProps) => {
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister: asyncStoragePersister }}
-      onSuccess={handleSuccess}
-      onError={handleError}
+      persistOptions={{
+        persister: asyncStoragePersister,
+        maxAge: Infinity, // Keeps the storage snapshot valid indefinitely
+      }}
     >
-      {children}
+      <HydrationGate onHydrateFinished={onHydrateFinished}>{children}</HydrationGate>
     </PersistQueryClientProvider>
   );
 };

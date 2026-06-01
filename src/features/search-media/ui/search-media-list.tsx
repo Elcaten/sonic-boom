@@ -41,13 +41,17 @@ export function SearchMediaList({ search, resolveHref }: SearchMediaListProps) {
       coverId = item.artist.id;
     }
 
+    if (!title || !subtitle || !coverId) {
+      return null;
+    }
+
     return (
       <MediaListItem
         key={coverId}
         href={resolveHref(item)}
         onPress={() => handleResultSelect(item)}
-        title={title!}
-        subtitle={subtitle!}
+        title={title}
+        subtitle={subtitle}
         coverId={coverId}
       />
     );

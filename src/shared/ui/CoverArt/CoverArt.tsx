@@ -1,8 +1,9 @@
-import { useRequiredQueries } from "@/core/providers/AppContextProvider/queries/queries-context";
 import { appLogger } from "@/shared/lib/logger/app-logger";
+import { useRequiredQueries } from "@/shared/api/subsonic";
+import { useColorScheme } from "@/shared/lib/theme/use-color-scheme";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { ImageStyle, StyleProp, StyleSheet, useColorScheme, View } from "react-native";
+import { ImageStyle, StyleProp, StyleSheet, View } from "react-native";
 import { getRandomBlurhash } from "./blur-hash";
 
 export function CoverArt({

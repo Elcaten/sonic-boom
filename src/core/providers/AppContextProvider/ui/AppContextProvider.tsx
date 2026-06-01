@@ -1,13 +1,7 @@
-import { APIContext, useInitAPI } from "@/core/providers/AppContextProvider/api/api-context";
-import {
-  ColorsContext,
-  useInitColors,
-} from "@/core/providers/AppContextProvider/colors/colors-context";
-import {
-  QueriesContext,
-  useInitQueries,
-} from "@/core/providers/AppContextProvider/queries/queries-context";
 import { AuthContext, useInitAuth } from "@/features/auth";
+import { APIContext, useInitAPI } from "@/features/subsonic-api";
+import { QueriesContext, useInitQueries } from "@/shared/api/subsonic";
+import { ColorsContext, useInitColors } from "@/shared/lib/theme";
 import { PropsWithChildren } from "react";
 
 export const AppContextProvider = ({

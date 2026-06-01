@@ -15,7 +15,7 @@ type PlayerButtonProps = {
   color?: ColorValue;
 };
 
-function PreviousButton({ size, color }: PlayerButtonProps) {
+function PreviousButton({ size, color = "primary" }: PlayerButtonProps) {
   return (
     <Button modifiers={[controlSize("large")]} onPress={() => TrackPlayer.skipToPrevious()}>
       <Image systemName="backward.fill" color={color} size={size} />
@@ -23,7 +23,7 @@ function PreviousButton({ size, color }: PlayerButtonProps) {
   );
 }
 
-function PlayPauseButton({ size, color }: PlayerButtonProps) {
+function PlayPauseButton({ size, color = "primary" }: PlayerButtonProps) {
   const isPlaying = useIsPlaying();
 
   return (
@@ -36,7 +36,7 @@ function PlayPauseButton({ size, color }: PlayerButtonProps) {
   );
 }
 
-function NextButton({ size, color }: PlayerButtonProps) {
+function NextButton({ size, color = "primary" }: PlayerButtonProps) {
   return (
     <Button modifiers={[controlSize("large")]} onPress={() => TrackPlayer.skipToNext()}>
       <Image systemName="forward.fill" color={color} size={size} />

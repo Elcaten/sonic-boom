@@ -1,0 +1,104 @@
+import { appLogger } from "@/shared/lib/logger/app-logger";
+import { getCoverCacheKey } from "@/shared/lib/media/get-cover-cache-key";
+import { queryOptions } from "@tanstack/react-query";
+import { Image, ImageSource } from "expo-image";
+import { SubsonicAPI } from "subsonic-api";
+
+export function createSubsonicQueries(api: SubsonicAPI) {
+  return {
+    albumList: function (params: { size: number; offset: number }) {
+      return queryOptions({
+        queryKey: ["albumList", params.size, params.offset],
+        queryFn: () =>
+          api.getAlbumList({
+            type: "alphabeticalByArtist",
+            size: params.size,
+            offset: params.offset,
+          }),
+      });
+    },
+
+    streamUrl: function (trackId: string) {
+      return queryOptions({
+        queryKey: ["stream-url", trackId],
+        queryFn: () => api.buildUrl("stream", { id: trackId }).then((u) => u.toString()),
+      });
+    },
+
+    coverArtImage: function (entityId: string | undefined, size: 32 | 48 | 256) {
+      return queryOptions({
+        queryKey: ["cover-art", entityId, size],
+        queryFn: async (): Promise<ImageSource> => {
+          const cacheKey = getCoverCacheKey({ id: entityId!, size });
+
+          const cachedArtwork = await Image.getCachePathAsync(cacheKey);
+          if (cachedArtwork) {
+            appLogger.QUERY.info(`Cached artwork ${cacheKey}`);
+            return { uri: cachedArtwork, cacheKey: cacheKey };
+          }
+
+          const artworkUrl = await api
+            .buildUrl("getCoverArt", { id: entityId!, size: size * 2 })
+            .then((u) => u.toString());
+
+          appLogger.QUERY.info(`Fetched artwork ${cacheKey}`);
+          return { uri: artworkUrl, cacheKey: cacheKey };
+        },
+        enabled: Boolean(entityId),
+        staleTime: undefined,
+      });
+    },
+
+    song: function (trackId: string) {
+      return queryOptions({
+        queryKey: ["song", trackId],
+        queryFn: () => api.getSong({ id: trackId }),
+      });
+    },
+
+    search: function ({ query }: { query: string }) {
+      return queryOptions({
+        queryKey: ["song", query],
+        queryFn: () =>
+          api
+            .search2({ query, songCount: 100, albumCount: 5, artistCount: 5 })
+            .then((result) => result.searchResult2)
+            .then((result) => {
+              return {
+                album: result.album?.filter((album) => {
+                  const santizedQuery = query.toLocaleLowerCase();
+                  return album.title.toLocaleLowerCase().includes(santizedQuery);
+                }),
+                artist: result.artist,
+                song: result.song?.filter((song) => {
+                  const santizedQuery = query.toLocaleLowerCase();
+                  return song.title.toLocaleLowerCase().includes(santizedQuery);
+                }),
+              };
+            }),
+        enabled: !!query,
+      });
+    },
+
+    album: function (albumId: string) {
+      return queryOptions({
+        queryKey: ["album", albumId],
+        queryFn: () => api.getAlbum({ id: albumId }),
+      });
+    },
+
+    artists: function () {
+      return queryOptions({
+        queryKey: ["artists"],
+        queryFn: () => api.getArtists(),
+      });
+    },
+
+    artist: function (artistId: string) {
+      return queryOptions({
+        queryKey: ["artist", artistId],
+        queryFn: () => api.getArtist({ id: artistId }),
+      });
+    },
+  };
+}

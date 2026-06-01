@@ -1,6 +1,6 @@
+import { MediaItemExtras } from "@/shared/lib/player/types";
 import { PlayerButton } from "@/features/player-controls/ui/PlayerButton";
 import { CoverArt } from "@/shared/ui/CoverArt/CoverArt";
-import { MediaItemExtras } from "@/track-player/types";
 import { Host, HStack, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import {
   contentShape,

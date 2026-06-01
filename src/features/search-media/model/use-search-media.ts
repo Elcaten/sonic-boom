@@ -1,7 +1,7 @@
-import { useRequiredQueries } from "@/core/providers/AppContextProvider/queries/queries-context";
+import { useRequiredQueries } from "@/shared/api/subsonic";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useDebouncedState } from "../../../hooks/use-debounce-state"; // Assuming this exists
+import { useDebouncedState } from "../../../shared/lib/debounce/use-debounce-state"; // Assuming this exists
 import { defaultStorage } from "../lib/default-storage";
 import { getUpdatedRecentSearches } from "../lib/get-updated-recent-searches";
 import { MEDIA_SEARCH_DEBOUNCE } from "./const";

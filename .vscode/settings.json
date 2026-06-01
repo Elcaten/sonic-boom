@@ -15,5 +15,16 @@
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
     "jest.config.ts": "jest.*"
-  }
+  },
+  "keyboard.touchbar.ignored": [
+    "workbench.action.debug.start",
+    "workbench.action.debug.run",
+    "touchbar.editor.action.jumpToBracket",
+    "touchbar.workbench.action.toggleSidebarVisibility",
+    "touchbar.editor.action.copyLinesDownAction",
+    "touchbar.workbench.action.showCommands",
+    "touchbar.workbench.action.splitEditor",
+    "touchbar.workbench.action.terminal.toggleTerminal",
+    "touchbar.editor.action.blockComment"
+  ]
 }
