@@ -1,5 +1,5 @@
-import { appLogger } from "@/shared/lib/logger/app-logger";
-import { getCoverCacheKey } from "@/shared/lib/media/get-cover-cache-key";
+import { appLogger } from "@/shared/lib/logger";
+import { getCoverCacheKey } from "@/shared/lib/media";
 import { queryOptions } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";
 import { SubsonicAPI } from "subsonic-api";

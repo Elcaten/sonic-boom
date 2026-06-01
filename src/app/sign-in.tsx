@@ -1,3 +1,3 @@
-import SignInScreen from "@/screens/auth/ui/SignInScreen/SignInScreen";
+import SignInScreen from "@/screens/auth";
 
 export default SignInScreen;

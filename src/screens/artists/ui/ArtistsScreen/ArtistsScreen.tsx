@@ -1,8 +1,7 @@
-import { groupArtistsBySection } from "@/entities/artist/lib/group-artists-by-section";
-import { useArtists } from "@/entities/artist/model/use-artists";
-import { useSearchBar } from "@/shared/lib/navigation/use-search-bar";
-import { pluralize } from "@/shared/lib/format/pluralize";
-import { MediaListItem } from "@/shared/ui/MediaListItem";
+import { groupArtistsBySection, useArtists } from "@/entities/artist";
+import { pluralize } from "@/shared/lib/format";
+import { useSearchBar } from "@/shared/lib/navigation";
+import { MediaListItem } from "@/shared/ui";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { listStyle } from "@expo/ui/swift-ui/modifiers";
 import { ActivityIndicator, View } from "react-native";

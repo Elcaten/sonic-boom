@@ -14,7 +14,8 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
-    "jest.config.ts": "jest.*"
+    "jest.config.ts": "jest.*",
+    "eslint.config.js": "eslint.*"
   },
   "keyboard.touchbar.ignored": [
     "workbench.action.debug.start",

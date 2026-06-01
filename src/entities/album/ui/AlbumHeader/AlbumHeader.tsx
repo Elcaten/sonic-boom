@@ -1,4 +1,4 @@
-import { CoverArt } from "@/shared/ui/CoverArt/CoverArt";
+import { CoverArt } from "@/shared/ui";
 import { ReactNode } from "react";
 import { HStack, Text, VStack } from "@expo/ui/swift-ui";
 import {

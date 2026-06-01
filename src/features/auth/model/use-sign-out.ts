@@ -1,9 +1,9 @@
-import { useAuth } from "@/features/auth/model/auth-context";
-import { trackPlayerPersistor } from "@/shared/lib/player/track-player-persistor";
+import { trackPlayerPersistor } from "@/shared/lib/player";
 import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import TrackPlayer from "@rntp/player";
 import { useCallback } from "react";
+import { useAuth } from "./auth-context";
 
 export function useSignOut() {
   const auth = useAuth();

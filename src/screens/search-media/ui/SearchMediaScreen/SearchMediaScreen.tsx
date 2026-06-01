@@ -1,6 +1,4 @@
-import { SearchItem } from "@/features/search-media/model/types";
-import { useSearchMedia } from "@/features/search-media/model/use-search-media";
-import { SearchMediaList } from "@/features/search-media/ui/search-media-list";
+import { SearchItem, SearchMediaList, useSearchMedia } from "@/features/search-media";
 import { useNavigation } from "expo-router";
 import { ExtendedStackNavigationOptions } from "expo-router/build/layouts/StackClient";
 import { useEffect } from "react";

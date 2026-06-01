@@ -1,8 +1,8 @@
-import { filterSortAlbums } from "@/entities/album/lib/filter-sort-albums";
-import { useArtistAlbums } from "@/entities/artist/model/use-artist-albums";
-import { useSearchBar } from "@/shared/lib/navigation/use-search-bar";
-import { pluralize } from "@/shared/lib/format/pluralize";
-import { MediaListItem } from "@/shared/ui/MediaListItem";
+import { filterSortAlbums } from "@/entities/album";
+import { useArtistAlbums } from "@/entities/artist";
+import { pluralize } from "@/shared/lib/format";
+import { useSearchBar } from "@/shared/lib/navigation";
+import { MediaListItem } from "@/shared/ui";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";

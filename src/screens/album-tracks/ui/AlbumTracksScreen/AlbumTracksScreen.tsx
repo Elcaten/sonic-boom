@@ -1,10 +1,6 @@
-import { useAlbum } from "@/entities/album/model/use-album";
-import { useAlbumMediaItems } from "@/entities/album/model/use-album-media-items";
-import { AlbumHeader } from "@/entities/album/ui/AlbumHeader/AlbumHeader";
-import { useAlbumPlayback } from "@/features/album-playback/model/use-album-playback";
-import { AlbumPlaybackActions } from "@/features/album-playback/ui/AlbumPlaybackActions";
-import { useAlbumTrackPress } from "@/features/album-track-list/model/use-album-track-press";
-import { AlbumTrackList } from "@/features/album-track-list/ui/AlbumTrackList/AlbumTrackList";
+import { AlbumHeader, useAlbum, useAlbumMediaItems } from "@/entities/album";
+import { AlbumPlaybackActions, useAlbumPlayback } from "@/features/album-playback";
+import { AlbumTrackList, useAlbumTrackPress } from "@/features/album-track-list";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";

@@ -1,5 +1,5 @@
-import { AuthState } from "@/features/auth/auth.types";
-import { appLogger } from "@/shared/lib/logger/app-logger";
+import type { AuthState } from "@/entities/auth";
+import { appLogger } from "@/shared/lib/logger";
 import * as Crypto from "expo-crypto";
 import { createContext, useContext, useMemo } from "react";
 import { SubsonicAPI } from "subsonic-api";

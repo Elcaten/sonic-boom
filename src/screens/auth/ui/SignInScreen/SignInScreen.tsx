@@ -1,4 +1,4 @@
-import { useSignIn } from "@/features/auth/model/use-sign-in";
+import { useSignIn } from "@/features/auth";
 import { TextInput } from "@expo/ui";
 import { Button, Form, Host, Section } from "@expo/ui/swift-ui";
 import { disabled, frame, scrollDisabled } from "@expo/ui/swift-ui/modifiers";

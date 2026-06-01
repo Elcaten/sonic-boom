@@ -1,5 +1,5 @@
-import { AlbumSong } from "@/entities/album/model/types";
-import { AlbumTrackRow } from "@/features/album-track-list/ui/AlbumTrackRow/AlbumTrackRow";
+import { AlbumSong } from "@/entities/album";
+import { AlbumTrackRow } from "../AlbumTrackRow/AlbumTrackRow";
 import { Section } from "@expo/ui/swift-ui";
 
 type AlbumTrackListProps = {

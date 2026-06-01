@@ -1,3 +1,1 @@
-import { AnimationsScreen } from "@/screens/dev-animations/ui/AnimationsScreen/AnimationsScreen";
-
-export default AnimationsScreen;
+export { default } from "@/screens/dev-animations";

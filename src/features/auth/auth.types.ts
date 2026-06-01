@@ -1,9 +1,6 @@
-export type AuthState = {
-  serverAddress: string;
-  username: string;
-  password: string;
-  isLoading: boolean;
-};
+import type { AuthState } from "@/entities/auth";
+
+export type { AuthState };
 
 export type AuthActions = {
   setServerAddress: (value: string) => Promise<void>;

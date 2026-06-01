@@ -1,5 +1,5 @@
-import { AlbumSong } from "@/entities/album/model/types";
-import { formatDuration } from "@/shared/lib/format/format-duration";
+import { AlbumSong } from "@/entities/album";
+import { formatDuration } from "@/shared/lib/format";
 import { Button, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import {
   Animation,

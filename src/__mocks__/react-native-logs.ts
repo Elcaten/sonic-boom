@@ -14,5 +14,3 @@ export const logger = {
     extend: () => noopLogger,
   }),
 };
-
-export type LoggerInstance<T extends string> = typeof noopLogger;

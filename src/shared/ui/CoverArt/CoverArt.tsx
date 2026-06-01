@@ -1,6 +1,6 @@
-import { appLogger } from "@/shared/lib/logger/app-logger";
 import { useRequiredQueries } from "@/shared/api/subsonic";
-import { useColorScheme } from "@/shared/lib/theme/use-color-scheme";
+import { appLogger } from "@/shared/lib/logger";
+import { useColorScheme } from "@/shared/lib/theme";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { ImageStyle, StyleProp, StyleSheet, View } from "react-native";

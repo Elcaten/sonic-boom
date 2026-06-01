@@ -1,4 +1,4 @@
-import { MediaItemExtras } from "@/shared/lib/player/types";
+import { MediaItemExtras } from "@/shared/lib/player";
 import { MediaItem } from "@rntp/player";
 import { AlbumSong } from "../model/types";
 

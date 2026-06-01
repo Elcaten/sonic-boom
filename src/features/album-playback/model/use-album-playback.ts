@@ -1,4 +1,4 @@
-import { shuffleArray } from "@/features/album-playback/lib/shuffle-array";
+import { shuffleArray } from "../lib/shuffle-array";
 import TrackPlayer, { MediaItem } from "@rntp/player";
 
 type UseAlbumPlaybackArgs = {
