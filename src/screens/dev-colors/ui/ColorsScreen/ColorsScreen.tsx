@@ -1,9 +1,7 @@
-import { useColors } from "@/shared/lib/theme";
+import { colors } from "@/shared/const/theme";
 import { SectionList, Text, View } from "react-native";
 
 export function ColorsScreen() {
-  const colors = useColors();
-
   return (
     <SectionList
       sections={Object.entries(colors).map(([colorName, colorValue]) => ({

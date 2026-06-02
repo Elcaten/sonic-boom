@@ -1,9 +1,9 @@
-import { useColorScheme, useColors } from "@/shared/lib/theme";
+import { colors } from "@/shared/const/theme";
+import { useColorScheme } from "@/shared/lib/theme";
 import React, { useState } from "react";
 import { Animated, Easing, LayoutChangeEvent, useAnimatedValueXY } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { DragTracker } from "./DragTracker";
-
 type SliderProps = {
   /** 0..1 */
   progress: number;
@@ -25,7 +25,6 @@ type SliderProps = {
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 const useSliderColors = () => {
-  const colors = useColors();
   const theme = useColorScheme() ?? "light";
   return {
     background: theme === "light" ? colors.systemGray5 : colors.systemGray4,
