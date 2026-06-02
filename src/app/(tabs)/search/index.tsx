@@ -1,1 +1,1 @@
-export { default } from "@/screens/search-media";
+export { SearchScreen as default } from "@/features/search";

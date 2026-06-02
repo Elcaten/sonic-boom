@@ -1,1 +1,1 @@
-export { default } from "@/screens/dev-animations";
+export { AnimationsScreen as default } from "@/features/settings";

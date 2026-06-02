@@ -1,3 +1,3 @@
-import ActiveTrackScreen from "@/screens/player";
+import { ActiveTrackScreen } from "@/features/player";
 
 export default ActiveTrackScreen;

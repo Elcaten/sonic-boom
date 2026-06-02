@@ -1,1 +1,1 @@
-export { default } from "@/screens/settings";
+export { SettingsScreen as default } from "@/features/settings";

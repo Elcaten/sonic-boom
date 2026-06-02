@@ -1,5 +1,5 @@
-export { AuthContext, useAuth, useInitAuth, useIsAuthenticated } from "./model/auth-context";
-export { useSignIn } from "./model/use-sign-in";
-export { useSignOut } from "./model/use-sign-out";
-export { SignOutButton } from "./ui/SignOutButton";
-export type { AuthState, AuthActions, AuthContextType } from "./auth.types";
+export { AuthContext, useAuth, useInitAuth, useIsAuthenticated } from "./context";
+export { useSignIn, useSignOut } from "./hooks";
+export { SignOutButton } from "./components/SignOutButton";
+export { default as SignInScreen } from "./components/SignInScreen";
+export type { AuthState, AuthActions, AuthContextType, SignInCredentials } from "./types";

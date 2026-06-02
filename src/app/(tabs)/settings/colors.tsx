@@ -1,1 +1,1 @@
-export { default } from "@/screens/dev-colors";
+export { ColorsScreen as default } from "@/features/settings";

@@ -1,1 +1,1 @@
-export { default } from "@/screens/artist-albums";
+export { ArtistAlbumsScreen as default } from "@/features/artists";

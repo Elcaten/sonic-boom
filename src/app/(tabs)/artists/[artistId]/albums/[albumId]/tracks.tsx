@@ -1,1 +1,1 @@
-export { default } from "@/screens/album-tracks";
+export { AlbumTracksScreen as default } from "@/features/albums";

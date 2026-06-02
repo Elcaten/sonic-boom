@@ -1,3 +1,3 @@
-import SignInScreen from "@/screens/sign-in";
+import { SignInScreen } from "@/features/auth";
 
 export default SignInScreen;

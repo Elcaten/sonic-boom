@@ -1,4 +1,4 @@
-import { FloatingPlayer } from "@/widgets/player/floating-player";
+import { FloatingPlayer } from "@/features/player";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 
 function BottomPlayer() {

@@ -1,4 +1,4 @@
-import { AppProvier } from "@/core";
+import { AppProvier } from "@/providers";
 import { useIsAuthenticated } from "@/features/auth";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
