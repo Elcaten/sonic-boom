@@ -15,8 +15,7 @@
       "infoPlist": {
         "UIBackgroundModes": ["audio"]
       },
-      "bundleIdentifier": "com.heavy.hope.sonicboom",
-      "appleTeamId": "42FT242JP9"
+      "bundleIdentifier": "com.heavy.hope.sonicboom"
     },
     "android": {
       "adaptiveIcon": {
