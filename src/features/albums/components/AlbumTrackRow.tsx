@@ -1,14 +1,14 @@
-import { formatDuration } from "@/lib/format";
+import { formatDuration } from "@/shared/lib/format";
 import { Button, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import {
-  Animation,
-  animation,
-  font,
-  foregroundStyle,
-  frame,
-  lineLimit,
-  padding,
-  symbolEffect,
+    Animation,
+    animation,
+    font,
+    foregroundStyle,
+    frame,
+    lineLimit,
+    padding,
+    symbolEffect,
 } from "@expo/ui/swift-ui/modifiers";
 import { AlbumSong } from "../types";
 
@@ -36,7 +36,12 @@ export function AlbumTrackRow({
             modifiers={[
               frame({ width: 32 }),
               ...(isPlaying
-                ? [symbolEffect({ effect: "variableColor", fillStyle: "iterative" }, { options: { speed: 0.3 } })]
+                ? [
+                    symbolEffect(
+                      { effect: "variableColor", fillStyle: "iterative" },
+                      { options: { speed: 0.3 } },
+                    ),
+                  ]
                 : []),
             ]}
           />

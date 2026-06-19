@@ -1,4 +1,4 @@
-import { appLogger } from "@/lib/logger";
+import { appLogger } from "@/shared/lib/logger";
 import * as Crypto from "expo-crypto";
 import { SubsonicAPI } from "subsonic-api";
 

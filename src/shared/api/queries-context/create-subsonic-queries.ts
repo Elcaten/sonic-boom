@@ -1,5 +1,5 @@
-import { appLogger } from "@/lib/logger";
-import { getCoverCacheKey } from "@/lib/media";
+import { appLogger } from "@/shared/lib/logger";
+import { getCoverCacheKey } from "@/shared/lib/media";
 import { queryOptions } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";
 import { SubsonicAPI } from "subsonic-api";
@@ -56,9 +56,13 @@ export function createSubsonicQueries(api: SubsonicAPI) {
             .then((result) => {
               const sanitized = query.toLocaleLowerCase();
               return {
-                album: result.album?.filter((album) => album.title.toLocaleLowerCase().includes(sanitized)),
+                album: result.album?.filter((album) =>
+                  album.title.toLocaleLowerCase().includes(sanitized),
+                ),
                 artist: result.artist,
-                song: result.song?.filter((song) => song.title.toLocaleLowerCase().includes(sanitized)),
+                song: result.song?.filter((song) =>
+                  song.title.toLocaleLowerCase().includes(sanitized),
+                ),
               };
             }),
         enabled: !!query,

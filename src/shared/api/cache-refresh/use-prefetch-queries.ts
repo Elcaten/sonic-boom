@@ -1,5 +1,5 @@
-import { batchProcessWithDetails } from "@/lib/promise";
 import { useRequiredQueries } from "@/shared/api";
+import { batchProcessWithDetails } from "@/shared/lib/promise";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 

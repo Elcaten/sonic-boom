@@ -1,18 +1,18 @@
-import { CoverArt } from "@/components";
+import { CoverArt } from "@/shared/ui";
 import { Host, HStack, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import {
-  contentShape,
-  disabled,
-  font,
-  foregroundStyle,
-  frame,
-  onTapGesture,
-  shapes,
+    contentShape,
+    disabled,
+    font,
+    foregroundStyle,
+    frame,
+    onTapGesture,
+    shapes,
 } from "@expo/ui/swift-ui/modifiers";
 import { useActiveMediaItem } from "@rntp/player";
 import { useRouter } from "expo-router";
-import { PlayerButton } from "./PlayerButton";
 import { MediaItemExtras } from "../types";
+import { PlayerButton } from "./PlayerButton";
 
 export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-next")[] }) {
   const router = useRouter();
@@ -36,7 +36,11 @@ export function FloatingPlayer({ actions }: { actions: ("play-pause" | "prev-nex
     <Host style={{ flex: 1, marginInlineStart: 14, marginInlineEnd: 14 }}>
       <HStack
         spacing={12}
-        modifiers={[contentShape(shapes.rectangle()), onTapGesture(handlePress), disabled(isDisabled)]}
+        modifiers={[
+          contentShape(shapes.rectangle()),
+          onTapGesture(handlePress),
+          disabled(isDisabled),
+        ]}
       >
         <VStack modifiers={[frame({ width: 32, height: 32 })]}>
           <CoverArt id={activeTrackExtra?.albumId} size={32} />

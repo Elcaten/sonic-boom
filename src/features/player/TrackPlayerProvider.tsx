@@ -1,4 +1,4 @@
-import { appLogger } from "@/lib/logger";
+import { appLogger } from "@/shared/lib/logger";
 import TrackPlayer, { Event, PlayerCommand, RepeatMode } from "@rntp/player";
 import { useEffect, useRef } from "react";
 import { trackPlayerPersistor } from "./persistor";
@@ -7,7 +7,12 @@ const setupTrackPlayer = async () => {
   TrackPlayer.setupPlayer({ contentType: "music" });
   TrackPlayer.setCommands({
     handling: "native",
-    capabilities: [PlayerCommand.PlayPause, PlayerCommand.Previous, PlayerCommand.Next, PlayerCommand.Seek],
+    capabilities: [
+      PlayerCommand.PlayPause,
+      PlayerCommand.Previous,
+      PlayerCommand.Next,
+      PlayerCommand.Seek,
+    ],
   });
   TrackPlayer.setVolume(1);
   TrackPlayer.setRepeatMode(RepeatMode.All);

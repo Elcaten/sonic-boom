@@ -1,9 +1,16 @@
-import { MediaListItem } from "@/components";
+import { MediaListItem } from "@/shared/ui";
 import { Spacer } from "@expo/ui";
-import { ContentUnavailableView, Host, HStack, List, ProgressView, Section } from "@expo/ui/swift-ui";
+import {
+    ContentUnavailableView,
+    Host,
+    HStack,
+    List,
+    ProgressView,
+    Section,
+} from "@expo/ui/swift-ui";
 import { scaleEffect } from "@expo/ui/swift-ui/modifiers";
-import { SearchItem } from "../types";
 import { useSearchMedia } from "../hooks";
+import { SearchItem } from "../types";
 
 interface SearchMediaListProps {
   search: ReturnType<typeof useSearchMedia>;

@@ -1,11 +1,11 @@
-import { MediaListItem } from "@/components";
-import { pluralize } from "@/lib/format";
-import { useSearchBar } from "@/lib/navigation";
+import { pluralize } from "@/shared/lib/format";
+import { useSearchBar } from "@/shared/lib/navigation";
+import { MediaListItem } from "@/shared/ui";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { listStyle } from "@expo/ui/swift-ui/modifiers";
 import { ActivityIndicator, View } from "react-native";
-import { groupArtistsBySection } from "../lib";
 import { useArtists } from "../hooks";
+import { groupArtistsBySection } from "../lib";
 
 export default function ArtistsScreen() {
   const { query } = useSearchBar();

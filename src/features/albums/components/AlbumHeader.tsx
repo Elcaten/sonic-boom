@@ -1,11 +1,11 @@
-import { CoverArt } from "@/components";
+import { CoverArt } from "@/shared/ui";
 import { HStack, Text, VStack } from "@expo/ui/swift-ui";
 import {
-  font,
-  foregroundStyle,
-  frame,
-  listRowSeparator,
-  multilineTextAlignment,
+    font,
+    foregroundStyle,
+    frame,
+    listRowSeparator,
+    multilineTextAlignment,
 } from "@expo/ui/swift-ui/modifiers";
 import { ReactNode } from "react";
 

@@ -1,5 +1,5 @@
-import { appLogger } from "@/lib/logger";
 import { useRequiredQueries } from "@/shared/api";
+import { appLogger } from "@/shared/lib/logger";
 import { useColorScheme } from "@/theme";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";

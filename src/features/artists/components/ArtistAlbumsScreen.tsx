@@ -1,7 +1,7 @@
-import { MediaListItem } from "@/components";
 import { filterSortAlbums } from "@/features/albums";
-import { pluralize } from "@/lib/format";
-import { useSearchBar } from "@/lib/navigation";
+import { pluralize } from "@/shared/lib/format";
+import { useSearchBar } from "@/shared/lib/navigation";
+import { MediaListItem } from "@/shared/ui";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";
@@ -38,7 +38,9 @@ export default function ArtistAlbumsScreen() {
     <Host style={{ flex: 1 }}>
       <List modifiers={[listStyle("automatic")]}>
         {filteredAlbums.map((album) => {
-          const title = [album.name, album.year ? `(${album.year})` : null].filter(Boolean).join(" ");
+          const title = [album.name, album.year ? `(${album.year})` : null]
+            .filter(Boolean)
+            .join(" ");
           return (
             <MediaListItem
               key={album.id}

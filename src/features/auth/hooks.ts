@@ -1,4 +1,4 @@
-import { appLogger } from "@/lib/logger";
+import { appLogger } from "@/shared/lib/logger";
 import TrackPlayer from "@rntp/player";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";

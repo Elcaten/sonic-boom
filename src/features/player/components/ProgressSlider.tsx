@@ -1,5 +1,5 @@
-import { Slider } from "@/components";
-import { formatDuration } from "@/lib/format";
+import { formatDuration } from "@/shared/lib/format";
+import { Slider } from "@/shared/ui";
 import { Host, Text } from "@expo/ui";
 import { font, padding } from "@expo/ui/swift-ui/modifiers";
 import TrackPlayer, { useProgress } from "@rntp/player";
@@ -26,7 +26,9 @@ export function ProgressSlider() {
       addonBottomLeft={({ isDragging, dragPercent }) => (
         <Host matchContents>
           <Text modifiers={[font({ textStyle: "callout" }), padding({ top: 8 })]}>
-            {isDragging ? formatDuration(progress.duration * dragPercent) : formatDuration(progressOptimistic)}
+            {isDragging
+              ? formatDuration(progress.duration * dragPercent)
+              : formatDuration(progressOptimistic)}
           </Text>
         </Host>
       )}

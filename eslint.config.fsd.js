@@ -19,7 +19,7 @@ module.exports = {
       { type: "app", pattern: "src/app/**", mode: "full" },
       { type: "providers", pattern: "src/providers/**", mode: "full" },
       { type: "api", pattern: "src/shared/api/**", mode: "full" },
-      { type: "components", pattern: "src/components/**", mode: "full" },
+      { type: "components", pattern: "src/shared/ui/**", mode: "full" },
       { type: "theme", pattern: "src/theme/**", mode: "full" },
       { type: "lib", pattern: "src/lib/**", mode: "full" },
       {

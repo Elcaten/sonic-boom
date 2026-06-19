@@ -1,13 +1,13 @@
-import { CoverArt } from "@/components";
+import { CoverArt } from "@/shared/ui";
 import { Column, Row } from "@expo/ui";
 import { Button, Host, RNHostView, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { font, foregroundStyle, padding } from "@expo/ui/swift-ui/modifiers";
 import { useActiveMediaItem } from "@rntp/player";
 import { useRouter } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { MediaItemExtras } from "../types";
 import { PlayerButton } from "./PlayerButton";
 import { ProgressSlider } from "./ProgressSlider";
-import { MediaItemExtras } from "../types";
 
 const capturePan = Gesture.Pan().minDistance(1);
 
@@ -19,7 +19,8 @@ export default function ActiveTrackScreen() {
   const handleAlbumPress = () => {
     const albumId = activeTrackExtra?.albumId;
     const artistId = activeTrackExtra?.artistId;
-    if (!albumId || typeof albumId !== "string" || !artistId || typeof artistId !== "string") return;
+    if (!albumId || typeof albumId !== "string" || !artistId || typeof artistId !== "string")
+      return;
     router.replace({
       pathname: "/(tabs)/artists/[artistId]/albums/[albumId]/tracks",
       params: { albumId, artistId },
