@@ -1,4 +1,4 @@
-import { colors } from "@/theme";
+import { colors } from "@/shared/theme";
 import { SectionList, Text, View } from "react-native";
 
 export default function ColorsScreen() {

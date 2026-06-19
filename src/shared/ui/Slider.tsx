@@ -1,4 +1,4 @@
-import { colors, useColorScheme } from "@/theme";
+import { colors, useColorScheme } from "@/shared/theme";
 import React, { useState } from "react";
 import { Animated, Easing, LayoutChangeEvent, useAnimatedValueXY } from "react-native";
 import Svg, { Rect } from "react-native-svg";
@@ -7,8 +7,20 @@ import { DragTracker } from "./DragTracker";
 type SliderProps = {
   progress: number;
   onProgressChange: (progress: number) => void;
-  addonBottomLeft?: ({ isDragging, dragPercent }: { isDragging: boolean; dragPercent: number }) => React.ReactNode;
-  addonBottomRight?: ({ isDragging, dragPercent }: { isDragging: boolean; dragPercent: number }) => React.ReactNode;
+  addonBottomLeft?: ({
+    isDragging,
+    dragPercent,
+  }: {
+    isDragging: boolean;
+    dragPercent: number;
+  }) => React.ReactNode;
+  addonBottomRight?: ({
+    isDragging,
+    dragPercent,
+  }: {
+    isDragging: boolean;
+    dragPercent: number;
+  }) => React.ReactNode;
 };
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -67,10 +79,17 @@ export function Slider(props: SliderProps) {
   const barWidth = isDragging ? dragPercent : progress;
 
   return (
-    <DragTracker onDragStart={handlePressIn} onDrag={(percent) => setDragPercent(percent)} onDragEnd={handlePressOut}>
+    <DragTracker
+      onDragStart={handlePressIn}
+      onDrag={(percent) => setDragPercent(percent)}
+      onDragEnd={handlePressOut}
+    >
       <Animated.View
         onLayout={onLayout}
-        style={{ flexDirection: "row", transform: [{ scaleX: scaleAnim.x }, { scaleY: scaleAnim.y }] }}
+        style={{
+          flexDirection: "row",
+          transform: [{ scaleX: scaleAnim.x }, { scaleY: scaleAnim.y }],
+        }}
       >
         <Svg width={containerWidth} height={8}>
           <AnimatedRect
@@ -94,12 +113,20 @@ export function Slider(props: SliderProps) {
         </Svg>
       </Animated.View>
       <Animated.View
-        style={{ flexDirection: "row", justifyContent: "space-between", transform: [{ scaleX: scaleAnim.x }] }}
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          transform: [{ scaleX: scaleAnim.x }],
+        }}
       >
-        <Animated.View style={{ transform: [{ scaleX: inverseScaleX }, { translateY: translateYAnim }] }}>
+        <Animated.View
+          style={{ transform: [{ scaleX: inverseScaleX }, { translateY: translateYAnim }] }}
+        >
           {addonBottomLeft?.({ isDragging, dragPercent })}
         </Animated.View>
-        <Animated.View style={{ transform: [{ scaleX: inverseScaleX }, { translateY: translateYAnim }] }}>
+        <Animated.View
+          style={{ transform: [{ scaleX: inverseScaleX }, { translateY: translateYAnim }] }}
+        >
           {addonBottomRight?.({ isDragging, dragPercent })}
         </Animated.View>
       </Animated.View>

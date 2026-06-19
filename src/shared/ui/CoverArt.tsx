@@ -1,6 +1,6 @@
 import { useRequiredQueries } from "@/shared/api";
 import { appLogger } from "@/shared/lib/logger";
-import { useColorScheme } from "@/theme";
+import { useColorScheme } from "@/shared/theme";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { ImageStyle, StyleProp, StyleSheet, View } from "react-native";
