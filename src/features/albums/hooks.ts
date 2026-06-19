@@ -1,4 +1,4 @@
-import { useRequiredQueries } from "@/api";
+import { useRequiredQueries } from "@/shared/api";
 import TrackPlayer, { MediaItem, useActiveMediaItem, useIsPlaying } from "@rntp/player";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";

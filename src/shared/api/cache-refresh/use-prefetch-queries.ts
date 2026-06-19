@@ -1,5 +1,5 @@
-import { useRequiredQueries } from "@/api";
 import { batchProcessWithDetails } from "@/lib/promise";
+import { useRequiredQueries } from "@/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -15,7 +15,8 @@ export function usePrefetchQueries() {
     queryClient.getQueryCache().clear();
 
     const artistListQuery = await queryClient.ensureQueryData(queries.artists());
-    const artistList = artistListQuery.artists.index?.flatMap((section) => section.artist ?? []) ?? [];
+    const artistList =
+      artistListQuery.artists.index?.flatMap((section) => section.artist ?? []) ?? [];
 
     const artistsDetailsQueries = artistList.map(async (artist) => {
       return queryClient.ensureQueryData(queries.artist(artist.id));
@@ -26,7 +27,10 @@ export function usePrefetchQueries() {
       pageSize: 3,
       delayMs: 300,
       onProgress: ({ completed, total }) => {
-        setProgress({ title: "Artists", progressPercentage: Math.round((completed / total) * 100) });
+        setProgress({
+          title: "Artists",
+          progressPercentage: Math.round((completed / total) * 100),
+        });
       },
     });
 

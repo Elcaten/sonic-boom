@@ -18,7 +18,7 @@ module.exports = {
     "boundaries/elements": [
       { type: "app", pattern: "src/app/**", mode: "full" },
       { type: "providers", pattern: "src/providers/**", mode: "full" },
-      { type: "api", pattern: "src/api/**", mode: "full" },
+      { type: "api", pattern: "src/shared/api/**", mode: "full" },
       { type: "components", pattern: "src/components/**", mode: "full" },
       { type: "theme", pattern: "src/theme/**", mode: "full" },
       { type: "lib", pattern: "src/lib/**", mode: "full" },
@@ -38,11 +38,17 @@ module.exports = {
         rules: [
           {
             from: { type: "app" },
-            allow: [{ to: { type: ["app", "providers", "features", "api", "lib", "components", "theme"] } }],
+            allow: [
+              {
+                to: { type: ["app", "providers", "features", "api", "lib", "components", "theme"] },
+              },
+            ],
           },
           {
             from: { type: "providers" },
-            allow: [{ to: { type: ["providers", "features", "api", "lib", "components", "theme"] } }],
+            allow: [
+              { to: { type: ["providers", "features", "api", "lib", "components", "theme"] } },
+            ],
           },
           {
             from: { type: "features" },
@@ -77,7 +83,12 @@ module.exports = {
       {
         patterns: [
           {
-            group: ["@/features/*/components/**", "@/features/*/hooks", "@/features/*/lib", "@/features/*/types"],
+            group: [
+              "@/features/*/components/**",
+              "@/features/*/hooks",
+              "@/features/*/lib",
+              "@/features/*/types",
+            ],
             message: "Use feature public API: @/features/<slice>",
           },
         ],

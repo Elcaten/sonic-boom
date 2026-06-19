@@ -1,5 +1,5 @@
-import { useRequiredQueries } from "@/api";
 import { useDebouncedState } from "@/lib/debounce";
+import { useRequiredQueries } from "@/shared/api";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { MEDIA_SEARCH_DEBOUNCE } from "./const";

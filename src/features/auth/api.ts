@@ -1,4 +1,4 @@
-import { createSubsonicAPI } from "@/api/api-context/create-subsonic-api";
+import { createSubsonicAPI } from "@/shared/api/api-context/create-subsonic-api";
 import { SignInCredentials } from "./types";
 
 export async function verifySubsonicCredentials({

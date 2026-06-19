@@ -1,6 +1,6 @@
-import { APIContext, useInitAPI } from "@/api/api-context/api-context";
-import { QueriesContext, useInitQueries } from "@/api/queries-context/queries-context";
 import { AuthContext, useInitAuth } from "@/features/auth";
+import { APIContext, useInitAPI } from "@/shared/api/api-context/api-context";
+import { QueriesContext, useInitQueries } from "@/shared/api/queries-context/queries-context";
 import { PropsWithChildren } from "react";
 
 export const AppContextProvider = ({

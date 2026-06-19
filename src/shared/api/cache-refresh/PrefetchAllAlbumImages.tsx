@@ -1,4 +1,4 @@
-import { useRequiredQueries } from "@/api";
+import { useRequiredQueries } from "@/shared/api";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { Image, ImageSource } from "expo-image";
 import { useEffect, useState } from "react";
@@ -25,7 +25,9 @@ export function PrefetchAllAlbumImages({
   }, [albumListQuery.data?.albumList, albumListQuery.isPending, onLoadEnd]);
 
   const coverArtQueries = useQueries({
-    queries: albumListQuery.data?.albumList.album?.map((album) => queries.coverArtImage(album.id, size)) ?? [],
+    queries:
+      albumListQuery.data?.albumList.album?.map((album) => queries.coverArtImage(album.id, size)) ??
+      [],
     combine: (results) => ({
       data: results.map((result) => result.data!),
       isPending: results.some((result) => result.isPending),

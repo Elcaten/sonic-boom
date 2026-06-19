@@ -1,5 +1,5 @@
-import { PrefetchAllAlbumImages, useRefreshCache } from "@/api";
 import { SignOutButton } from "@/features/auth";
+import { PrefetchAllAlbumImages, useRefreshCache } from "@/shared/api";
 import { Button, Form, Host, HStack, ProgressView, Section, Spacer, Text } from "@expo/ui/swift-ui";
 import { disabled, padding, progressViewStyle } from "@expo/ui/swift-ui/modifiers";
 import { Link } from "expo-router";
@@ -34,7 +34,9 @@ export default function SettingsScreen() {
                 {isRefreshing && showFetcher === "QUERIES" && (
                   <Text>{`${progress?.title ?? "Loading"}... ${progress?.progressPercentage ?? 0}%`}</Text>
                 )}
-                {isRefreshing && (showFetcher === 48 || showFetcher === 256) && <Text>Images...</Text>}
+                {isRefreshing && (showFetcher === 48 || showFetcher === 256) && (
+                  <Text>Images...</Text>
+                )}
                 <Spacer />
                 {isRefreshing && <ProgressView modifiers={[progressViewStyle("circular")]} />}
               </HStack>
@@ -52,8 +54,12 @@ export default function SettingsScreen() {
             inset: 0,
           }}
         >
-          {showFetcher === 48 && <PrefetchAllAlbumImages size={48} onLoadEnd={handleSmallImagesLoaded} />}
-          {showFetcher === 256 && <PrefetchAllAlbumImages size={256} onLoadEnd={handleLargeImagesLoaded} />}
+          {showFetcher === 48 && (
+            <PrefetchAllAlbumImages size={48} onLoadEnd={handleSmallImagesLoaded} />
+          )}
+          {showFetcher === 256 && (
+            <PrefetchAllAlbumImages size={256} onLoadEnd={handleLargeImagesLoaded} />
+          )}
         </View>
       )}
     </View>

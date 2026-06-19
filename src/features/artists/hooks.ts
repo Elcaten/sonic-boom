@@ -1,4 +1,4 @@
-import { useRequiredQueries } from "@/api";
+import { useRequiredQueries } from "@/shared/api";
 import { useQuery } from "@tanstack/react-query";
 import { SectionedArtist } from "./types";
 
