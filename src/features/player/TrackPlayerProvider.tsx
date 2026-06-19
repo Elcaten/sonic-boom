@@ -1,6 +1,6 @@
 import { appLogger } from "@/shared/lib/logger";
 import TrackPlayer, { Event, PlayerCommand, RepeatMode } from "@rntp/player";
-import { useEffect, useRef } from "react";
+import { PropsWithChildren, useEffect, useRef } from "react";
 import { trackPlayerPersistor } from "./persistor";
 
 const setupTrackPlayer = async () => {
@@ -20,7 +20,7 @@ const setupTrackPlayer = async () => {
   await trackPlayerPersistor.hydrateActiveTrackIndex();
 };
 
-const useSetupTrackPlayer = ({ onLoad }: { onLoad?: () => void }) => {
+const useSetupTrackPlayer = () => {
   const isInitialized = useRef(false);
 
   useEffect(() => {
@@ -34,7 +34,6 @@ const useSetupTrackPlayer = ({ onLoad }: { onLoad?: () => void }) => {
     setupTrackPlayer()
       .then(() => {
         isInitialized.current = true;
-        onLoad?.();
         appLogger.PLAYER.info("Track player initialized");
       })
       .catch((err) => {
@@ -47,15 +46,10 @@ const useSetupTrackPlayer = ({ onLoad }: { onLoad?: () => void }) => {
       TrackPlayer.stop();
       TrackPlayer.clear();
     };
-  }, [onLoad]);
+  }, []);
 };
 
-type TrackPlayerProviderProps = {
-  children: React.ReactNode;
-  onLoad: () => void;
-};
-
-export const TrackPlayerProvider = ({ children, onLoad }: TrackPlayerProviderProps) => {
-  useSetupTrackPlayer({ onLoad });
+export const TrackPlayerProvider = ({ children }: PropsWithChildren<unknown>) => {
+  useSetupTrackPlayer();
   return <>{children}</>;
 };

@@ -12,12 +12,30 @@ export const useAuth = () => {
   return context;
 };
 
-export const useIsAuthenticated = () => {
+type AuthState =
+  | {
+      loading: true;
+      authenticated?: never;
+    }
+  | {
+      loading: false;
+      authenticated: boolean;
+    };
+
+export const useAuthState = (): AuthState => {
   const auth = useAuth();
-  return !!(auth.state.serverAddress && auth.state.username && auth.state.password);
+
+  if (auth.state.isLoading) {
+    return { loading: true };
+  }
+
+  return {
+    loading: false,
+    authenticated: !!auth.state.serverAddress && !!auth.state.username && !!auth.state.password,
+  };
 };
 
-export function useInitAuth(onLoad: () => void): AuthContextType {
+export function useInitAuth(): AuthContextType {
   const [serverAddress, setServerAddressState] = useState("");
   const [username, setUsernameState] = useState("");
   const [password, setPasswordState] = useState("");
@@ -34,9 +52,8 @@ export function useInitAuth(onLoad: () => void): AuthContextType {
       .catch((error) => console.error("Error loading stored values:", error))
       .finally(() => {
         setIsLoading(false);
-        onLoad();
       });
-  }, [onLoad]);
+  }, []);
 
   const persist = useCallback(
     async (next: { serverAddress: string; username: string; password: string }) => {

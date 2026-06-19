@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { QueryClient, useIsRestoring } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import React, { useEffect } from "react";
+import { PropsWithChildren } from "react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,28 +20,7 @@ const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
 });
 
-type QueryClientProviderProps = {
-  children: React.ReactNode;
-  onHydrateFinished: () => void;
-};
-
-const HydrationGate = ({ children, onHydrateFinished }: QueryClientProviderProps) => {
-  const isRestoring = useIsRestoring();
-
-  useEffect(() => {
-    if (!isRestoring) {
-      onHydrateFinished();
-    }
-  }, [isRestoring, onHydrateFinished]);
-
-  if (isRestoring) {
-    return null;
-  }
-
-  return <>{children}</>;
-};
-
-export const QueryClientProvider = ({ onHydrateFinished, children }: QueryClientProviderProps) => {
+export const QueryClientProvider = ({ children }: PropsWithChildren<unknown>) => {
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -50,7 +29,7 @@ export const QueryClientProvider = ({ onHydrateFinished, children }: QueryClient
         maxAge: Infinity,
       }}
     >
-      <HydrationGate onHydrateFinished={onHydrateFinished}>{children}</HydrationGate>
+      {children}
     </PersistQueryClientProvider>
   );
 };
