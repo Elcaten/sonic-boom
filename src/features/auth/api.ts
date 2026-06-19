@@ -1,38 +1,16 @@
-import * as Crypto from "expo-crypto";
-import { SubsonicAPI } from "subsonic-api";
+import { createSubsonicAPI } from "@/api/api-context/create-subsonic-api";
 import { SignInCredentials } from "./types";
 
-class AuthService {
-  async verifySubsonicCredentials({
-    serverAddress,
-    username,
-    password,
-  }: SignInCredentials): Promise<void> {
-    if (!serverAddress || !username || !password) {
-      throw new Error("Invalid credentials");
-    }
+export async function verifySubsonicCredentials({
+  serverAddress,
+  username,
+  password,
+}: SignInCredentials) {
+  const api = createSubsonicAPI({ serverAddress, username, password });
 
-    const salt = this.generateSalt();
-    const api = new SubsonicAPI({
-      url: serverAddress,
-      auth: { username, password },
-      salt,
-      reuseSalt: true,
-    });
-
-    try {
-      await api.navidromeSession();
-    } catch {
-      throw new Error("Invalid credentials");
-    }
-  }
-
-  private generateSalt(): string {
-    const randomBytes = Crypto.getRandomBytes(16);
-    return Array.from(randomBytes)
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
+  try {
+    await api.navidromeSession();
+  } catch {
+    throw new Error("Invalid credentials");
   }
 }
-
-export const authService = new AuthService();

@@ -1,5 +1,5 @@
-import { APIContext, useInitAPI } from "@/api/api-context";
-import { QueriesContext, useInitQueries } from "@/api/queries-context";
+import { APIContext, useInitAPI } from "@/api/api-context/api-context";
+import { QueriesContext, useInitQueries } from "@/api/queries-context/queries-context";
 import { AuthContext, useInitAuth } from "@/features/auth";
 import { PropsWithChildren } from "react";
 

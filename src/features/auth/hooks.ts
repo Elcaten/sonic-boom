@@ -1,10 +1,10 @@
 import { appLogger } from "@/lib/logger";
+import TrackPlayer from "@rntp/player";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import TrackPlayer from "@rntp/player";
 import { useCallback, useState } from "react";
 import { usePlayerPersistor } from "../player";
-import { authService } from "./api";
+import { verifySubsonicCredentials } from "./api";
 import { useAuth } from "./context";
 
 export function useSignIn() {
@@ -14,7 +14,7 @@ export function useSignIn() {
   const { actions: authActions } = useAuth();
 
   const submit = useMutation({
-    mutationFn: () => authService.verifySubsonicCredentials({ serverAddress, username, password }),
+    mutationFn: () => verifySubsonicCredentials({ serverAddress, username, password }),
     onError: (error) => appLogger.SIGN_IN.error(error),
     onSuccess: () => {
       authActions.setServerAddress(serverAddress);
