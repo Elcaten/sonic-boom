@@ -1,14 +1,31 @@
 import { useAuthState } from "@/features/auth";
-import { AppProvier } from "@/providers";
-import { SplashScreenGate } from "@/providers/SplashScreenGate";
+import { TrackPlayerProvider } from "@/features/player";
+import {
+  AppContextProvider,
+  QueryClientProvider,
+  SplashScreenGate,
+  ThemeProvider,
+} from "@/providers";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   return (
-    <AppProvier>
-      <Content />
-    </AppProvier>
+    <GestureHandlerRootView>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <TrackPlayerProvider>
+            <AppContextProvider>
+              <QueryClientProvider>
+                <Content />
+              </QueryClientProvider>
+            </AppContextProvider>
+          </TrackPlayerProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

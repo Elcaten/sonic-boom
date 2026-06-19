@@ -91,6 +91,10 @@ module.exports = {
             ],
             message: "Use feature public API: @/features/<slice>",
           },
+          {
+            group: ["@/providers/**"],
+            message: "Use provider public API: @/providers",
+          },
         ],
       },
     ],
