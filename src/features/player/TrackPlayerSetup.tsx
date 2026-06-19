@@ -1,7 +1,13 @@
 import { appLogger } from "@/shared/lib/logger";
 import TrackPlayer, { Event, PlayerCommand, RepeatMode } from "@rntp/player";
-import { PropsWithChildren, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { trackPlayerPersistor } from "./persistor";
+
+export const TrackPlayerSetup = () => {
+  useSetupTrackPlayer();
+
+  return null;
+};
 
 const setupTrackPlayer = async () => {
   TrackPlayer.setupPlayer({ contentType: "music" });
@@ -21,11 +27,7 @@ const setupTrackPlayer = async () => {
 };
 
 const useSetupTrackPlayer = () => {
-  const isInitialized = useRef(false);
-
   useEffect(() => {
-    if (isInitialized.current) return;
-
     const eventListener = TrackPlayer.addEventListener(Event.MediaItemTransition, async () => {
       await trackPlayerPersistor.peristQueue();
       trackPlayerPersistor.persistActiveTrackIndex();
@@ -33,11 +35,9 @@ const useSetupTrackPlayer = () => {
 
     setupTrackPlayer()
       .then(() => {
-        isInitialized.current = true;
         appLogger.PLAYER.info("Track player initialized");
       })
       .catch((err) => {
-        isInitialized.current = false;
         appLogger.PLAYER.error(err);
       });
 
@@ -47,9 +47,4 @@ const useSetupTrackPlayer = () => {
       TrackPlayer.clear();
     };
   }, []);
-};
-
-export const TrackPlayerProvider = ({ children }: PropsWithChildren<unknown>) => {
-  useSetupTrackPlayer();
-  return <>{children}</>;
 };

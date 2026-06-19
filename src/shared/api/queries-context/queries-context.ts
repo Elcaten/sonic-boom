@@ -1,5 +1,4 @@
-import { createContext, useContext, useMemo } from "react";
-import { SubsonicAPI } from "subsonic-api";
+import { createContext, useContext } from "react";
 import { createSubsonicQueries } from "./create-subsonic-queries";
 
 type QueriesContextType = ReturnType<typeof createSubsonicQueries> | null;
@@ -16,10 +15,3 @@ export const useRequiredQueries = () => {
   }
   return context;
 };
-
-export function useInitQueries(api: SubsonicAPI | null) {
-  return useMemo(() => {
-    if (!api) return null;
-    return createSubsonicQueries(api);
-  }, [api]);
-}

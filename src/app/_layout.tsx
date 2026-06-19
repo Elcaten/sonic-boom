@@ -1,11 +1,7 @@
 import { useAuthState } from "@/features/auth";
-import { TrackPlayerProvider } from "@/features/player";
-import {
-  AppContextProvider,
-  QueryClientProvider,
-  SplashScreenGate,
-  ThemeProvider,
-} from "@/providers";
+import { TrackPlayerSetup } from "@/features/player";
+import { AppContextProvider, QueryClientProvider, ThemeProvider } from "@/providers";
+import { SplashScreenGate } from "@/shared/ui";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -13,19 +9,21 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView>
-      <SafeAreaProvider>
-        <ThemeProvider>
-          <TrackPlayerProvider>
+    <>
+      <TrackPlayerSetup />
+
+      <GestureHandlerRootView>
+        <SafeAreaProvider>
+          <ThemeProvider>
             <AppContextProvider>
               <QueryClientProvider>
                 <Content />
               </QueryClientProvider>
             </AppContextProvider>
-          </TrackPlayerProvider>
-        </ThemeProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+          </ThemeProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </>
   );
 }
 
