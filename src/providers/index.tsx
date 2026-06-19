@@ -11,6 +11,7 @@ export const AppProvier = ({ children }: PropsWithChildren) => {
   const [playerReady, setPlayerReady] = useState(false);
   const [authReady, setAuthReady] = useState(false);
   const [persistorReady, setPersistorReady] = useState(false);
+  const isAppReady = playerReady && authReady && persistorReady;
 
   return (
     <GestureHandlerRootView>
@@ -19,9 +20,7 @@ export const AppProvier = ({ children }: PropsWithChildren) => {
           <TrackPlayerProvider onLoad={() => setPlayerReady(true)}>
             <AppContextProvider onLoad={() => setAuthReady(true)}>
               <QueryClientProvider onHydrateFinished={() => setPersistorReady(true)}>
-                <SplashScreenGate isAppReady={playerReady && authReady && persistorReady}>
-                  {children}
-                </SplashScreenGate>
+                <SplashScreenGate isAppReady={isAppReady}>{children}</SplashScreenGate>
               </QueryClientProvider>
             </AppContextProvider>
           </TrackPlayerProvider>

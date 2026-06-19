@@ -2,7 +2,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
-SplashScreen.preventAutoHideAsync();
 
 type SplashScreenGateProps = {
   children: React.ReactNode;
