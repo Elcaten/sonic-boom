@@ -1,4 +1,5 @@
 import { createSubsonicAPI } from "@/shared/api/api-context/create-subsonic-api";
+import { appLogger } from "@/shared/lib/logger";
 import { SignInCredentials } from "./types";
 
 export async function verifySubsonicCredentials({
@@ -10,7 +11,8 @@ export async function verifySubsonicCredentials({
 
   try {
     await api.navidromeSession();
-  } catch {
+  } catch (e) {
+    appLogger.API.error("Invalid credentials", { cause: e });
     throw new Error("Invalid credentials");
   }
 }

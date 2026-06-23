@@ -1,4 +1,3 @@
-import { appLogger } from "@/shared/lib/logger";
 import * as Crypto from "expo-crypto";
 import { SubsonicAPI } from "subsonic-api";
 
@@ -6,6 +5,7 @@ type CreateSubsonicAPIParams = {
   serverAddress: string;
   username: string;
   password: string;
+  fetch?: ConstructorParameters<typeof SubsonicAPI>[0]["fetch"];
 };
 
 export function createSubsonicAPI({ serverAddress, username, password }: CreateSubsonicAPIParams) {
@@ -14,27 +14,6 @@ export function createSubsonicAPI({ serverAddress, username, password }: CreateS
     auth: { username, password },
     salt: generateSalt(),
     reuseSalt: true,
-    fetch: (params) => {
-      if (typeof params === "string") {
-        try {
-          const url = new URL(params);
-          url.searchParams.delete("v");
-          url.searchParams.delete("c");
-          url.searchParams.delete("f");
-          url.searchParams.delete("u");
-          url.searchParams.delete("t");
-          url.searchParams.delete("s");
-          appLogger.API.info(
-            `${url.pathname} ${Array.from(url.searchParams.entries())
-              .map(([k, v]) => `${k} = ${v}`)
-              .join(" & ")}`,
-          );
-        } catch (e) {
-          appLogger.API.error(e);
-        }
-      }
-      return fetch(params);
-    },
   });
 }
 

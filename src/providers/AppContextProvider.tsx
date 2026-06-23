@@ -2,6 +2,7 @@ import { AuthContext, AuthState, useInitAuth } from "@/features/auth";
 import { createSubsonicQueries, QueriesContext } from "@/shared/api";
 import { APIContext } from "@/shared/api/api-context/api-context";
 import { createSubsonicAPI } from "@/shared/api/api-context/create-subsonic-api";
+import { appLogger } from "@/shared/lib/logger/app-logger";
 import { PropsWithChildren, useMemo } from "react";
 import { SubsonicAPI } from "subsonic-api";
 
@@ -28,6 +29,27 @@ function createApiContext(auth: AuthState) {
     serverAddress: auth.serverAddress,
     username: auth.username,
     password: auth.password,
+    fetch: (params) => {
+      if (typeof params === "string") {
+        try {
+          const url = new URL(params);
+          url.searchParams.delete("v");
+          url.searchParams.delete("c");
+          url.searchParams.delete("f");
+          url.searchParams.delete("u");
+          url.searchParams.delete("t");
+          url.searchParams.delete("s");
+          appLogger.API.info(
+            `${url.pathname} ${Array.from(url.searchParams.entries())
+              .map(([k, v]) => `${k} = ${v}`)
+              .join(" & ")}`,
+          );
+        } catch (e) {
+          appLogger.API.error(e);
+        }
+      }
+      return fetch(params);
+    },
   });
 }
 

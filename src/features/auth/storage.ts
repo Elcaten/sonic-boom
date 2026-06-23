@@ -1,11 +1,10 @@
-import { SignInCredentials } from "./types";
 import * as SecureStore from "expo-secure-store";
 
 class AuthStorage {
   public static keys = {
-    SERVER_ADDRESS: "server_address",
-    USERNAME: "username",
-    PASSWORD: "password",
+    SERVER_ADDRESS: "_server_address",
+    USERNAME: "_username",
+    PASSWORD: "_password",
   };
 
   async getCredentials() {
@@ -17,12 +16,16 @@ class AuthStorage {
     return { serverAddress, username, password };
   }
 
-  async saveCredentials(credentials: SignInCredentials) {
-    await Promise.all([
-      SecureStore.setItemAsync(AuthStorage.keys.SERVER_ADDRESS, credentials.serverAddress),
-      SecureStore.setItemAsync(AuthStorage.keys.USERNAME, credentials.username),
-      SecureStore.setItemAsync(AuthStorage.keys.PASSWORD, credentials.password),
-    ]);
+  async saveServerAddress(serverAddress: string) {
+    await SecureStore.setItemAsync(AuthStorage.keys.SERVER_ADDRESS, serverAddress);
+  }
+
+  async saveUsername(username: string) {
+    await SecureStore.setItemAsync(AuthStorage.keys.USERNAME, username);
+  }
+
+  async savePassword(password: string) {
+    await SecureStore.setItemAsync(AuthStorage.keys.PASSWORD, password);
   }
 
   async clearCredentials() {

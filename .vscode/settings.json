@@ -27,5 +27,6 @@
     "touchbar.workbench.action.splitEditor",
     "touchbar.workbench.action.terminal.toggleTerminal",
     "touchbar.editor.action.blockComment"
-  ]
+  ],
+  "cSpell.words": ["navidrome"]
 }

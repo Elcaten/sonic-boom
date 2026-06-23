@@ -44,10 +44,10 @@ export function useInitAuth(): AuthContextType {
   useEffect(() => {
     authStorage
       .getCredentials()
-      .then((creds) => {
-        if (creds.serverAddress) setServerAddressState(creds.serverAddress);
-        if (creds.username) setUsernameState(creds.username);
-        if (creds.password) setPasswordState(creds.password);
+      .then((credentials) => {
+        if (credentials.serverAddress) setServerAddressState(credentials.serverAddress);
+        if (credentials.username) setUsernameState(credentials.username);
+        if (credentials.password) setPasswordState(credentials.password);
       })
       .catch((error) => console.error("Error loading stored values:", error))
       .finally(() => {
@@ -55,36 +55,20 @@ export function useInitAuth(): AuthContextType {
       });
   }, []);
 
-  const persist = useCallback(
-    async (next: { serverAddress: string; username: string; password: string }) => {
-      await authStorage.saveCredentials(next).catch(console.error);
-    },
-    [],
-  );
+  const setServerAddress = useCallback(async (value: string) => {
+    setServerAddressState(value);
+    await authStorage.saveServerAddress(value);
+  }, []);
 
-  const setServerAddress = useCallback(
-    async (value: string) => {
-      setServerAddressState(value);
-      await persist({ serverAddress: value, username, password });
-    },
-    [password, persist, username],
-  );
+  const setUsername = useCallback(async (value: string) => {
+    setUsernameState(value);
+    await authStorage.saveUsername(value);
+  }, []);
 
-  const setUsername = useCallback(
-    async (value: string) => {
-      setUsernameState(value);
-      await persist({ serverAddress, username: value, password });
-    },
-    [password, persist, serverAddress],
-  );
-
-  const setPassword = useCallback(
-    async (value: string) => {
-      setPasswordState(value);
-      await persist({ serverAddress, username, password: value });
-    },
-    [persist, serverAddress, username],
-  );
+  const setPassword = useCallback(async (value: string) => {
+    setPasswordState(value);
+    await authStorage.savePassword(value);
+  }, []);
 
   const clearAll = useCallback(async () => {
     setServerAddressState("");
