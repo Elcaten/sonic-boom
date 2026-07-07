@@ -4,13 +4,15 @@ import { MediaListItem } from "@/shared/ui";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { listStyle } from "@expo/ui/swift-ui/modifiers";
 import { ActivityIndicator, View } from "react-native";
-import { useArtists } from "../hooks";
+import { useArtists, usePreloadAlbumImages } from "../hooks";
 import { groupArtistsBySection } from "../lib";
 
 export default function ArtistsScreen() {
   const { query } = useSearchBar();
   const { artistsQuery, sectionedArtists } = useArtists();
   const sections = groupArtistsBySection({ artists: sectionedArtists, query });
+
+  const preloadAlbumImages = usePreloadAlbumImages();
 
   if (artistsQuery.isPending) {
     return (
@@ -44,6 +46,7 @@ export default function ArtistsScreen() {
                   pathname: "/(tabs)/artists/[artistId]/albums",
                   params: { artistId: artist.id },
                 }}
+                onPress={() => preloadAlbumImages(artist.id)}
                 coverId={artist.id}
                 title={artist.name}
                 subtitle={pluralize(artist.albumCount, "album")}

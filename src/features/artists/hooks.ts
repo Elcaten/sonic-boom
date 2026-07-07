@@ -1,5 +1,6 @@
 import { useRequiredQueries } from "@/shared/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Image } from "expo-image";
 import { SectionedArtist } from "./types";
 
 export function useArtists() {
@@ -28,4 +29,19 @@ export function useArtistAlbums(artistId: string | undefined) {
 
   const albums = artistQuery.data?.artist.album ?? [];
   return { artistQuery, albums };
+}
+
+// Preload album images so we avoid showing blurhashes on initial ArtistAlbumsScreen load
+export function usePreloadAlbumImages() {
+  const queryClient = useQueryClient();
+  const queries = useRequiredQueries();
+
+  return async (artistId: string) => {
+    const artist = await queryClient.ensureQueryData(queries.artist(artistId));
+    const albumIds = artist.artist.album?.map((a) => a.id);
+    albumIds?.forEach(async (albumId) => {
+      const source = await queryClient.ensureQueryData(queries.coverArtImage(albumId, 48));
+      Image.loadAsync(source);
+    });
+  };
 }
