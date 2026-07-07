@@ -44,3 +44,6 @@ app-example
 # CodeSpeak
 .codespeak/ignored/
 .coverage/
+
+.env
+.env.*

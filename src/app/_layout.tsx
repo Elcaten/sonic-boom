@@ -2,6 +2,7 @@ import { useAuthState } from "@/features/auth";
 import { TrackPlayerSetup } from "@/features/player";
 import { AppContextProvider, QueryClientProvider, ThemeProvider } from "@/providers";
 import { SplashScreenGate } from "@/shared/ui";
+import { FloatingDevTools } from "@buoy-gg/core";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -17,6 +18,13 @@ export default function RootLayout() {
           <ThemeProvider>
             <AppContextProvider>
               <QueryClientProvider>
+                <FloatingDevTools
+                  licenseKey={process.env.EXPO_PUBLIC_BUYO_LICENSE_KEY}
+                  externalSync={{
+                    socketURL: `http://${process.env.EXPO_PUBLIC_HOSTNAME}:42831`,
+                    enableLogs: true,
+                  }}
+                />
                 <Content />
               </QueryClientProvider>
             </AppContextProvider>
