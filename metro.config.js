@@ -18,19 +18,6 @@ config.resolver = {
     ...config.resolver?.extraNodeModules,
     "subsonic-api": subsonicApiPath,
   },
-  // Enable source maps for better debugging
-  sourceExts: [...(config.resolver?.sourceExts || []), "mjs"],
-};
-
-// Configure transformer to handle ES modules
-config.transformer = {
-  ...config.transformer,
-  getTransformOptions: async () => ({
-    transform: {
-      experimentalImportSupport: true,
-      inlineRequires: true,
-    },
-  }),
 };
 
 module.exports = config;
