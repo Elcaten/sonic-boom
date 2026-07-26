@@ -11,6 +11,7 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@_elcaten/expo-list-section-index": "^1.0.0",
     "@buoy-gg/core": "^5.0.0",
     "@buoy-gg/external-sync": "^5.0.0",
     "@buoy-gg/network": "^5.0.0",

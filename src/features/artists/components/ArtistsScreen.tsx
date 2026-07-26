@@ -1,6 +1,7 @@
 import { pluralize } from "@/shared/lib/format";
 import { useSearchBar } from "@/shared/lib/navigation";
 import { MediaListItem } from "@/shared/ui";
+import { listSectionIndexVisibility, sectionIndexLabel } from "@_elcaten/expo-list-section-index";
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { listStyle } from "@expo/ui/swift-ui/modifiers";
 import { ActivityIndicator, View } from "react-native";
@@ -36,9 +37,13 @@ export default function ArtistsScreen() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List modifiers={[listStyle("automatic")]}>
+      <List modifiers={[listStyle("plain"), listSectionIndexVisibility("visible")]}>
         {sections.map((section) => (
-          <Section key={section.title} title={section.title}>
+          <Section
+            key={section.title}
+            title={section.title}
+            modifiers={section.title.length === 1 ? [sectionIndexLabel(section.title)] : undefined}
+          >
             {section.data.map((artist) => (
               <MediaListItem
                 key={artist.id}
