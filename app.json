@@ -44,6 +44,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "./plugins/with-ios-automatic-signing",
       [
         "expo-build-properties",
         {

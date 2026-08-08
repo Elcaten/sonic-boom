@@ -6,7 +6,7 @@
     "start:lan": "REACT_NATIVE_PACKAGER_HOSTNAME=$(ipconfig getifaddr en0) EXPO_PUBLIC_HOSTNAME=$(ipconfig getifaddr en0) npx expo start --dev-client",
     "start:tunnel": "npx expo start --dev-client --tunnel",
     "android": "expo run:android",
-    "ios": "expo run:ios --device",
+    "ios": "PATH=\"$PWD/scripts/xcodebuild:$PATH\" expo run:ios --device",
     "web": "expo start --web",
     "lint": "expo lint"
   },
@@ -58,7 +58,8 @@
     "react-native-svg": "15.15.4",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.10.0",
-    "subsonic-api": "file:/Users/nameless/src/subsonic-api"
+    "subsonic-api": "file:/Users/nameless/src/subsonic-api",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@expo/ngrok": "^4.1.3",
