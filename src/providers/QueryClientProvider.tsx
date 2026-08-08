@@ -1,20 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { defaultShouldDehydrateQuery, QueryClient } from "@tanstack/react-query";
+import { defaultShouldDehydrateQuery } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { PropsWithChildren } from "react";
+import { getQueryClient } from "./query-client";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      gcTime: Number.MAX_SAFE_INTEGER,
-      staleTime: Number.MAX_SAFE_INTEGER,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const queryClient = getQueryClient();
 
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
