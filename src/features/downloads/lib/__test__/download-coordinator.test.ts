@@ -122,7 +122,7 @@ function createDependencies(existingTasks: MockTask[] = []) {
 
 describe("download coordinator", () => {
   const target = {
-    artistId: "artist",
+    albumArtistId: "artist",
     albumId: "album",
     trackId: "track",
     contentType: "audio/mpeg",
@@ -152,6 +152,21 @@ describe("download coordinator", () => {
 
     expect(dependencies.store.start).toHaveBeenCalledWith(target, 0.25);
     expect(pausedTask.resume).toHaveBeenCalledTimes(1);
+  });
+
+  it("stops recovered tasks that use legacy artist metadata", async () => {
+    const legacyTask = createTask(target);
+    legacyTask.metadata = {
+      artistId: "legacy-artist",
+      albumId: target.albumId,
+      trackId: target.trackId,
+    };
+    const dependencies = createDependencies([legacyTask]);
+
+    await recoverMediaDownloads(dependencies);
+
+    expect(legacyTask.stop).toHaveBeenCalledTimes(1);
+    expect(dependencies.store.start).not.toHaveBeenCalled();
   });
 
   it("stops native work before deleting all files and state", async () => {

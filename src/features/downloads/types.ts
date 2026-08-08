@@ -1,5 +1,5 @@
 export type DownloadIdentity = {
-  artistId: string;
+  albumArtistId: string;
   albumId: string;
   trackId: string;
 };
@@ -27,5 +27,7 @@ export type DownloadStatus =
 export type DownloadTaskMap = Map<string, DownloadTaskState>;
 
 export function getDownloadKey(identity: DownloadIdentity): string {
-  return [identity.artistId, identity.albumId, identity.trackId].map(encodeURIComponent).join("::");
+  return [identity.albumArtistId, identity.albumId, identity.trackId]
+    .map(encodeURIComponent)
+    .join("::");
 }

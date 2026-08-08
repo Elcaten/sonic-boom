@@ -32,7 +32,10 @@ export function buildDownloadsSections({
     const album = albums.get(downloadedTrack.albumId);
     const song = album?.song?.find((candidate) => candidate.id === downloadedTrack.trackId);
     const artistTitle =
-      artistNames.get(downloadedTrack.artistId) ?? song?.artist ?? album?.artist ?? "Unknown artist";
+      artistNames.get(downloadedTrack.albumArtistId) ??
+      album?.artist ??
+      song?.artist ??
+      "Unknown artist";
     const albumTitle = album?.name ?? song?.album ?? "Unknown album";
     const trackNumber = song?.track ?? Number.MAX_SAFE_INTEGER;
     const detail = [
@@ -42,8 +45,8 @@ export function buildDownloadsSections({
     ]
       .filter(Boolean)
       .join(" · ");
-    const section = sectionsByArtist.get(downloadedTrack.artistId) ?? {
-      artistId: downloadedTrack.artistId,
+    const section = sectionsByArtist.get(downloadedTrack.albumArtistId) ?? {
+      artistId: downloadedTrack.albumArtistId,
       title: artistTitle,
       songs: [],
     };
@@ -56,7 +59,7 @@ export function buildDownloadsSections({
       discNumber: song?.discNumber ?? 1,
       trackNumber,
     });
-    sectionsByArtist.set(downloadedTrack.artistId, section);
+    sectionsByArtist.set(downloadedTrack.albumArtistId, section);
   }
 
   return [...sectionsByArtist.values()]

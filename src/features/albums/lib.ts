@@ -2,16 +2,24 @@ import { MediaItem } from "@rntp/player";
 import { MediaItemExtras } from "../player";
 import { AlbumSong } from "./types";
 
-export function filterSortAlbums<T extends { name: string; year?: number | null }>({
+export function filterSortAlbums<T extends { id: string; name: string; year?: number | null }>({
   albums,
   query,
+  downloadedOnly = false,
+  downloadedAlbumIds,
 }: {
   albums: T[];
   query: string;
+  downloadedOnly?: boolean;
+  downloadedAlbumIds?: ReadonlySet<string>;
 }) {
   const normalizedQuery = query.toLocaleLowerCase();
   return albums
-    .filter((album) => album.name.toLocaleLowerCase().includes(normalizedQuery))
+    .filter(
+      (album) =>
+        (!downloadedOnly || downloadedAlbumIds?.has(album.id)) &&
+        album.name.toLocaleLowerCase().includes(normalizedQuery),
+    )
     .sort((a, b) => (b.year ?? 0) - (a.year ?? 0));
 }
 

@@ -100,7 +100,7 @@ describe("DownloadsRepository", () => {
   it("creates encoded destinations and scans them back into identities", () => {
     const repository = new DownloadsRepository();
     const target = {
-      artistId: "artist/a",
+      albumArtistId: "artist/a",
       albumId: "album b",
       trackId: "track.c",
       contentType: "audio/mpeg; charset=binary",
@@ -115,7 +115,7 @@ describe("DownloadsRepository", () => {
 
   it("deletes the complete catalog", () => {
     const repository = new DownloadsRepository();
-    const target = { artistId: "artist", albumId: "album", trackId: "track" };
+    const target = { albumArtistId: "artist", albumId: "album", trackId: "track" };
     repository.prepareDestination(target);
     new File(repository.file(target).uri).create();
 
@@ -126,7 +126,7 @@ describe("DownloadsRepository", () => {
 
   it("ignores background downloader temporary files", () => {
     const repository = new DownloadsRepository();
-    const target = { artistId: "artist", albumId: "album", trackId: "track" };
+    const target = { albumArtistId: "artist", albumId: "album", trackId: "track" };
     repository.prepareDestination(target);
     new File(`${repository.file(target).uri}.tmp`).create();
 

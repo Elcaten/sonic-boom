@@ -47,7 +47,7 @@ export class DownloadsRepository {
   file(target: DownloadTarget): File {
     return new File(
       this.root,
-      encodePathSegment(target.artistId),
+      encodePathSegment(target.albumArtistId),
       encodePathSegment(target.albumId),
       `${encodePathSegment(target.trackId)}.${mediaExtension(target.contentType)}`,
     );
@@ -69,7 +69,7 @@ export class DownloadsRepository {
 
     return this.root.list().flatMap((artistEntry) => {
       if (!isDirectory(artistEntry)) return [];
-      const artistId = decodePathSegment(artistEntry.name);
+      const albumArtistId = decodePathSegment(artistEntry.name);
 
       return artistEntry.list().flatMap((albumEntry) => {
         if (!isDirectory(albumEntry)) return [];
@@ -85,7 +85,7 @@ export class DownloadsRepository {
 
           return [
             {
-              artistId,
+              albumArtistId,
               albumId,
               trackId: decodePathSegment(encodedTrackId),
               fileUri: trackEntry.uri,

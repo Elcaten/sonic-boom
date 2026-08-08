@@ -39,7 +39,7 @@ export type DownloadCoordinatorDependencies = {
 
 function isDownloadIdentity(value: Record<string, unknown>): value is DownloadIdentity {
   return (
-    typeof value.artistId === "string" &&
+    typeof value.albumArtistId === "string" &&
     typeof value.albumId === "string" &&
     typeof value.trackId === "string"
   );
@@ -115,7 +115,7 @@ export function startMediaDownload({
       url: remoteUrl,
       destination: resolved.repository.prepareDestination(target),
       metadata: {
-        artistId: target.artistId,
+        albumArtistId: target.albumArtistId,
         albumId: target.albumId,
         trackId: target.trackId,
       },

@@ -15,8 +15,8 @@ describe("buildDownloadsSections", () => {
 
     const sections = buildDownloadsSections({
       downloadedTracks: [
-        { artistId: "artist", albumId: "album", trackId: "two", fileUri: "file:///two" },
-        { artistId: "artist", albumId: "album", trackId: "one", fileUri: "file:///one" },
+        { albumArtistId: "artist", albumId: "album", trackId: "two", fileUri: "file:///two" },
+        { albumArtistId: "artist", albumId: "album", trackId: "one", fileUri: "file:///one" },
       ],
       artistNames: new Map([["artist", "Artist B"]]),
       albums: new Map([["album", album]]),
@@ -31,7 +31,12 @@ describe("buildDownloadsSections", () => {
   it("keeps files visible when cached server metadata is unavailable", () => {
     const sections = buildDownloadsSections({
       downloadedTracks: [
-        { artistId: "artist-id", albumId: "album-id", trackId: "track-id", fileUri: "file:///track" },
+        {
+          albumArtistId: "artist-id",
+          albumId: "album-id",
+          trackId: "track-id",
+          fileUri: "file:///track",
+        },
       ],
       artistNames: new Map(),
       albums: new Map(),

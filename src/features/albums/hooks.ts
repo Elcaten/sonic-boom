@@ -114,14 +114,15 @@ export function useDownloadAlbum() {
   const startMediaDownload = useStartMediaDownload();
 
   return useCallback(
-    async ({ albumId }: { albumId: string }) => {
+    async ({ albumId, albumArtistId }: { albumId: string; albumArtistId: string }) => {
       const response = await queryClient.ensureQueryData(queries.album(albumId));
       const songs = response.album.song ?? [];
+      const resolvedAlbumArtistId = response.album.artistId ?? albumArtistId;
 
       await Promise.allSettled(
         songs.map(async (song) => {
           const target = {
-            artistId: song.artistId ?? response.album.artistId ?? "",
+            albumArtistId: resolvedAlbumArtistId,
             albumId: song.albumId ?? albumId,
             trackId: song.id,
             contentType: song.contentType,

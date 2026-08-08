@@ -15,7 +15,7 @@ export function useDownloadsSections() {
       const pendingTracks = [...downloadTasks.values()]
         .filter((task) => !completedKeys.has(getDownloadKey(task)))
         .map((task) => ({
-          artistId: task.artistId,
+          albumArtistId: task.albumArtistId,
           albumId: task.albumId,
           trackId: task.trackId,
           fileUri: "",
@@ -25,7 +25,7 @@ export function useDownloadsSections() {
     [downloadTasks, downloadedTracksQuery.data],
   );
   const artistIds = useMemo(
-    () => [...new Set(downloadedTracks.map((track) => track.artistId))],
+    () => [...new Set(downloadedTracks.map((track) => track.albumArtistId))],
     [downloadedTracks],
   );
   const albumIds = useMemo(

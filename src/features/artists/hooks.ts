@@ -35,9 +35,12 @@ export function usePreloadAlbumImages() {
   const queryClient = useQueryClient();
   const queries = useRequiredQueries();
 
-  return async (artistId: string) => {
+  return async (artistId: string, albumIdsToPreload?: ReadonlySet<string>) => {
     const artist = await queryClient.ensureQueryData(queries.artist(artistId));
-    const albumIds = artist.artist.album?.map((album) => album.id) ?? [];
+    const albumIds =
+      artist.artist.album
+        ?.map((album) => album.id)
+        .filter((albumId) => !albumIdsToPreload || albumIdsToPreload.has(albumId)) ?? [];
     await Promise.all(
       albumIds.map((albumId) => queryClient.ensureQueryData(queries.coverArtImage(albumId, 48))),
     );

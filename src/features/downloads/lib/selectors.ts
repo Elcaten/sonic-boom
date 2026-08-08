@@ -15,6 +15,20 @@ export function indexDownloadedTracks(tracks: DownloadedTrackRef[]): Map<string,
   return new Map(tracks.map((track) => [getDownloadKey(track), track]));
 }
 
+export function indexDownloadedAlbumsByArtist(
+  tracks: DownloadedTrackRef[],
+): Map<string, Set<string>> {
+  const albumIdsByArtist = new Map<string, Set<string>>();
+
+  for (const track of tracks) {
+    const albumIds = albumIdsByArtist.get(track.albumArtistId) ?? new Set<string>();
+    albumIds.add(track.albumId);
+    albumIdsByArtist.set(track.albumArtistId, albumIds);
+  }
+
+  return albumIdsByArtist;
+}
+
 export function selectTrackDownloadStatuses({
   songs,
   albumId,
@@ -50,12 +64,12 @@ export function selectTrackDownloadStatuses({
 }
 
 export function selectAlbumDownloadStatuses({
-  artistId,
+  albumArtistId,
   albums,
   downloadedTracks,
   tasks,
 }: {
-  artistId: string;
+  albumArtistId: string;
   albums: AlbumDownloadCandidate[];
   downloadedTracks: DownloadedTrackRef[];
   tasks: DownloadTaskMap;
@@ -65,11 +79,16 @@ export function selectAlbumDownloadStatuses({
   for (const album of albums) {
     const completedTrackIds = new Set(
       downloadedTracks
-        .filter((track) => track.artistId === artistId && track.albumId === album.id)
+        .filter(
+          (track) => track.albumArtistId === albumArtistId && track.albumId === album.id,
+        )
         .map((track) => track.trackId),
     );
     const albumTasks = [...tasks.values()].filter(
-      (task) => task.artistId === artistId && task.albumId === album.id && !completedTrackIds.has(task.trackId),
+      (task) =>
+        task.albumArtistId === albumArtistId &&
+        task.albumId === album.id &&
+        !completedTrackIds.has(task.trackId),
     );
     const total = Math.max(album.songCount, completedTrackIds.size + albumTasks.length);
     if (total === 0) continue;

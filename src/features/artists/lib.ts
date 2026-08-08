@@ -3,13 +3,21 @@ import { ArtistSection, SectionedArtist } from "./types";
 export function groupArtistsBySection({
   artists,
   query,
+  downloadedOnly = false,
+  downloadedAlbumsByArtist,
 }: {
   artists: SectionedArtist[];
   query: string;
+  downloadedOnly?: boolean;
+  downloadedAlbumsByArtist?: ReadonlyMap<string, ReadonlySet<string>>;
 }): ArtistSection[] {
   const sanitizedSearch = query.toLocaleLowerCase();
   const groupedArtists = artists
-    .filter((artist) => artist.artist.name.toLocaleLowerCase().includes(sanitizedSearch))
+    .filter(
+      ({ artist }) =>
+        (!downloadedOnly || Boolean(downloadedAlbumsByArtist?.get(artist.id)?.size)) &&
+        artist.name.toLocaleLowerCase().includes(sanitizedSearch),
+    )
     .reduce<Record<string, ArtistSection["data"]>>((acc, currentArtist) => {
       if (!acc[currentArtist.section]) {
         acc[currentArtist.section] = [];

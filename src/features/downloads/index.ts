@@ -1,4 +1,6 @@
 export { DownloadStatusIcon } from "./components/DownloadStatusIcon";
+export { DownloadedFilterToolbar } from "./components/DownloadedFilterToolbar";
+export { useDownloadedFilterStore } from "./filter-store";
 export {
   DownloadRecovery,
   DOWNLOADS_QUERY_KEY,
@@ -9,6 +11,7 @@ export {
 } from "./hooks";
 export {
   canStartAlbumDownload,
+  indexDownloadedAlbumsByArtist,
   indexDownloadedTracks,
   selectAlbumDownloadStatuses,
   selectTrackDownloadStatuses,
