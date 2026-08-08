@@ -1,4 +1,5 @@
 import { useAuthState } from "@/features/auth";
+import { useDownloadStore } from "@/features/downloads";
 import { TrackPlayerSetup } from "@/features/player";
 import { AppContextProvider, QueryClientProvider, ThemeProvider } from "@/providers";
 import { SplashScreenGate } from "@/shared/ui";
@@ -7,6 +8,10 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+const devToolsStores = {
+  ownloadStore: useDownloadStore,
+};
 
 export default function RootLayout() {
   return (
@@ -19,10 +24,10 @@ export default function RootLayout() {
             <AppContextProvider>
               <QueryClientProvider>
                 <FloatingDevTools
+                  zustandStores={devToolsStores}
                   licenseKey={process.env.EXPO_PUBLIC_BUYO_LICENSE_KEY}
                   externalSync={{
                     socketURL: `http://${process.env.EXPO_PUBLIC_HOSTNAME}:42831`,
-                    enableLogs: true,
                   }}
                 />
                 <Content />

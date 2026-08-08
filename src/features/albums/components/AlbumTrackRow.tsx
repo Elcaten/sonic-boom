@@ -1,34 +1,33 @@
-import { formatDuration } from "@/shared/lib/format";
-import { Button, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
+import { DownloadStatusIcon } from "@/features/downloads";
+import { MediaItemExtras } from "@/features/player";
+import { Button, HStack, Image, Spacer, Text } from "@expo/ui/swift-ui";
 import {
-    Animation,
-    animation,
-    font,
-    foregroundStyle,
-    frame,
-    lineLimit,
-    padding,
-    symbolEffect,
+  Animation,
+  animation,
+  font,
+  foregroundStyle,
+  frame,
+  lineLimit,
+  symbolEffect,
 } from "@expo/ui/swift-ui/modifiers";
-import { AlbumSong } from "../types";
+import { MediaItem } from "@rntp/player";
 
 export function AlbumTrackRow({
-  song,
+  mediaItem,
   isActive,
   isPlaying,
   onPress,
 }: {
-  song: AlbumSong;
+  mediaItem: MediaItem;
   isActive: boolean;
   isPlaying: boolean;
   onPress: () => void;
 }) {
+  const extras = mediaItem.extras as unknown as MediaItemExtras;
+
   return (
     <Button onPress={onPress}>
       <HStack spacing={12} modifiers={[animation(Animation.spring({ duration: 0.2 }), isActive)]}>
-        <VStack modifiers={[frame({ width: 1 })]}>
-          <Text>&nbsp;</Text>
-        </VStack>
         {isActive && (
           <Image
             systemName="waveform"
@@ -56,23 +55,14 @@ export function AlbumTrackRow({
               }),
             ]}
           >
-            {String(song.track)}
+            {String(extras.trackNumber)}
           </Text>
         )}
         <Text modifiers={[font({ weight: isActive ? "semibold" : "regular" }), lineLimit(1)]}>
-          {song.title}
+          {mediaItem.title}
         </Text>
         <Spacer />
-        {song.duration && (
-          <Text
-            modifiers={[
-              padding({ trailing: 16 }),
-              foregroundStyle({ type: "hierarchical", style: "secondary" }),
-            ]}
-          >
-            {formatDuration(song.duration)}
-          </Text>
-        )}
+        {extras.downloadTask && <DownloadStatusIcon downloadTask={extras.downloadTask} />}
       </HStack>
     </Button>
   );

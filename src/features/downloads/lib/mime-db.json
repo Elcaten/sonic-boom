@@ -1,0 +1,113 @@
+{
+  "audio/aac": {
+    "source": "iana",
+    "extensions": ["adts", "aac"]
+  },
+  "audio/ac3": {
+    "source": "iana",
+    "extensions": ["ac3"]
+  },
+  "audio/adpcm": {
+    "source": "apache",
+    "extensions": ["adp"]
+  },
+  "audio/amr": {
+    "source": "iana",
+    "extensions": ["amr"]
+  },
+  "audio/flac": {
+    "source": "iana",
+    "extensions": ["flac"]
+  },
+  "audio/matroska": {
+    "source": "iana",
+    "extensions": ["mka"]
+  },
+  "audio/midi": {
+    "source": "apache",
+    "extensions": ["mid", "midi", "kar", "rmi"]
+  },
+  "audio/mp3": {
+    "compressible": false,
+    "extensions": ["mp3"]
+  },
+  "audio/mp4": {
+    "source": "iana",
+    "compressible": false,
+    "extensions": ["m4a", "mp4a", "m4b"]
+  },
+  "audio/mpeg": {
+    "source": "iana",
+    "compressible": false,
+    "extensions": ["mpga", "mp2", "mp2a", "mp3", "m2a", "m3a"]
+  },
+  "audio/ogg": {
+    "source": "iana",
+    "compressible": false,
+    "extensions": ["oga", "ogg", "spx", "opus"]
+  },
+  "audio/opus": {
+    "source": "iana",
+    "extensions": ["ogg"]
+  },
+  "audio/vorbis": {
+    "source": "iana",
+    "compressible": false,
+    "extensions": ["ogg"]
+  },
+  "audio/wav": {
+    "compressible": false,
+    "extensions": ["wav"]
+  },
+  "audio/wave": {
+    "compressible": false,
+    "extensions": ["wav"]
+  },
+  "audio/webm": {
+    "source": "apache",
+    "compressible": false,
+    "extensions": ["weba"]
+  },
+  "audio/x-aac": {
+    "source": "apache",
+    "compressible": false,
+    "extensions": ["aac"]
+  },
+  "audio/x-aiff": {
+    "source": "apache",
+    "extensions": ["aif", "aiff", "aifc"]
+  },
+  "audio/x-caf": {
+    "source": "apache",
+    "compressible": false,
+    "extensions": ["caf"]
+  },
+  "audio/x-flac": {
+    "source": "apache",
+    "extensions": ["flac"]
+  },
+  "audio/x-m4a": {
+    "source": "nginx",
+    "extensions": ["m4a"]
+  },
+  "audio/x-matroska": {
+    "source": "apache",
+    "extensions": ["mka"]
+  },
+  "audio/x-mpegurl": {
+    "source": "apache",
+    "extensions": ["m3u"]
+  },
+  "audio/x-ms-wax": {
+    "source": "apache",
+    "extensions": ["wax"]
+  },
+  "audio/x-ms-wma": {
+    "source": "apache",
+    "extensions": ["wma"]
+  },
+  "audio/x-wav": {
+    "source": "apache",
+    "extensions": ["wav"]
+  }
+}

@@ -1,27 +1,27 @@
 import { Section } from "@expo/ui/swift-ui";
-import { AlbumSong } from "../types";
+import { MediaItem } from "@rntp/player";
 import { AlbumTrackRow } from "./AlbumTrackRow";
 
 export function AlbumTrackList({
-  songs,
+  mediaItems,
   activeTrackId,
   isPlaying,
   onTrackPress,
 }: {
-  songs: AlbumSong[];
+  mediaItems: MediaItem[];
   activeTrackId?: string;
   isPlaying: boolean;
   onTrackPress: (trackId: string) => void;
 }) {
   return (
     <Section>
-      {songs.map((song) => (
+      {mediaItems.map((mediaItem) => (
         <AlbumTrackRow
-          key={song.id}
-          song={song}
-          isActive={song.id === activeTrackId}
+          key={mediaItem.mediaId}
+          mediaItem={mediaItem}
+          isActive={mediaItem.mediaId === activeTrackId}
           isPlaying={isPlaying}
-          onPress={() => onTrackPress(song.id)}
+          onPress={() => onTrackPress(mediaItem.mediaId!)}
         />
       ))}
     </Section>

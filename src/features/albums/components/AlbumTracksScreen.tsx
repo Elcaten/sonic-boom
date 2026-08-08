@@ -1,8 +1,11 @@
 import { ContentUnavailableView, Host, List, Section } from "@expo/ui/swift-ui";
 import { frame, listStyle } from "@expo/ui/swift-ui/modifiers";
 import { useLocalSearchParams } from "expo-router";
-import { ActivityIndicator, View, useWindowDimensions } from "react-native";
-import { useAlbum, useAlbumMediaItems, useAlbumPlayback, useAlbumTrackPress } from "../hooks";
+import { ActivityIndicator, useWindowDimensions, View } from "react-native";
+import { useAlbum } from "../hooks";
+import { useAlbumMediaItems } from "../hooks/useAlbumMediaItems";
+import { useAlbumPlayback } from "../hooks/useAlbumPlayback";
+import { useAlbumTrackPress } from "../hooks/useAlbumTrackPress";
 import { AlbumHeader } from "./AlbumHeader";
 import { AlbumPlaybackActions } from "./AlbumPlaybackActions";
 import { AlbumTrackList } from "./AlbumTrackList";
@@ -15,6 +18,7 @@ export default function AlbumTracksScreen() {
   const isWideLayout = width > 600;
 
   const { albumQuery, album, songs } = useAlbum(albumId);
+
   const albumMediaItems = useAlbumMediaItems({ albumId, songs });
   const { playAlbum, shuffleAlbum, playFromTrack } = useAlbumPlayback({
     tracks: albumMediaItems.data,
@@ -59,7 +63,7 @@ export default function AlbumTracksScreen() {
           actions={<AlbumPlaybackActions onPlayPress={playAlbum} onShufflePress={shuffleAlbum} />}
         />
         <AlbumTrackList
-          songs={songs}
+          mediaItems={albumMediaItems.data}
           activeTrackId={activeTrackId}
           isPlaying={isPlaying}
           onTrackPress={handleTrackPress}
