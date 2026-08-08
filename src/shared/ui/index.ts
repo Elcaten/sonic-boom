@@ -4,3 +4,4 @@ export { HapticPressable } from "./HapticPressable";
 export { MediaListItem } from "./MediaListItem";
 export { Slider } from "./Slider";
 export { SplashScreenGate } from "./SplashScreenGate";
+export { ArtworkStartupGate } from "./ArtworkStartupGate";

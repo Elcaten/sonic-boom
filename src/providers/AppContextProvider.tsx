@@ -9,7 +9,7 @@ import { SubsonicAPI } from "subsonic-api";
 export const AppContextProvider = ({ children }: PropsWithChildren<unknown>) => {
   const auth = useInitAuth();
   const api = useMemo(() => createApiContext(auth.state), [auth.state]);
-  const queries = useMemo(() => createQueriesContext(api), [api]);
+  const queries = useMemo(() => createQueriesContext(api, auth.state), [api, auth.state]);
 
   return (
     <AuthContext.Provider value={auth}>
@@ -53,8 +53,11 @@ function createApiContext(auth: AuthState) {
   });
 }
 
-function createQueriesContext(api: SubsonicAPI | null) {
+function createQueriesContext(api: SubsonicAPI | null, auth: AuthState) {
   if (!api) return null;
 
-  return createSubsonicQueries(api);
+  return createSubsonicQueries(api, {
+    serverAddress: auth.serverAddress,
+    username: auth.username,
+  });
 }

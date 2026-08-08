@@ -1,10 +1,46 @@
 import { appLogger } from "@/shared/lib/logger";
-import { getCoverCacheKey } from "@/shared/lib/media";
 import { queryOptions } from "@tanstack/react-query";
-import { Image, ImageSource } from "expo-image";
+import { ImageSource } from "expo-image";
 import { SubsonicAPI } from "subsonic-api";
+import {
+  CoverArtRepository,
+  CoverArtSize,
+} from "../cover-art/cover-art-repository";
 
-export function createSubsonicQueries(api: SubsonicAPI) {
+export function createSubsonicQueries(
+  api: SubsonicAPI,
+  account: { serverAddress: string; username: string },
+) {
+  const coverArtRepository = new CoverArtRepository(account);
+
+  const getCoverArtImage = async ({
+    entityId,
+    size,
+    force = false,
+    signal,
+  }: {
+    entityId: string;
+    size: CoverArtSize;
+    force?: boolean;
+    signal?: AbortSignal;
+  }): Promise<ImageSource> => {
+    const storedSize = coverArtRepository.getStoredSize(size);
+    const source = await coverArtRepository.getCoverArt({
+      entityId,
+      size,
+      force,
+      signal,
+      getUrl: () =>
+        api
+          .buildUrl("getCoverArt", { id: entityId, size: storedSize * 2 })
+          .then((url) => url.toString()),
+    });
+    appLogger.COVER_ART.info(
+      `${force ? "Refreshed" : "Resolved"} persistent artwork ${source.cacheKey}`,
+    );
+    return source;
+  };
+
   return {
     albumList: (params: { size: number; offset: number }) =>
       queryOptions({
@@ -21,26 +57,19 @@ export function createSubsonicQueries(api: SubsonicAPI) {
         queryKey: ["stream-url", trackId],
         queryFn: () => api.buildUrl("stream", { id: trackId }).then((u) => u.toString()),
       }),
-    coverArtImage: (entityId: string | undefined, size: 32 | 48 | 256) =>
+    coverArtImage: (entityId: string | undefined, size: CoverArtSize) =>
       queryOptions({
         queryKey: ["cover-art", entityId, size],
-        queryFn: async (): Promise<ImageSource> => {
-          const cacheKey = getCoverCacheKey({ id: entityId!, size });
-          const cachedArtwork = await Image.getCachePathAsync(cacheKey);
-          if (cachedArtwork) {
-            appLogger.QUERY.info(`Cached artwork ${cacheKey}`);
-            return { uri: cachedArtwork, cacheKey };
-          }
-
-          const artworkUrl = await api
-            .buildUrl("getCoverArt", { id: entityId!, size: size * 2 })
-            .then((u) => u.toString());
-          appLogger.QUERY.info(`Fetched artwork ${cacheKey}`);
-          return { uri: artworkUrl, cacheKey };
-        },
+        queryFn: ({ signal }): Promise<ImageSource> =>
+          getCoverArtImage({ entityId: entityId!, size, signal }),
         enabled: Boolean(entityId),
-        staleTime: undefined,
+        retry: false,
       }),
+    artwork: {
+      repository: coverArtRepository,
+      get: getCoverArtImage,
+      ping: () => api.ping(),
+    },
     song: (trackId: string) =>
       queryOptions({
         queryKey: ["song", trackId],

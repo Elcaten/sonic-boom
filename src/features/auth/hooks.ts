@@ -1,3 +1,4 @@
+import { useRequiredQueries } from "@/shared/api/queries-context/queries-context";
 import { appLogger } from "@/shared/lib/logger";
 import TrackPlayer from "@rntp/player";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -39,16 +40,18 @@ export function useSignOut() {
   const auth = useAuth();
   const { clearAll } = usePlayerPersistor();
   const queryClient = useQueryClient();
+  const queries = useRequiredQueries();
 
   const signOut = useCallback(async () => {
-    TrackPlayer.stop();
-    TrackPlayer.clear();
+    await TrackPlayer.stop();
+    await TrackPlayer.clear();
     await clearAll();
+    await queries.artwork.repository.clear();
     await Image.clearMemoryCache();
     await Image.clearDiskCache();
     await auth.actions.clearAll();
     queryClient.clear();
-  }, [auth.actions, clearAll, queryClient]);
+  }, [auth.actions, clearAll, queries.artwork.repository, queryClient]);
 
   return { signOut };
 }

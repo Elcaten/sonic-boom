@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { QueryClient } from "@tanstack/react-query";
+import { defaultShouldDehydrateQuery, QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { PropsWithChildren } from "react";
 
@@ -28,6 +28,10 @@ export const QueryClientProvider = ({ children }: PropsWithChildren<unknown>) =>
       persistOptions={{
         persister: asyncStoragePersister,
         maxAge: Number.MAX_SAFE_INTEGER,
+        dehydrateOptions: {
+          shouldDehydrateQuery: (query) =>
+            query.queryKey[0] !== "cover-art" && defaultShouldDehydrateQuery(query),
+        },
       }}
     >
       {children}

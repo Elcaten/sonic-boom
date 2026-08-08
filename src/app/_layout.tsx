@@ -1,7 +1,7 @@
 import { useAuthState } from "@/features/auth";
 import { TrackPlayerSetup } from "@/features/player";
 import { AppContextProvider, QueryClientProvider, ThemeProvider } from "@/providers";
-import { SplashScreenGate } from "@/shared/ui";
+import { ArtworkStartupGate, SplashScreenGate } from "@/shared/ui";
 import { FloatingDevTools } from "@buoy-gg/core";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -38,8 +38,12 @@ export default function RootLayout() {
 function Content() {
   const authState = useAuthState();
 
-  return (
-    <SplashScreenGate isAppReady={!authState.loading}>
+  if (authState.loading) {
+    return <SplashScreenGate isAppReady={false}>{null}</SplashScreenGate>;
+  }
+
+  const stack = (
+    <>
       <StatusBar style="auto" />
       <Stack>
         <Stack.Protected guard={!!authState.authenticated}>
@@ -56,6 +60,9 @@ function Content() {
           />
         </Stack.Protected>
       </Stack>
-    </SplashScreenGate>
+    </>
   );
+
+  if (authState.authenticated) return <ArtworkStartupGate>{stack}</ArtworkStartupGate>;
+  return <SplashScreenGate isAppReady>{stack}</SplashScreenGate>;
 }

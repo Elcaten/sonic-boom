@@ -1,26 +1,32 @@
+import { useArtworkSync } from "../cover-art";
 import { Image } from "expo-image";
 import { useState } from "react";
 import { Alert } from "react-native";
 import { usePrefetchQueries } from "./use-prefetch-queries";
 
-type FetcherState = 48 | 256 | "QUERIES" | undefined;
+type RefreshStage = "QUERIES" | "ARTWORK" | undefined;
 
 export function useRefreshCache() {
   const prefetchQueries = usePrefetchQueries();
-  const [showFetcher, setShowFetcher] = useState<FetcherState>(undefined);
+  const artworkSync = useArtworkSync();
+  const [stage, setStage] = useState<RefreshStage>(undefined);
 
   const startRefresh = async () => {
-    setShowFetcher("QUERIES");
-    await prefetchQueries.trigger();
-    await Image.clearMemoryCache();
-    await Image.clearDiskCache();
-    setShowFetcher(48);
+    try {
+      setStage("QUERIES");
+      await prefetchQueries.trigger();
+      setStage("ARTWORK");
+      await artworkSync.start({ force: true });
+      await Image.clearMemoryCache();
+    } finally {
+      setStage(undefined);
+    }
   };
 
   const onRefreshPress = () => {
     Alert.alert(
       "Refresh Cache?",
-      "This will delete all downloaded album data and artwork from this device. They will be downloaded again.",
+      "This will refresh album data and artwork. Existing artwork is kept if a replacement cannot be downloaded.",
       [
         { text: "Refresh", onPress: startRefresh, style: "destructive" },
         { text: "Cancel", style: "cancel" },
@@ -28,15 +34,11 @@ export function useRefreshCache() {
     );
   };
 
-  const handleSmallImagesLoaded = () => setShowFetcher(256);
-  const handleLargeImagesLoaded = () => setShowFetcher(undefined);
-
   return {
-    showFetcher,
-    isRefreshing: Boolean(showFetcher),
-    progress: prefetchQueries.progress,
+    stage,
+    isRefreshing: Boolean(stage),
+    queryProgress: prefetchQueries.progress,
+    artworkProgress: artworkSync.progress,
     onRefreshPress,
-    handleSmallImagesLoaded,
-    handleLargeImagesLoaded,
   };
 }

@@ -1,6 +1,5 @@
 import { useRequiredQueries } from "@/shared/api";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Image } from "expo-image";
 import { SectionedArtist } from "./types";
 
 export function useArtists() {
@@ -38,10 +37,9 @@ export function usePreloadAlbumImages() {
 
   return async (artistId: string) => {
     const artist = await queryClient.ensureQueryData(queries.artist(artistId));
-    const albumIds = artist.artist.album?.map((a) => a.id);
-    albumIds?.forEach(async (albumId) => {
-      const source = await queryClient.ensureQueryData(queries.coverArtImage(albumId, 48));
-      Image.loadAsync(source);
-    });
+    const albumIds = artist.artist.album?.map((album) => album.id) ?? [];
+    await Promise.all(
+      albumIds.map((albumId) => queryClient.ensureQueryData(queries.coverArtImage(albumId, 48))),
+    );
   };
 }

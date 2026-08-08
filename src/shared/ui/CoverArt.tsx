@@ -40,11 +40,12 @@ export function CoverArt({
         placeholder={{ blurhash: getRandomBlurhash() }}
         placeholderContentFit="fill"
         source={coverArtQuery?.data}
-        cachePolicy="memory-disk"
+        cachePolicy="memory"
+        recyclingKey={coverArtQuery.data?.uri}
         style={[{ width: imgSize, height: imgSize, borderRadius }, style]}
         onLoad={(e) => {
           appLogger.COVER_ART.info(
-            `Loaded artwork from ${e.cacheType} ${coverArtQuery?.data?.cacheKey}`,
+            `Rendered persistent artwork from ${e.cacheType} ${coverArtQuery?.data?.cacheKey}`,
           );
         }}
         onError={() => {

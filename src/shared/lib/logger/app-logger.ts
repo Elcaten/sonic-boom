@@ -4,7 +4,7 @@ const allLoggerExtensions = ["PLAYER", "API", "QUERY", "COVER_ART", "SIGN_IN"] a
 
 type LoggerExtention = (typeof allLoggerExtensions)[number];
 
-const enabledLoggerExtensions: LoggerExtention[] = ["API"];
+const enabledLoggerExtensions: LoggerExtention[] = ["API", "QUERY"];
 
 const baseLogger = logger.createLogger({
   levels: {
