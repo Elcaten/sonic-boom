@@ -1,3 +1,4 @@
+import { deleteAllMediaDownloads, DOWNLOADS_QUERY_KEY } from "@/features/downloads";
 import { useRequiredQueries } from "@/shared/api/queries-context/queries-context";
 import { appLogger } from "@/shared/lib/logger";
 import TrackPlayer from "@rntp/player";
@@ -46,6 +47,10 @@ export function useSignOut() {
     await TrackPlayer.stop();
     await TrackPlayer.clear();
     await clearAll();
+    await deleteAllMediaDownloads({
+      onCatalogChanged: () => queryClient.invalidateQueries({ queryKey: DOWNLOADS_QUERY_KEY }),
+      onError: (message, error) => appLogger.DOWNLOADS.error(message, error),
+    });
     await queries.artwork.repository.clear();
     await Image.clearMemoryCache();
     await Image.clearDiskCache();

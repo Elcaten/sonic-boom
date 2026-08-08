@@ -1,14 +1,23 @@
 import { Button, HStack, Image, RNHostView, Spacer, Text, VStack } from "@expo/ui/swift-ui";
 import { font, foregroundStyle, lineLimit } from "@expo/ui/swift-ui/modifiers";
 import { Link, LinkProps } from "expo-router";
+import { ReactNode } from "react";
 import { CoverArt } from "./CoverArt";
+
+type MediaListItemProps = LinkProps & {
+  title: string;
+  subtitle: string;
+  coverId: string;
+  trailingAccessory?: ReactNode;
+};
 
 export function MediaListItem({
   title,
   subtitle,
   coverId,
+  trailingAccessory,
   ...rest
-}: LinkProps & { title: string; subtitle: string; coverId: string }) {
+}: MediaListItemProps) {
   return (
     <Link {...rest} asChild>
       <Button>
@@ -31,6 +40,7 @@ export function MediaListItem({
             </Text>
           </VStack>
           <Spacer />
+          {trailingAccessory}
           <Image systemName="chevron.right" size={14} color="secondary" />
         </HStack>
       </Button>

@@ -1,27 +1,27 @@
 import { Section } from "@expo/ui/swift-ui";
-import { AlbumSong } from "../types";
+import { AlbumTrackRowModel } from "../types";
 import { AlbumTrackRow } from "./AlbumTrackRow";
 
 export function AlbumTrackList({
-  songs,
+  tracks,
   activeTrackId,
   isPlaying,
   onTrackPress,
 }: {
-  songs: AlbumSong[];
+  tracks: AlbumTrackRowModel[];
   activeTrackId?: string;
   isPlaying: boolean;
   onTrackPress: (trackId: string) => void;
 }) {
   return (
     <Section>
-      {songs.map((song) => (
+      {tracks.map((track) => (
         <AlbumTrackRow
-          key={song.id}
-          song={song}
-          isActive={song.id === activeTrackId}
+          key={track.id}
+          track={track}
+          isActive={track.id === activeTrackId}
           isPlaying={isPlaying}
-          onPress={() => onTrackPress(song.id)}
+          onPress={() => onTrackPress(track.id)}
         />
       ))}
     </Section>

@@ -8,6 +8,10 @@ export default function SettingsLayout() {
         options={{ headerTitle: "Settings", headerTransparent: true }}
       />
       <Stack.Screen
+        name="downloads"
+        options={{ headerTitle: "Downloads", headerTransparent: true }}
+      />
+      <Stack.Screen
         name="animations"
         options={{ headerTitle: "Animations", headerTransparent: true }}
       />

@@ -1,6 +1,13 @@
 import { consoleTransport, logger, LoggerInstance } from "react-native-logs";
 
-const allLoggerExtensions = ["PLAYER", "API", "QUERY", "COVER_ART", "SIGN_IN"] as const;
+const allLoggerExtensions = [
+  "PLAYER",
+  "API",
+  "QUERY",
+  "COVER_ART",
+  "SIGN_IN",
+  "DOWNLOADS",
+] as const;
 
 type LoggerExtention = (typeof allLoggerExtensions)[number];
 

@@ -1,4 +1,5 @@
 import { useAuthState } from "@/features/auth";
+import { DownloadRecovery } from "@/features/downloads";
 import { TrackPlayerSetup } from "@/features/player";
 import { AppContextProvider, QueryClientProvider, ThemeProvider } from "@/providers";
 import { ArtworkStartupGate, SplashScreenGate } from "@/shared/ui";
@@ -63,6 +64,13 @@ function Content() {
     </>
   );
 
-  if (authState.authenticated) return <ArtworkStartupGate>{stack}</ArtworkStartupGate>;
+  if (authState.authenticated) {
+    return (
+      <>
+        <DownloadRecovery />
+        <ArtworkStartupGate>{stack}</ArtworkStartupGate>
+      </>
+    );
+  }
   return <SplashScreenGate isAppReady>{stack}</SplashScreenGate>;
 }

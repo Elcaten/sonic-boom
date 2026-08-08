@@ -1,34 +1,33 @@
+import { DownloadStatusIcon } from "@/features/downloads";
 import { formatDuration } from "@/shared/lib/format";
-import { Button, HStack, Image, Spacer, Text, VStack } from "@expo/ui/swift-ui";
+import { Button, HStack, Image, Spacer, Text } from "@expo/ui/swift-ui";
 import {
-    Animation,
-    animation,
-    font,
-    foregroundStyle,
-    frame,
-    lineLimit,
-    padding,
-    symbolEffect,
+  Animation,
+  animation,
+  disabled,
+  font,
+  foregroundStyle,
+  frame,
+  lineLimit,
+  padding,
+  symbolEffect,
 } from "@expo/ui/swift-ui/modifiers";
-import { AlbumSong } from "../types";
+import { AlbumTrackRowModel } from "../types";
 
 export function AlbumTrackRow({
-  song,
+  track,
   isActive,
   isPlaying,
   onPress,
 }: {
-  song: AlbumSong;
+  track: AlbumTrackRowModel;
   isActive: boolean;
   isPlaying: boolean;
   onPress: () => void;
 }) {
   return (
-    <Button onPress={onPress}>
+    <Button onPress={onPress} modifiers={!track.isPlayable ? [disabled()] : undefined}>
       <HStack spacing={12} modifiers={[animation(Animation.spring({ duration: 0.2 }), isActive)]}>
-        <VStack modifiers={[frame({ width: 1 })]}>
-          <Text>&nbsp;</Text>
-        </VStack>
         {isActive && (
           <Image
             systemName="waveform"
@@ -56,23 +55,24 @@ export function AlbumTrackRow({
               }),
             ]}
           >
-            {String(song.track)}
+            {track.trackNumber ? String(track.trackNumber) : "–"}
           </Text>
         )}
         <Text modifiers={[font({ weight: isActive ? "semibold" : "regular" }), lineLimit(1)]}>
-          {song.title}
+          {track.title}
         </Text>
         <Spacer />
-        {song.duration && (
+        {track.duration && (
           <Text
             modifiers={[
               padding({ trailing: 16 }),
               foregroundStyle({ type: "hierarchical", style: "secondary" }),
             ]}
           >
-            {formatDuration(song.duration)}
+            {formatDuration(track.duration)}
           </Text>
         )}
+        {track.downloadStatus && <DownloadStatusIcon status={track.downloadStatus} />}
       </HStack>
     </Button>
   );

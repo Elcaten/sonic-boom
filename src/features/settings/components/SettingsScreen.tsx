@@ -13,6 +13,11 @@ export default function SettingsScreen() {
     <View style={{ flex: 1, position: "relative" }}>
       <Host style={{ flex: 1 }}>
         <Form modifiers={isRefreshing ? [disabled()] : undefined}>
+          <Section title="Library">
+            <Link href="/settings/downloads" asChild>
+              <Button modifiers={[padding({ horizontal: 8 })]} label="Downloads" />
+            </Link>
+          </Section>
           <Section title="Developer">
             <Link href="/settings/animations" asChild>
               <Button modifiers={[padding({ horizontal: 8 })]} label="Animations" />

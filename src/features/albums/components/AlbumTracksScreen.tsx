@@ -59,7 +59,7 @@ export default function AlbumTracksScreen() {
           actions={<AlbumPlaybackActions onPlayPress={playAlbum} onShufflePress={shuffleAlbum} />}
         />
         <AlbumTrackList
-          songs={songs}
+          tracks={albumMediaItems.tracks}
           activeTrackId={activeTrackId}
           isPlaying={isPlaying}
           onTrackPress={handleTrackPress}

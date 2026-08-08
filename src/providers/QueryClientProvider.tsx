@@ -30,7 +30,9 @@ export const QueryClientProvider = ({ children }: PropsWithChildren<unknown>) =>
         maxAge: Number.MAX_SAFE_INTEGER,
         dehydrateOptions: {
           shouldDehydrateQuery: (query) =>
-            query.queryKey[0] !== "cover-art" && defaultShouldDehydrateQuery(query),
+            query.queryKey[0] !== "cover-art" &&
+            query.queryKey[0] !== "downloads" &&
+            defaultShouldDehydrateQuery(query),
         },
       }}
     >

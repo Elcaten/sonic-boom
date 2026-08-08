@@ -17,11 +17,11 @@ export function filterSortAlbums<T extends { name: string; year?: number | null 
 
 export function mapSongToMediaItem({
   song,
-  streamUrl,
+  mediaUrl,
   artworkUrl,
 }: {
   song: AlbumSong;
-  streamUrl: string;
+  mediaUrl: string;
   artworkUrl?: string;
 }): MediaItem {
   const extras: MediaItemExtras = {
@@ -31,7 +31,8 @@ export function mapSongToMediaItem({
 
   return {
     mediaId: song.id,
-    url: streamUrl,
+    url: mediaUrl,
+    mimeType: song.contentType,
     title: song.title,
     artist: song.artist,
     albumTitle: song.album,
