@@ -37,7 +37,7 @@ export default function ArtistsScreen() {
 
   return (
     <Host style={{ flex: 1 }}>
-      <List modifiers={[listStyle("plain"), listSectionIndexVisibility("visible")]}>
+      <List modifiers={[listStyle("automatic"), listSectionIndexVisibility("visible")]}>
         {sections.map((section) => (
           <Section
             key={section.title}
